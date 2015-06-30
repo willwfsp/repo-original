@@ -1,5 +1,5 @@
 doctype html
-html(lang="en", data-ng-app="angle")
+html(lang="en", data-ng-app="sigalei")
   
   head
     meta(charset='utf-8')
@@ -8,13 +8,13 @@ html(lang="en", data-ng-app="angle")
     meta(name='description', content='{{app.description}}')
     meta(name='keywords', content='app, responsive, angular, bootstrap, dashboard, admin')
 
-    title(data-ng-bind="::pageTitle()") Angle - Angular Bootstrap Admin Template
+    title(data-ng-bind="::pageTitle()") SigaLei - Busque e acompanhe os projetos de lei em discussão no Congresso Nacional e nas Assembleias Legislativas
     // Bootstrap styles
-    link(rel='stylesheet', href='app/css/bootstrap.css', data-ng-if="!app.layout.isRTL")
-    link(rel='stylesheet', href='app/css/bootstrap-rtl.css', data-ng-if="app.layout.isRTL")
+    link(rel='stylesheet', href='app/css/bootstrap.css')
+
     // Application styles
-    link(rel='stylesheet', href='app/css/app.css', data-ng-if="!app.layout.isRTL")
-    link(rel='stylesheet', href='app/css/app-rtl.css', data-ng-if="app.layout.isRTL")
+    link(rel='stylesheet', href='app/css/app.css')
+
     // Themes
     link(rel='stylesheet', ng-href='{{app.layout.theme}}', data-ng-if="app.layout.theme")
   

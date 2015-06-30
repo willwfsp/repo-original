@@ -4,7 +4,7 @@
 // angle to myAppName
 // ----------------------------------- 
 
-var myApp = angular.module('myAppName', ['angle']);
+var myApp = angular.module('SigaLeiApp', ['sigalei']);
 
 myApp.run(["$log", function($log) {
 

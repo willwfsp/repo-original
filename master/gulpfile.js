@@ -3,8 +3,10 @@ var args        = require('yargs').argv,
     flip        = require('css-flip'),
     through     = require('through2'),
     gulp        = require('gulp'),
+    jshint      = require('gulp-jshint'),
     $           = require('gulp-load-plugins')(),
     gulpsync    = $.sync(gulp),
+    csslint     = require('gulp-csslint'),
     PluginError = $.util.PluginError;
 
 // production mode (see build task)
@@ -26,7 +28,8 @@ var paths = {
   app:     '../app/',
   markup:  'jade/',
   styles:  'less/',
-  scripts: 'js/'
+  scripts: 'js/',
+  css:     '../app/css/' 
 }
 
 // if sass -> switch to sass folder
@@ -342,3 +345,17 @@ function flipcss(opt) {
 function log(msg) {
   $.util.log( $.util.colors.blue( msg ) );  
 }
+
+// JSHint task
+gulp.task('lint', function() {
+ gulp.src(paths.scripts + 'custom/**/*.js')
+ .pipe(jshint())
+ // You can look into pretty reporters as well, but that's another story
+ .pipe(jshint.reporter('default'));
+});
+
+gulp.task('css', function() {
+  gulp.src(paths.css+"**/*.css")
+    .pipe(csslint())
+    .pipe(csslint.reporter());
+});
