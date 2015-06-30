@@ -11,15 +11,23 @@
     "translate": "sidebar.nav.SINGLEVIEW"
   },
   {
-    "text": "Menu",
+    "text": "Casas Legislativas",
     "sref": "#",
     "icon": "icon-folder",
     "submenu": [
-      { "text": "Sub Menu", 
-        "sref": "app.submenu", 
-        "translate": "sidebar.nav.menu.SUBMENU" 
-      }    
+      { "text": "Congresso Nacional", 
+        "sref": "app.cn", 
+        "translate": "sidebar.nav.menu.CN" 
+      },
+      { "text": "Câmara dos Deputados", 
+        "sref": "app.cd", 
+        "translate": "sidebar.nav.menu.CD" 
+      },
+      { "text": "Senado Federal", 
+        "sref": "app.sf", 
+        "translate": "sidebar.nav.menu.SF" 
+      }      
     ],
-    "translate": "sidebar.nav.menu.MENU"
+    "translate": "sidebar.nav.menu.CASAS"
   }
 ]

@@ -103,10 +103,20 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         title: 'Single View',
         templateUrl: helper.basepath('singleview.html')
     })
-    .state('app.submenu', {
-        url: '/submenu',
-        title: 'Submenu',
-        templateUrl: helper.basepath('submenu.html')
+    .state('app.cn', {
+        url: '/congresso_nacional',
+        title: 'Congresso Nacional',
+        templateUrl: helper.basepath('congresso_nacional.html')
+    })
+    .state('app.cd', {
+        url: '/camara_deputados',
+        title: 'Câmara dos Deputados',
+        templateUrl: helper.basepath('camara_deputados.html')
+    })
+    .state('app.sf', {
+        url: '/senado_federal',
+        title: 'Senado Federal',
+        templateUrl: helper.basepath('senado_federal.html')
     })
     // 
     // CUSTOM RESOLVES
@@ -444,7 +454,7 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$state', '$http', 
  * Module: navbar-search.js
  * Navbar search toggler * Auto dismiss on ESC key
  =========================================================*/
-
+/*
 App.directive('searchOpen', ['navSearch', function(navSearch) {
   'use strict';
 
@@ -483,7 +493,7 @@ App.directive('searchOpen', ['navSearch', function(navSearch) {
   };
 
 }]);
-
+*/
 
 /**=========================================================
  * Module: sidebar.js
@@ -790,7 +800,7 @@ App.factory('colors', ['APP_COLORS', function(colors) {
  * Module: nav-search.js
  * Services to share navbar search functions
  =========================================================*/
- 
+ /*
 App.service('navSearch', function() {
   var navbarFormSelector = 'form.navbar-form';
   return {
@@ -816,6 +826,7 @@ App.service('navSearch', function() {
   };
 
 });
+*/
 /**=========================================================
  * Module: helpers.js
  * Provides helper functions for routes definition

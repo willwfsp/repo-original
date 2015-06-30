@@ -2,7 +2,7 @@
  * Module: nav-search.js
  * Services to share navbar search functions
  =========================================================*/
- 
+ /*
 App.service('navSearch', function() {
   var navbarFormSelector = 'form.navbar-form';
   return {
@@ -28,3 +28,4 @@ App.service('navSearch', function() {
   };
 
 });
+*/

@@ -1,19 +1,19 @@
 {
   "dashboard": {
-    "WELCOME": "Welcome to {{appName}}"
+    "WELCOME": "Bem-vindo ao {{appName}}"
   },
   "topbar": {
     "search": {
-      "PLACEHOLDER": "Type and hit enter.."
+      "PLACEHOLDER": "Digite sua busca e aperte enter"
     }
   },
   "sidebar": {
-    "WELCOME": "Welcome",
+    "WELCOME": "Bem-vindo",
     "heading": {
-      "HEADER": "Main Navigation"
+      "HEADER": "Navegação Principal"
     },
     "nav": {
-      "SINGLEVIEW": "Single View",
+      "SINGLEVIEW": "Vista simples",
       "menu": {
         "CASAS": "Casas Legislativas",
         "CN": "Congresso Nacional",

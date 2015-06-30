@@ -2,7 +2,7 @@
  * Module: navbar-search.js
  * Navbar search toggler * Auto dismiss on ESC key
  =========================================================*/
-
+/*
 App.directive('searchOpen', ['navSearch', function(navSearch) {
   'use strict';
 
@@ -41,4 +41,4 @@ App.directive('searchOpen', ['navSearch', function(navSearch) {
   };
 
 }]);
-
+*/

@@ -30,10 +30,20 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         title: 'Single View',
         templateUrl: helper.basepath('singleview.html')
     })
-    .state('app.submenu', {
-        url: '/submenu',
-        title: 'Submenu',
-        templateUrl: helper.basepath('submenu.html')
+    .state('app.cn', {
+        url: '/congresso_nacional',
+        title: 'Congresso Nacional',
+        templateUrl: helper.basepath('congresso_nacional.html')
+    })
+    .state('app.cd', {
+        url: '/camara_deputados',
+        title: 'Câmara dos Deputados',
+        templateUrl: helper.basepath('camara_deputados.html')
+    })
+    .state('app.sf', {
+        url: '/senado_federal',
+        title: 'Senado Federal',
+        templateUrl: helper.basepath('senado_federal.html')
     })
     // 
     // CUSTOM RESOLVES
