@@ -1,8 +1,8 @@
-<h3>Congresso Nacional
-   <small>Subtitle</small>
-</h3>
-<div class="row">
-   <div class="col-lg-12">
-      <p>A row with content</p>
+<div ng-controller="congressoDataController" data-ng-init="fetchData()">
+   <h3 class="text-center">Congresso Nacional</h3>
+   <div class="row jumbotron">
+      <div class="col-lg-12">
+         <p>{{ dados.SLAs_DESC }}</p>
+      </div>
    </div>
 </div>

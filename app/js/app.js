@@ -13,7 +13,7 @@ if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript 
 // APP START
 // ----------------------------------- 
 
-var App = angular.module('sigalei', [
+var App = angular.module('angle', [
     'ngRoute',
     'ngAnimate',
     'ngStorage',
@@ -85,7 +85,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
   $locationProvider.html5Mode(false);
 
   // default route
-  $urlRouterProvider.otherwise('/app/singleview');
+  $urlRouterProvider.otherwise('/app/search');
 
   // 
   // Application Routes
@@ -98,25 +98,10 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'AppController',
         resolve: helper.resolveFor('modernizr', 'icons')
     })
-    .state('app.singleview', {
-        url: '/singleview',
-        title: 'Single View',
-        templateUrl: helper.basepath('singleview.html')
-    })
-    .state('app.cn', {
-        url: '/congresso_nacional',
-        title: 'Congresso Nacional',
-        templateUrl: helper.basepath('congresso_nacional.html')
-    })
-    .state('app.cd', {
-        url: '/camara_deputados',
-        title: 'Câmara dos Deputados',
-        templateUrl: helper.basepath('camara_deputados.html')
-    })
-    .state('app.sf', {
-        url: '/senado_federal',
-        title: 'Senado Federal',
-        templateUrl: helper.basepath('senado_federal.html')
+    .state('app.search', {
+        url: '/search',
+        title: 'Pesquisar',
+        templateUrl: helper.basepath('search.html')
     })
     // 
     // CUSTOM RESOLVES
@@ -160,7 +145,6 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
       App.value      = $provide.value;
 
 }]).config(['$translateProvider', function ($translateProvider) {
-
     $translateProvider.useStaticFilesLoader({
         prefix : 'app/i18n/',
         suffix : '.json'
@@ -178,8 +162,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
     $tooltipProvider.options({appendToBody: true});
 
-}])
-;
+}]);
 
 /**=========================================================
  * Module: constants.js
@@ -637,6 +620,32 @@ App.directive('sidebar', ['$rootScope', '$window', 'Utils', function($rootScope,
 
 }]);
 /**=========================================================
+ * Module: table-checkall.js
+ * Tables check all checkbox
+ =========================================================*/
+
+App.directive('checkAll', function() {
+  'use strict';
+  
+  return {
+    restrict: 'A',
+    controller: ["$scope", "$element", function($scope, $element){
+      
+      $element.on('change', function() {
+        var $this = $(this),
+            index= $this.index() + 1,
+            checkbox = $this.find('input[type="checkbox"]'),
+            table = $this.parents('table');
+        // Make sure to affect only the correct checkbox column
+        table.find('tbody > tr > td:nth-child('+index+') input[type="checkbox"]')
+          .prop('checked', checkbox[0].checked);
+
+      });
+    }]
+  };
+
+});
+/**=========================================================
  * Module: toggle-state.js
  * Toggle a classname from the BODY Useful to change a state that 
  * affects globally the entire layout or more than one item 
@@ -1066,7 +1075,7 @@ App.service('Utils', ["$window", "APP_MEDIAQUERY", function($window, APP_MEDIAQU
 // angle to myAppName
 // ----------------------------------- 
 
-var myApp = angular.module('SigaLeiApp', ['sigalei']);
+var myApp = angular.module('SigaLeiApp', ['angle']);
 
 myApp.run(["$log", function($log) {
 
@@ -1088,6 +1097,298 @@ myApp.directive('oneOfMyOwnDirectives', function() {
   /*directive code*/
 });
 
-myApp.config(["$stateProvider", function($stateProvider /* ... */) {
+myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider, helper) {
   /* specific routes here (see file config.js) */
+  $stateProvider
+    .state('app.congresso_nacional', {
+        url: '/congresso_nacional',
+        title: 'Congresso Nacional',
+        templateUrl: helper.basepath('congresso_nacional.html')
+    })
+    .state('app.camara_deputados', {
+        url: '/camara_deputados',
+        title: 'Câmara dos Deputados',
+        templateUrl: helper.basepath('camara_deputados.html')
+    })
+    .state('app.senado_federal', {
+        url: '/senado_federal',
+        title: 'Senado Federal',
+        templateUrl: helper.basepath('senado_federal.html')
+    })
+    .state('app.projeto_lei', {
+        url: '/projeto_lei',
+        title: 'Visualizar Projeto de Lei',
+        templateUrl: helper.basepath('projeto_lei.html')
+    })
+    ;
+
+}]);
+
+myApp.run(['$rootScope', function($rootScope){
+  $rootScope.app.token = "admin@sigalei";
+  $rootScope.app.databaseURL = 'http://sigalei-api.mybluemix.net/v1/';
+}])
+myApp.controller('congressoDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
+	$scope.dados = {};
+    $scope.fetchData = function(){
+        DataFetcher.fetch_data_congresso();
+    }
+    $scope.$on('search:completed', function(event) {
+        $scope.dados = DataFetcher.get_results();
+    });
+    /*
+    $scope.fetchData = function(){
+        var url = $rootScope.app.databaseURL + 'assembleias/eed505570f32a32977ada84991c73457?access_token=' + $rootScope.app.token;
+        var req = {
+                url: url,
+                dataType: "json, jsonp",
+                method: 'GET',
+                headers: {
+                    'Access-Control-Allow-Origin' : '*',
+                    'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }              
+        };
+        $http(req)
+            .success(function(data){
+            	$scope.dados = data;
+            })
+            .error(function(data){
+            	$log.log("Error");
+            });
+
+    };
+    */
+}]);
+myApp.controller('projetoLeiController', ['$scope','$state', '$log',  '$http', function($scope, $state, $log, $http){
+	$scope.projeto = {};
+    $scope.fetchProjeto = function(){
+        $http.get("http://sigalei.mybluemix.net:80/sigalei/v1/apps/9b4b92a7-f710-4722-8fa4-18535d50bcb8/proposicao/CD-PL-1992-2007")
+        .success(function(data){
+        	$scope.projeto = data;
+        })
+        .error(function(data){
+        	$log.log("Error");
+        });
+
+    };
+
+}]);
+
+myApp.controller('searchBar', ['$scope','$state', '$log',  'DoSearch', function($scope, $state, $log, DoSearch){
+
+    $scope.searchQ = function(){
+        DoSearch.browse($scope.termos);
+        $log.log($scope.termos);
+        $state.go('app.search');
+    };
+
+}]);
+
+myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'DoSearch', function($location, $scope, $log, $state, DoSearch) {
+    $scope.query = "";
+    $scope.dados = [];
+    $scope.hasLoaded = false;
+    $scope.numero_resultados = 0;
+    $scope.casas_marcadas = {
+        "senado_federal": false,
+        "congresso_nacional": false,
+        "camara_deputados": false
+    };
+    $scope.tipos_lei = {
+        "projeto_lei_ordinaria": false,
+        "projeto_lei_complementar": false,
+        "medida_provisoria": false,
+        "projeto_ementa_constituconal": false,
+        "projeto_lei_nacional": false
+    };
+
+    $scope.init = function(){
+        if($location.search().q === undefined){
+            console.log("no filters");
+        }
+        else{
+            console.log($location.search().q);
+            $scope.query = $location.search().q;
+            DoSearch.browse($scope.query);            
+        }
+
+    };
+    /*
+    $scope.filtro_casas = function(){
+        var casas = "";
+        for(key in $scope.casas_marcadas){
+            if($scope.casas_marcadas[key])
+                //casas +=
+        }
+    }
+    */
+    $scope.$on('search:completed', function(event) {
+        // you could inspect the data to see if what you care about changed, or just update your own scope
+        $log.log('TESTE');
+        $scope.numero_resultados = DoSearch.getResults().total_rows;
+        $scope.dados = DoSearch.getResults().rows;
+        $scope.query = DoSearch.getQuery();
+        $scope.hasLoaded = true;
+    });
+
+    //Converte a data que vem no formato "yyyymmdd", fora de padrão
+    $scope.toDate = function(dateStr){
+
+        var date = dateStr.substr(0, 4) + '-' + dateStr.substr(4, 2) + '-' + dateStr.substr(6, 2) + ' 00:00:00';
+
+        var t = date.split(/[- :]/);
+
+        // Apply each element to the Date function
+        var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+        var actiondate = new Date(d);
+
+        return actiondate;
+
+    };
+
+}]);
+
+myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
+    var databaseURL = $rootScope.app.databaseURL;
+    var databaseToken = $rootScope.app.token;
+    var results = {};
+    var request_stub = {
+        dataType: "json",
+        headers: {
+            'Access-Control-Allow-Origin' : '*',
+            'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }           
+    };
+
+    return {
+
+        set_promise : function(url, method){
+            var defer = $q.defer();
+
+            $http({
+                url: url,
+                dataType: "json",
+                method: method,
+                headers: {
+                    'Access-Control-Allow-Origin' : '*',
+                    'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }                
+            })
+            .success(function(response){
+                defer.resolve(response);
+            })
+            .error(function(status, error){
+                defer.reject(status);
+            })
+
+            return defer.promise;
+        }, 
+
+        fetch_data : function(){
+            return "Hi!";
+        },
+        fetch_data_congresso : function(){
+            var req = request_stub;
+            var congresso_key = 'eed505570f32a32977ada84991c73457';
+            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
+            req.method = 'GET';
+            console.log(req);
+
+            $http(req)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('search:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+        get_results : function(){
+            return results;
+        }
+    };
+}]);
+
+
+myApp.factory('DoSearch', ['$q', '$http', '$rootScope', '$log',
+    function($q, $http, $rootScope, $log) {
+
+    var searchResults = {};
+
+    return {
+        doRequest : function(appendUrl, body, method){
+            var url = 'http://sigalei.mybluemix.net:80/sigalei/v1/apps/9b4b92a7-f710-4722-8fa4-18535d50bcb8/' + appendUrl;
+            var defer = $q.defer();
+
+            $http({
+                url: url,
+                dataType: "json",
+                method: method,
+                headers: {
+                    'Access-Control-Allow-Origin' : '*',
+                    'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: body
+
+            }).success(function(res){
+
+                defer.resolve(res);
+
+            }).error(function(status, error){
+
+                defer.reject(status);
+
+            });
+            return defer.promise;
+
+        },
+
+        browse : function(termos) {
+
+            var myData = {};
+
+            url = "proposicao/query";
+            if (termos){
+                url = url + "?q=" + termos;
+            }
+            debugger;
+            var body = {
+                "casas": [
+                    "CN","CD","SF","MG"
+                ],
+                "bookmark": ""
+            };
+
+            var results = {};
+
+
+            this.doRequest(url, body, "POST").then(function(res){ //Sucess
+
+                searchResults = res;
+                $rootScope.$broadcast('search:completed');
+
+            },function(status){ //Error
+
+                $log.log('Falha');
+            }
+            );
+
+
+            return results;
+
+        },
+
+        getResults : function(){
+            return searchResults;
+        }
+    };
+
 }]);

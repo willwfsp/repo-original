@@ -12,7 +12,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
   $locationProvider.html5Mode(false);
 
   // default route
-  $urlRouterProvider.otherwise('/app/singleview');
+  $urlRouterProvider.otherwise('/app/search');
 
   // 
   // Application Routes
@@ -25,25 +25,10 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'AppController',
         resolve: helper.resolveFor('modernizr', 'icons')
     })
-    .state('app.singleview', {
-        url: '/singleview',
-        title: 'Single View',
-        templateUrl: helper.basepath('singleview.html')
-    })
-    .state('app.cn', {
-        url: '/congresso_nacional',
-        title: 'Congresso Nacional',
-        templateUrl: helper.basepath('congresso_nacional.html')
-    })
-    .state('app.cd', {
-        url: '/camara_deputados',
-        title: 'Câmara dos Deputados',
-        templateUrl: helper.basepath('camara_deputados.html')
-    })
-    .state('app.sf', {
-        url: '/senado_federal',
-        title: 'Senado Federal',
-        templateUrl: helper.basepath('senado_federal.html')
+    .state('app.search', {
+        url: '/search',
+        title: 'Pesquisar',
+        templateUrl: helper.basepath('search.html')
     })
     // 
     // CUSTOM RESOLVES
@@ -87,7 +72,6 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
       App.value      = $provide.value;
 
 }]).config(['$translateProvider', function ($translateProvider) {
-
     $translateProvider.useStaticFilesLoader({
         prefix : 'app/i18n/',
         suffix : '.json'
@@ -105,5 +89,4 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
     $tooltipProvider.options({appendToBody: true});
 
-}])
-;
+}]);

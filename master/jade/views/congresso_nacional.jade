@@ -1,6 +1,6 @@
-h3 Congresso Nacional
-  small Subtitle
+div(ng-controller="congressoDataController", data-ng-init="fetchData()")
+	h3.text-center Congresso Nacional
 
-.row
-  .col-lg-12
-    p A row with content
+	.row.jumbotron
+		.col-lg-12
+			p {{ dados.SLAs_DESC }}

@@ -1,0 +1,135 @@
+div
+  h3 Resultado da busca
+    small Busque e filtre os resultados
+
+  .row(ng-controller="searchResults" data-ng-init="init()")
+    .col-lg-9
+      // START panel
+      .panel.panel-default
+        .panel-heading(ng-if="hasLoaded")
+          | {{numero_resultados}} projetos de lei encontrados
+          paneltool(tool-refresh="traditional")
+        // START table-responsive
+        .table-responsive
+          table.table.table-striped.table-bordered.table-hover
+            thead
+              tr
+                th(check-all)
+                  .checkbox.c-checkbox(data-toggle="tooltip",data-title="Check All")
+                    label
+                      input(type='checkbox')
+                      span.fa.fa-check
+                th Description
+            tbody
+              //tr#load_screen(display="none")
+                td
+                  .checkbox.c-checkbox
+                    label
+                      input(type='checkbox')
+                      span.fa.fa-check
+                td 
+                  .media-box
+                        .media-box-body
+                          h4.media-box-heading Loading...
+              tr(ng-repeat="projeto_lei in dados")
+                td
+                  .checkbox.c-checkbox
+                    label
+                      input(type='checkbox')
+                      span.fa.fa-check
+                td
+                  .media-box
+                      .media-box-body
+                        .pull-right.btn.btn-info.btn-sm View
+                        h4.media-box-heading {{projeto_lei.fields.SLP_APRESENTACAO}}
+                        small.text-muted Autor: {{projeto_lei.fields.SLA_NOME}}
+                        p {{projeto_lei.fields.SLP_EMENTA}}
+
+        // END table-responsive
+        .panel-footer
+          .row
+            .col-lg-2
+              button.btn.btn-sm.btn-default(ng-click="filtro_casas()") Clear
+            .col-lg-8
+            .col-lg-2.text-right
+              ul.pagination.pagination-sm
+                li.active: a(href='#') 1
+                li: a(href='#') 2
+                li: a(href='#') 3
+                li: a(href='#') »
+      // END panel
+
+    .col-lg-3
+      h3.m0.pb-lg Filtros
+      br
+      //filtro por casas legislativas
+      .form-group.mb-xl
+        label.control-label.mb Casas Legislativas
+        br
+        label.checkbox-inline.c-checkbox
+          input(type='checkbox', ng-model="casas_marcadas.congresso_nacional")
+          |  Congresso Nacional
+          span.pull-left.fa.fa-check
+        br
+        label.checkbox-inline.c-checkbox
+          input(type='checkbox', ng-model="casas_marcadas.camara_deputados")
+          |  Camara dos Deputados
+          span.pull-left.fa.fa-check
+        br
+        label.checkbox-inline.c-checkbox
+          input(type='checkbox', ng-model="casas_marcadas.senado_federal")
+          |  Senado Federal
+          span.pull-left.fa.fa-check
+        br
+
+      //filtro por estado do projeto de lei
+      .form-group.mb-xl
+        label.control-label.mb Estado do PL
+        br
+        select.chosen-select.form-control(chosen="", ng-model="filtros.status")
+          option(value="") Todos
+          option(value="0") Nao Tramitando
+          option(value="1") Tramitando
+          option(value="2") Transformado em Lei
+      //filtro por tipo de projeto de lei
+      .form-group.mb-xl
+        label.control-label.mb Tipo de PL
+        br
+        label.checkbox-inline.c-checkbox
+          input(type='checkbox', ng-model="tipos_lei.projeto_lei_ordinaria")
+          |  Projeto de Lei Ordinário
+          span.pull-left.fa.fa-check
+        br
+        label.checkbox-inline.c-checkbox
+          input(type='checkbox', ng-model="tipos_lei.projeto_lei_complementar")
+          |  Projeto de Lei Complementar
+          span.pull-left.fa.fa-check
+        br
+        label.checkbox-inline.c-checkbox
+          input(type='checkbox', ng-model="tipos_lei.medida_provisoria")
+          |  Medida Provisoria
+          span.pull-left.fa.fa-check
+        br
+        label.checkbox-inline.c-checkbox
+          input(type='checkbox', ng-model="tipos_lei.projeto_lei_nacional")
+          |  Projeto de Lei Nacional
+          span.pull-left.fa.fa-check
+        br
+        label.checkbox-inline.c-checkbox
+          input(type='checkbox', ng-model="tipos_lei.projeto_ementa_constituconal")
+          |  Proposta de Emenda Constitucional
+          span.pull-left.fa.fa-check
+        br
+        //select.chosen-select.form-control(chosen="", ng-model="filtros.tipo")
+          option(value="") Todos
+          option(value="PL") Projeto de Lei Ordinario
+          option(value="MPV") Medida Provisoria
+          option(value="PLN") Projeto de Lei Nacional
+          option(value="PEC") Proposta de Emenda Constitucional
+
+      .form-group.mb-xl
+        label.control-label.mb Ano
+        br
+        p.input-group
+          input.form-control(type="text")
+

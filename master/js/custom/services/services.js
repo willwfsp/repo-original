@@ -1,0 +1,142 @@
+myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
+    var databaseURL = $rootScope.app.databaseURL;
+    var databaseToken = $rootScope.app.token;
+    var results = {};
+    var request_stub = {
+        dataType: "json",
+        headers: {
+            'Access-Control-Allow-Origin' : '*',
+            'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }           
+    };
+
+    return {
+
+        set_promise : function(url, method){
+            var defer = $q.defer();
+
+            $http({
+                url: url,
+                dataType: "json",
+                method: method,
+                headers: {
+                    'Access-Control-Allow-Origin' : '*',
+                    'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }                
+            })
+            .success(function(response){
+                defer.resolve(response);
+            })
+            .error(function(status, error){
+                defer.reject(status);
+            })
+
+            return defer.promise;
+        }, 
+
+        fetch_data : function(){
+            return "Hi!";
+        },
+        fetch_data_congresso : function(){
+            var req = request_stub;
+            var congresso_key = 'eed505570f32a32977ada84991c73457';
+            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
+            req.method = 'GET';
+            console.log(req);
+
+            $http(req)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('search:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+        get_results : function(){
+            return results;
+        }
+    };
+}]);
+
+
+myApp.factory('DoSearch', ['$q', '$http', '$rootScope', '$log',
+    function($q, $http, $rootScope, $log) {
+
+    var searchResults = {};
+
+    return {
+        doRequest : function(appendUrl, body, method){
+            var url = 'http://sigalei.mybluemix.net:80/sigalei/v1/apps/9b4b92a7-f710-4722-8fa4-18535d50bcb8/' + appendUrl;
+            var defer = $q.defer();
+
+            $http({
+                url: url,
+                dataType: "json",
+                method: method,
+                headers: {
+                    'Access-Control-Allow-Origin' : '*',
+                    'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: body
+
+            }).success(function(res){
+
+                defer.resolve(res);
+
+            }).error(function(status, error){
+
+                defer.reject(status);
+
+            });
+            return defer.promise;
+
+        },
+
+        browse : function(termos) {
+
+            var myData = {};
+
+            url = "proposicao/query";
+            if (termos){
+                url = url + "?q=" + termos;
+            }
+            debugger;
+            var body = {
+                "casas": [
+                    "CN","CD","SF","MG"
+                ],
+                "bookmark": ""
+            };
+
+            var results = {};
+
+
+            this.doRequest(url, body, "POST").then(function(res){ //Sucess
+
+                searchResults = res;
+                $rootScope.$broadcast('search:completed');
+
+            },function(status){ //Error
+
+                $log.log('Falha');
+            }
+            );
+
+
+            return results;
+
+        },
+
+        getResults : function(){
+            return searchResults;
+        }
+    };
+
+}]);
