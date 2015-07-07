@@ -2,6 +2,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
     var databaseURL = $rootScope.app.databaseURL;
     var databaseToken = $rootScope.app.token;
     var results = {};
+    var query = "";
     var request_stub = {
         dataType: "json",
         headers: {
@@ -38,9 +39,37 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
             return defer.promise;
         }, 
 
-        fetch_data : function(){
-            return "Hi!";
+        fetch_data_proposicoes : function(termos, filtros){
+            
+            var headers = {
+                'Access-Control-Allow-Origin' : '*',
+                'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            };
+
+            for(filtro in filtros){
+                headers[filtro] = filtros[filtro];
+            };
+
+            url = databaseURL + 'proposicoes?';
+
+            if(termos){
+                url += 'q=' + termos + '&';
+            };
+
+            url += 'access_token=' + databaseToken;
+            $http.post(url, headers)
+                .success(function(data){
+                    results = data;
+                    query = termos || "";
+                    $rootScope.$broadcast('search:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
         },
+
         fetch_data_congresso : function(){
             var req = request_stub;
             var congresso_key = 'eed505570f32a32977ada84991c73457';
@@ -51,14 +80,52 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
             $http(req)
                 .success(function(data){
                     results = data;
-                    $rootScope.$broadcast('search:completed');
+                    $rootScope.$broadcast('fetch:completed');
                 })
                 .error(function(status, error){
                     $log.log('error');
                 });
         },
+
+        fetch_data_camara : function(){
+            var req = request_stub;
+            var congresso_key = 'eed505570f32a32977ada84991c743c6';
+            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
+            req.method = 'GET';
+            console.log(req);
+
+            $http(req)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+
+        fetch_data_senado : function(){
+            var req = request_stub;
+            var congresso_key = 'eed505570f32a32977ada84991c7295c';
+            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
+            req.method = 'GET';
+            console.log(req);
+
+            $http(req)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+
         get_results : function(){
             return results;
+        },
+        get_query : function(){
+            return query;
         }
     };
 }]);

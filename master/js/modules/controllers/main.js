@@ -90,6 +90,7 @@ App.controller('AppController',
       // list of available languages
       available: {
         'en':       'English',
+        'pt_BR':    'Português',
         'es_AR':    'Español'
       },
       // display always the current ui language

@@ -1,6 +1,6 @@
-h3 Câmara dos Deputados
-  small Subtitle
+div(ng-controller="congressoDataController", data-ng-init="fetchData()")
+	h3.text-center {{ dados.SLAs_NOME}}
 
-.row
-  .col-lg-12
-    p A row with content
+	.row.well
+		.col-lg-12
+			p {{ dados.SLAs_DESC }}

@@ -299,6 +299,7 @@ App.controller('AppController',
       // list of available languages
       available: {
         'en':       'English',
+        'pt_BR':    'Português',
         'es_AR':    'Español'
       },
       // display always the current ui language
@@ -1133,33 +1134,29 @@ myApp.controller('congressoDataController', ['$scope','$rootScope', '$log', '$ht
     $scope.fetchData = function(){
         DataFetcher.fetch_data_congresso();
     }
-    $scope.$on('search:completed', function(event) {
+    $scope.$on('fetch:completed', function(event) {
         $scope.dados = DataFetcher.get_results();
     });
-    /*
-    $scope.fetchData = function(){
-        var url = $rootScope.app.databaseURL + 'assembleias/eed505570f32a32977ada84991c73457?access_token=' + $rootScope.app.token;
-        var req = {
-                url: url,
-                dataType: "json, jsonp",
-                method: 'GET',
-                headers: {
-                    'Access-Control-Allow-Origin' : '*',
-                    'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }              
-        };
-        $http(req)
-            .success(function(data){
-            	$scope.dados = data;
-            })
-            .error(function(data){
-            	$log.log("Error");
-            });
+}]);
 
-    };
-    */
+myApp.controller('camaraDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
+    $scope.dados = {};
+    $scope.fetchData = function(){
+        DataFetcher.fetch_data_camara();
+    }
+    $scope.$on('fetch:completed', function(event) {
+        $scope.dados = DataFetcher.get_results();
+    });
+}]);
+
+myApp.controller('senadoDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
+    $scope.dados = {};
+    $scope.fetchData = function(){
+        DataFetcher.fetch_data_senado();
+    }
+    $scope.$on('fetch:completed', function(event) {
+        $scope.dados = DataFetcher.get_results();
+    });
 }]);
 myApp.controller('projetoLeiController', ['$scope','$state', '$log',  '$http', function($scope, $state, $log, $http){
 	$scope.projeto = {};
@@ -1176,44 +1173,87 @@ myApp.controller('projetoLeiController', ['$scope','$state', '$log',  '$http', f
 
 }]);
 
-myApp.controller('searchBar', ['$scope','$state', '$log',  'DoSearch', function($scope, $state, $log, DoSearch){
+myApp.controller('searchBar', ['$scope','$state', '$log',  'DataFetcher', function($scope, $state, $log, DataFetcher){
 
     $scope.searchQ = function(){
-        DoSearch.browse($scope.termos);
-        $log.log($scope.termos);
+        DataFetcher.fetch_data_proposicoes($scope.termos);
         $state.go('app.search');
     };
 
 }]);
 
-myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'DoSearch', function($location, $scope, $log, $state, DoSearch) {
+myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'DataFetcher', function($location, $scope, $log, $state, DataFetcher) {
+    var filters_stub = {
+        "bookmark": "",
+        "casas": [],
+        "tipos": [],
+        "ano": ""
+    };
+
     $scope.query = "";
     $scope.dados = [];
     $scope.hasLoaded = false;
     $scope.numero_resultados = 0;
+
+    $scope.filters = filters_stub;
+
     $scope.casas_marcadas = {
-        "senado_federal": false,
-        "congresso_nacional": false,
-        "camara_deputados": false
+        "CN": false,
+        "CD": false,
+        "SF": false
     };
     $scope.tipos_lei = {
-        "projeto_lei_ordinaria": false,
-        "projeto_lei_complementar": false,
-        "medida_provisoria": false,
-        "projeto_ementa_constituconal": false,
-        "projeto_lei_nacional": false
+        "PL": false,
+        "PLN": false,
+        "MPV": false,
+        "PEC": false
     };
 
+    $scope.limpar_filtros = function(){
+        console.log("hi!");
+        for(key in $scope.casas_marcadas){
+            $scope.casas_marcadas[key] = false;
+        };
+        for(key in $scope.tipos_lei){
+            $scope.tipos_lei[key] = false;
+        };
+        $scope.filters = filters_stub;
+    };
+
+    $scope.change_filtro_casas = function(){
+        $scope.filters.casas = [];
+        for(key in $scope.casas_marcadas){
+            if($scope.casas_marcadas[key]){
+                $scope.filters.casas.push(key);
+            };
+        };
+        console.log("hey!");
+        DataFetcher.fetch_data_proposicoes($scope.query, $scope.filters);
+    };
+    
+    $scope.change_filtro_tipos_lei = function(){
+        $scope.filters.tipos = [];
+        for(key in $scope.tipos_lei){
+            if($scope.tipos_lei[key]){
+                $scope.filters.tipos.push(key);
+            };
+        };
+        console.log("Hello!");
+        DataFetcher.fetch_data_proposicoes($scope.query, $scope.filters);
+    };
+    
     $scope.init = function(){
+        /*
         if($location.search().q === undefined){
-            console.log("no filters");
+            console.log("no query");
         }
         else{
             console.log($location.search().q);
             $scope.query = $location.search().q;
-            DoSearch.browse($scope.query);            
+            DataFetcher.browse($scope.query);            
         }
-
+        */
+        DataFetcher.fetch_data_proposicoes();
     };
     /*
     $scope.filtro_casas = function(){
@@ -1226,11 +1266,11 @@ myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'DoS
     */
     $scope.$on('search:completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
-        $log.log('TESTE');
-        $scope.numero_resultados = DoSearch.getResults().total_rows;
-        $scope.dados = DoSearch.getResults().rows;
-        $scope.query = DoSearch.getQuery();
+        $scope.numero_resultados = DataFetcher.get_results().total_rows;
+        $scope.dados = DataFetcher.get_results().rows;
+        $scope.query = DataFetcher.get_query();
         $scope.hasLoaded = true;
+        console.log($scope.dados[0].id);
     });
 
     //Converte a data que vem no formato "yyyymmdd", fora de padrão
@@ -1254,6 +1294,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
     var databaseURL = $rootScope.app.databaseURL;
     var databaseToken = $rootScope.app.token;
     var results = {};
+    var query = "";
     var request_stub = {
         dataType: "json",
         headers: {
@@ -1290,9 +1331,37 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
             return defer.promise;
         }, 
 
-        fetch_data : function(){
-            return "Hi!";
+        fetch_data_proposicoes : function(termos, filtros){
+            
+            var headers = {
+                'Access-Control-Allow-Origin' : '*',
+                'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            };
+
+            for(filtro in filtros){
+                headers[filtro] = filtros[filtro];
+            };
+
+            url = databaseURL + 'proposicoes?';
+
+            if(termos){
+                url += 'q=' + termos + '&';
+            };
+
+            url += 'access_token=' + databaseToken;
+            $http.post(url, headers)
+                .success(function(data){
+                    results = data;
+                    query = termos || "";
+                    $rootScope.$broadcast('search:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
         },
+
         fetch_data_congresso : function(){
             var req = request_stub;
             var congresso_key = 'eed505570f32a32977ada84991c73457';
@@ -1303,14 +1372,52 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
             $http(req)
                 .success(function(data){
                     results = data;
-                    $rootScope.$broadcast('search:completed');
+                    $rootScope.$broadcast('fetch:completed');
                 })
                 .error(function(status, error){
                     $log.log('error');
                 });
         },
+
+        fetch_data_camara : function(){
+            var req = request_stub;
+            var congresso_key = 'eed505570f32a32977ada84991c743c6';
+            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
+            req.method = 'GET';
+            console.log(req);
+
+            $http(req)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+
+        fetch_data_senado : function(){
+            var req = request_stub;
+            var congresso_key = 'eed505570f32a32977ada84991c7295c';
+            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
+            req.method = 'GET';
+            console.log(req);
+
+            $http(req)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+
         get_results : function(){
             return results;
+        },
+        get_query : function(){
+            return query;
         }
     };
 }]);
