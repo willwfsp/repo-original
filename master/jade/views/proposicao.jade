@@ -1,0 +1,61 @@
+div(ng-controller="proposicaoController", data-ng-init="fetchData()")
+	.page-header
+		h2 {{dados.SLP_NOME}}
+	.row
+		.col-sm-12.col-md-6.text-center.well
+			h3 Informações Gerais
+			h4 Tipo
+			p  {{dados.SLP_TIPO_DESC}}
+			h4 Temas
+			p.small(ng-repeat="tema in dados.SLP_TEMA") {{tema}}
+			h4 Apreciação
+			p  {{dados.SLP_APRECIACAO}}
+			h4 Autor(es)
+			p(ng-repeat="autor in dados.SLP_AUTORES") {{autor.SLPa_NOME_FANTASIA}}, {{autor.SLPa_PARTIDO}}-{{autor.SLPa_UF_REP}}
+			p  {{dados.SLP_APRECIACAO}}
+			h4 Regime de Tramitação
+			p  {{dados.SLP_REGIME_TRAMITACAO}}
+			h4 Ementa
+			p  {{dados.SLP_EMENTA}}
+
+
+		.col-sm-12.col-md-6.text-center.well
+			h3 Status Geral
+			h4 Data de Apresentação
+			p  {{dados.SLP_DATA_APRESENTACAO}}
+			h4 Última Ação
+			p  {{dados.SLP_DATA_ATUALIZACAO}}
+			.well.well-sm
+				h4 Status
+				.well.well-sm
+					h4 Câmara dos Deputados
+					p  {{dados.SLP_STATUS.CD.FASE}}
+					h4 Órgão Responsável
+					p  {{dados.SLP_STATUS.CD.ORG_DESC}}
+					h4 Data
+					p  {{dados.SLP_STATUS.CD.DATA}}
+					h4 Status
+					p  {{dados.SLP_STATUS.CD.DESC}}
+				.well.well-sm(ng-if="dados.SLP_STATUS.SF.FASE > 0")
+					h4 SENADO FEDERAL
+					p  {{dados.SLP_STATUS.SF.FASE}}
+					h4 Órgão Responsável
+					p  {{dados.SLP_STATUS.SF.ORG_DESC}}
+					h4 Data
+					p  {{dados.SLP_STATUS.SF.DATA}}
+					h4 Status
+					p  {{dados.SLP_STATUS.SF.DESC}}
+
+div
+	//(ng-controller="tramitacaoController", data-ng-init="fetchData()")
+	//.row
+		.col-sm-12.col-md-6.text-center
+			p This project is an application skeleton. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects. 
+			br 
+			| The seed app doesn't do much and has most of the feature removed so you can add theme as per your needs just following the demo app examples.
+			br
+		.col-sm-12.col-md-6.text-center
+			p This project is an application skeleton. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects. 
+			br 
+			| The seed app doesn't do much and has most of the feature removed so you can add theme as per your needs just following the demo app examples.
+			br

@@ -20,8 +20,11 @@ div
                 td
                   .media-box
                       .media-box-body
-                        .pull-right.btn.btn-sigalei.btn-sm Detalhes
-                        h4.media-box-heading {{projeto_lei.fields.SLP_NOME}}
+                        .pull-right.btn.btn-default.btn-sm Detalhes
+                        a(ng-href="#/app/proposicao?p={{projeto_lei.fields.SLP_NOME}}")
+                          h4.media-box-heading {{projeto_lei.fields.SLP_NOME}}
+                        small.text-muted(ng-if="projeto_lei.fields.SLR_NOME != undefined") Outros Nomes: {{projeto_lei.fields.SLR_NOME}}
+                        br(ng-if="projeto_lei.fields.SLR_NOME != undefined")
                         small.text-muted Autor: {{projeto_lei.fields.SLPa_NOME_FANTASIA}}
                         br
                         small.text-muted Tema: {{projeto_lei.fields.SLP_TEMA}}
@@ -31,7 +34,7 @@ div
         .panel-footer
           .row
             .col-lg-2
-              button.btn.btn-sm.btn-sigalei.pull-center(ng-click="filtro_casas()") Mais
+              button.btn.btn-md.btn-default.pull-center(ng-click="filtro_casas()") Mais
       // END panel
 
     .col-lg-3
@@ -74,6 +77,11 @@ div
           span.pull-left.fa.fa-check
         br
         label.checkbox-inline.c-checkbox
+          input(type='checkbox', ng-model="tipos_lei.PLComp", ng-click="change_filtro_tipos_lei()")
+          |  Projeto de Lei Complementar
+          span.pull-left.fa.fa-check
+        br
+        label.checkbox-inline.c-checkbox
           input(type='checkbox', ng-model="tipos_lei.MPV", ng-click="change_filtro_tipos_lei()")
           |  Medida Provisoria
           span.pull-left.fa.fa-check
@@ -93,6 +101,6 @@ div
         label.control-label.mb Ano
         br
         p.input-group
-          input.form-control(type="text")
+          input.form-control(type="number", min="1980", max="2015", ng-model="ano" ng-blur="change_filtro_ano()")
 
       button.btn.btn-md.btn-default(ng-click="limpar_filtros()") Limpar Filtros

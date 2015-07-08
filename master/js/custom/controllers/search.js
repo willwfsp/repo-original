@@ -1,7 +1,8 @@
 
-myApp.controller('searchBar', ['$scope','$state', '$log',  'DataFetcher', function($scope, $state, $log, DataFetcher){
+myApp.controller('searchBar', ['$location', '$scope','$state', '$log',  'DataFetcher', function($location, $scope, $state, $log, DataFetcher){
 
     $scope.searchQ = function(){
+
         DataFetcher.fetch_data_proposicoes($scope.termos);
         $state.go('app.search');
     };
@@ -30,9 +31,21 @@ myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'Dat
     };
     $scope.tipos_lei = {
         "PL": false,
+        "PLComp": false,
         "PLN": false,
         "MPV": false,
         "PEC": false
+    };
+
+    $scope.ano = "";
+
+    $scope.change_filtro_ano = function(){
+        
+        if( ($scope.ano >= 1980 && $scope.ano <= 2015) || $scope.ano == ""){
+            console.log($scope.ano);
+            $scope.filters.ano = $scope.ano.toString();
+            DataFetcher.fetch_data_proposicoes($scope.query, $scope.filters);
+        };
     };
 
     $scope.limpar_filtros = function(){
@@ -43,7 +56,11 @@ myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'Dat
         for(key in $scope.tipos_lei){
             $scope.tipos_lei[key] = false;
         };
-        $scope.filters = filters_stub;
+        $scope.ano = "";
+        $scope.filters.casas = [];
+        $scope.filters.tipos = [];
+        $scope.filters.ano = "";
+        DataFetcher.fetch_data_proposicoes("", $scope.filters);
     };
 
     $scope.change_filtro_casas = function(){
@@ -96,6 +113,9 @@ myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'Dat
         $scope.dados = DataFetcher.get_results().rows;
         $scope.query = DataFetcher.get_query();
         $scope.hasLoaded = true;
+        var location = $location.path() + '?' + $scope.query;
+        console.log(location);
+        $location.path(location);
         console.log($scope.dados[0].id);
     });
 

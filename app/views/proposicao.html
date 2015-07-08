@@ -1,0 +1,66 @@
+<div ng-controller="proposicaoController" data-ng-init="fetchData()">
+   <div class="page-header">
+      <h2>{{dados.SLP_NOME}}</h2>
+   </div>
+   <div class="row">
+      <div class="col-sm-12 col-md-6 text-center well">
+         <h3>Informações Gerais</h3>
+         <h4>Tipo</h4>
+         <p>{{dados.SLP_TIPO_DESC}}</p>
+         <h4>Temas</h4>
+         <p ng-repeat="tema in dados.SLP_TEMA" class="small">{{tema}}</p>
+         <h4>Apreciação</h4>
+         <p>{{dados.SLP_APRECIACAO}}</p>
+         <h4>Autor(es)</h4>
+         <p ng-repeat="autor in dados.SLP_AUTORES">{{autor.SLPa_NOME_FANTASIA}}, {{autor.SLPa_PARTIDO}}-{{autor.SLPa_UF_REP}}</p>
+         <p>{{dados.SLP_APRECIACAO}}</p>
+         <h4>Regime de Tramitação</h4>
+         <p>{{dados.SLP_REGIME_TRAMITACAO}}</p>
+         <h4>Ementa</h4>
+         <p>{{dados.SLP_EMENTA}}</p>
+      </div>
+      <div class="col-sm-12 col-md-6 text-center well">
+         <h3>Status Geral</h3>
+         <h4>Data de Apresentação</h4>
+         <p>{{dados.SLP_DATA_APRESENTACAO}}</p>
+         <h4>Última Ação</h4>
+         <p>{{dados.SLP_DATA_ATUALIZACAO}}</p>
+         <div class="well well-sm">
+            <h4>Status</h4>
+            <div class="well well-sm">
+               <h4>Câmara dos Deputados</h4>
+               <p>{{dados.SLP_STATUS.CD.FASE}}</p>
+               <h4>Órgão Responsável</h4>
+               <p>{{dados.SLP_STATUS.CD.ORG_DESC}}</p>
+               <h4>Data</h4>
+               <p>{{dados.SLP_STATUS.CD.DATA}}</p>
+               <h4>Status</h4>
+               <p>{{dados.SLP_STATUS.CD.DESC}}</p>
+            </div>
+            <div ng-if="dados.SLP_STATUS.SF.FASE &gt; 0" class="well well-sm">
+               <h4>SENADO FEDERAL</h4>
+               <p>{{dados.SLP_STATUS.SF.FASE}}</p>
+               <h4>Órgão Responsável</h4>
+               <p>{{dados.SLP_STATUS.SF.ORG_DESC}}</p>
+               <h4>Data</h4>
+               <p>{{dados.SLP_STATUS.SF.DATA}}</p>
+               <h4>Status</h4>
+               <p>{{dados.SLP_STATUS.SF.DESC}}</p>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div>
+   <!--(ng-controller="tramitacaoController", data-ng-init="fetchData()")-->
+   <!--.row.col-sm-12.col-md-6.text-center
+	p This project is an application skeleton. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects. 
+	br 
+	| The seed app doesn't do much and has most of the feature removed so you can add theme as per your needs just following the demo app examples.
+	br
+.col-sm-12.col-md-6.text-center
+	p This project is an application skeleton. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects. 
+	br 
+	| The seed app doesn't do much and has most of the feature removed so you can add theme as per your needs just following the demo app examples.
+	br-->
+</div>

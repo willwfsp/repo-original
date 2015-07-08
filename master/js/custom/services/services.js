@@ -1,8 +1,11 @@
 myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
     var databaseURL = $rootScope.app.databaseURL;
     var databaseToken = $rootScope.app.token;
+
     var results = {};
     var query = "";
+    var proposicao = "";
+
     var request_stub = {
         dataType: "json",
         headers: {
@@ -40,7 +43,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
         }, 
 
         fetch_data_proposicoes : function(termos, filtros){
-            
+            console.log(filtros);
             var headers = {
                 'Access-Control-Allow-Origin' : '*',
                 'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
@@ -64,6 +67,21 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                     results = data;
                     query = termos || "";
                     $rootScope.$broadcast('search:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+
+        fetch_data_proposicao : function(nome){
+            var req = request_stub;
+            req.url = databaseURL + 'proposicoes/' + nome +'?access_token='+ databaseToken;
+            req.method = 'GET';
+            console.log(req.url);
+            $http.get(req.url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
                 })
                 .error(function(status, error){
                     $log.log('error');

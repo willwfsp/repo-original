@@ -44,10 +44,10 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
         title: 'Senado Federal',
         templateUrl: helper.basepath('senado_federal.html')
     })
-    .state('app.projeto_lei', {
-        url: '/projeto_lei',
+    .state('app.proposicao', {
+        url: '/proposicao',
         title: 'Visualizar Projeto de Lei',
-        templateUrl: helper.basepath('projeto_lei.html')
+        templateUrl: helper.basepath('proposicao.html')
     })
     ;
 

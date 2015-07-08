@@ -22,8 +22,12 @@
                         <td>
                            <div class="media-box">
                               <div class="media-box-body">
-                                 <div class="pull-right btn btn-sigalei btn-sm">Detalhes</div>
-                                 <h4 class="media-box-heading">{{projeto_lei.fields.SLP_NOME}}</h4>
+                                 <div class="pull-right btn btn-default btn-sm">Detalhes</div>
+                                 <a ng-href="#/app/proposicao?p={{projeto_lei.fields.SLP_NOME}}">
+                                    <h4 class="media-box-heading">{{projeto_lei.fields.SLP_NOME}}</h4>
+                                 </a>
+                                 <small ng-if="projeto_lei.fields.SLR_NOME != undefined" class="text-muted">Outros Nomes: {{projeto_lei.fields.SLR_NOME}}</small>
+                                 <br ng-if="projeto_lei.fields.SLR_NOME != undefined" />
                                  <small class="text-muted">Autor: {{projeto_lei.fields.SLPa_NOME_FANTASIA}}</small>
                                  <br/>
                                  <small class="text-muted">Tema: {{projeto_lei.fields.SLP_TEMA}}</small>
@@ -39,7 +43,7 @@
             <div class="panel-footer">
                <div class="row">
                   <div class="col-lg-2">
-                     <button ng-click="filtro_casas()" class="btn btn-sm btn-sigalei pull-center">Mais</button>
+                     <button ng-click="filtro_casas()" class="btn btn-md btn-default pull-center">Mais</button>
                   </div>
                </div>
             </div>
@@ -85,6 +89,11 @@ select.chosen-select.form-control(chosen="", ng-model="filtros.status")
             </label>
             <br/>
             <label class="checkbox-inline c-checkbox">
+               <input type="checkbox" ng-model="tipos_lei.PLComp" ng-click="change_filtro_tipos_lei()" />Projeto de Lei Complementar
+               <span class="pull-left fa fa-check"></span>
+            </label>
+            <br/>
+            <label class="checkbox-inline c-checkbox">
                <input type="checkbox" ng-model="tipos_lei.MPV" ng-click="change_filtro_tipos_lei()" />Medida Provisoria
                <span class="pull-left fa fa-check"></span>
             </label>
@@ -104,7 +113,7 @@ select.chosen-select.form-control(chosen="", ng-model="filtros.status")
             <label class="control-label mb">Ano</label>
             <br/>
             <p class="input-group">
-               <input type="text" class="form-control" />
+               <input type="number" min="1980" max="2015" ng-model="ano" ng-blur="change_filtro_ano()" class="form-control" />
             </p>
          </div>
          <button ng-click="limpar_filtros()" class="btn btn-md btn-default">Limpar Filtros</button>

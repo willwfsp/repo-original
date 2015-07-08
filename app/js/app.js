@@ -1116,10 +1116,10 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
         title: 'Senado Federal',
         templateUrl: helper.basepath('senado_federal.html')
     })
-    .state('app.projeto_lei', {
-        url: '/projeto_lei',
+    .state('app.proposicao', {
+        url: '/proposicao',
         title: 'Visualizar Projeto de Lei',
-        templateUrl: helper.basepath('projeto_lei.html')
+        templateUrl: helper.basepath('proposicao.html')
     })
     ;
 
@@ -1158,24 +1158,37 @@ myApp.controller('senadoDataController', ['$scope','$rootScope', '$log', '$http'
         $scope.dados = DataFetcher.get_results();
     });
 }]);
-myApp.controller('projetoLeiController', ['$scope','$state', '$log',  '$http', function($scope, $state, $log, $http){
-	$scope.projeto = {};
-    $scope.fetchProjeto = function(){
-        $http.get("http://sigalei.mybluemix.net:80/sigalei/v1/apps/9b4b92a7-f710-4722-8fa4-18535d50bcb8/proposicao/CD-PL-1992-2007")
-        .success(function(data){
-        	$scope.projeto = data;
-        })
-        .error(function(data){
-        	$log.log("Error");
-        });
+myApp.controller('proposicaoController', ['$location', '$scope','$state', '$log',  '$http', 'DataFetcher', 
+    function($location,$scope, $state, $log, $http, DataFetcher){
+	$scope.dados = {};
+    $scope.fetchData = function(){
+        console.log($location.search().p);
+        DataFetcher.fetch_data_proposicao($location.search().p);
+    };
+    $scope.toDate = function(dateStr){
+
+        var date = dateStr.substr(0, 4) + '-' + dateStr.substr(4, 2) + '-' + dateStr.substr(6, 2) + ' 00:00:00';
+
+        var t = date.split(/[- :]/);
+
+        // Apply each element to the Date function
+        var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+        var actiondate = new Date(d);
+
+        return actiondate;
 
     };
+    $scope.$on('fetch:completed', function(event) {
+        // you could inspect the data to see if what you care about changed, or just update your own scope
+        $scope.dados = DataFetcher.get_results();
+    });
 
 }]);
 
-myApp.controller('searchBar', ['$scope','$state', '$log',  'DataFetcher', function($scope, $state, $log, DataFetcher){
+myApp.controller('searchBar', ['$location', '$scope','$state', '$log',  'DataFetcher', function($location, $scope, $state, $log, DataFetcher){
 
     $scope.searchQ = function(){
+
         DataFetcher.fetch_data_proposicoes($scope.termos);
         $state.go('app.search');
     };
@@ -1204,9 +1217,21 @@ myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'Dat
     };
     $scope.tipos_lei = {
         "PL": false,
+        "PLComp": false,
         "PLN": false,
         "MPV": false,
         "PEC": false
+    };
+
+    $scope.ano = "";
+
+    $scope.change_filtro_ano = function(){
+        
+        if( ($scope.ano >= 1980 && $scope.ano <= 2015) || $scope.ano == ""){
+            console.log($scope.ano);
+            $scope.filters.ano = $scope.ano.toString();
+            DataFetcher.fetch_data_proposicoes($scope.query, $scope.filters);
+        };
     };
 
     $scope.limpar_filtros = function(){
@@ -1217,7 +1242,11 @@ myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'Dat
         for(key in $scope.tipos_lei){
             $scope.tipos_lei[key] = false;
         };
-        $scope.filters = filters_stub;
+        $scope.ano = "";
+        $scope.filters.casas = [];
+        $scope.filters.tipos = [];
+        $scope.filters.ano = "";
+        DataFetcher.fetch_data_proposicoes("", $scope.filters);
     };
 
     $scope.change_filtro_casas = function(){
@@ -1270,6 +1299,9 @@ myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'Dat
         $scope.dados = DataFetcher.get_results().rows;
         $scope.query = DataFetcher.get_query();
         $scope.hasLoaded = true;
+        var location = $location.path() + '?' + $scope.query;
+        console.log(location);
+        $location.path(location);
         console.log($scope.dados[0].id);
     });
 
@@ -1293,8 +1325,11 @@ myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'Dat
 myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
     var databaseURL = $rootScope.app.databaseURL;
     var databaseToken = $rootScope.app.token;
+
     var results = {};
     var query = "";
+    var proposicao = "";
+
     var request_stub = {
         dataType: "json",
         headers: {
@@ -1332,7 +1367,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
         }, 
 
         fetch_data_proposicoes : function(termos, filtros){
-            
+            console.log(filtros);
             var headers = {
                 'Access-Control-Allow-Origin' : '*',
                 'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
@@ -1356,6 +1391,21 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                     results = data;
                     query = termos || "";
                     $rootScope.$broadcast('search:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+
+        fetch_data_proposicao : function(nome){
+            var req = request_stub;
+            req.url = databaseURL + 'proposicoes/' + nome +'?access_token='+ databaseToken;
+            req.method = 'GET';
+            console.log(req.url);
+            $http.get(req.url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
                 })
                 .error(function(status, error){
                     $log.log('error');
