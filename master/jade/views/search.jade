@@ -6,35 +6,29 @@ div
     .col-lg-9
       // START panel
       .panel.panel-default
-        .panel-heading(ng-if="hasLoaded")
-          | {{numero_resultados}} projetos de lei encontrados
+        .panel-heading(ng-if="!fetching")
+          | {{total_results}} projetos de lei encontrados
           paneltool(tool-refresh="traditional")
         // START table-responsive
-        .table-responsive
+        .table-responsive(infinite-scroll="moreResults()", infinite-scroll-disabled="fetching || bills.length >= total_results")
           table.table.table-striped.table-bordered.table-hover
             thead
               tr
                 th Descrição
             tbody
-              tr(ng-repeat="projeto_lei in dados")
+              tr(ng-repeat="bill in bills")
                 td
                   .media-box
                       .media-box-body
-                        .pull-right.btn.btn-default.btn-sm Detalhes
-                        a(ng-href="#/app/proposicao?p={{projeto_lei.fields.SLP_NOME}}")
-                          h4.media-box-heading {{projeto_lei.fields.SLP_NOME}}
-                        small.text-muted(ng-if="projeto_lei.fields.SLR_NOME != undefined") Outros Nomes: {{projeto_lei.fields.SLR_NOME}}
-                        br(ng-if="projeto_lei.fields.SLR_NOME != undefined")
-                        small.text-muted Autor: {{projeto_lei.fields.SLPa_NOME_FANTASIA}}
+                        a(ng-href="#/app/proposicao?p={{bill.fields.SLP_NOME}}")
+                          h4.media-box-heading {{bill.fields.SLP_NOME}}
+                        small.text-muted(ng-if="bill.fields.SLR_NOME != undefined") Outros Nomes: {{bill.fields.SLR_NOME}}
+                        br(ng-if="bill.fields.SLR_NOME != undefined")
+                        small.text-muted Autor: {{bill.fields.SLPa_NOME_FANTASIA}}
                         br
-                        small.text-muted Tema: {{projeto_lei.fields.SLP_TEMA}}
-                        p {{projeto_lei.fields.SLP_EMENTA}}
-
+                        small.text-muted Tema: {{bill.fields.SLP_TEMA}}
+                        p {{bill.fields.SLP_EMENTA}}
         // END table-responsive
-        .panel-footer
-          .row
-            .col-lg-2
-              button.btn.btn-md.btn-default.pull-center(ng-click="filtro_casas()") Mais
       // END panel
 
     .col-lg-3
@@ -44,55 +38,46 @@ div
         label.control-label.mb Casas Legislativas
         br
         label.checkbox-inline.c-checkbox
-          input(type='checkbox', ng-model="casas_marcadas.CN", ng-click="change_filtro_casas()")
+          input(type='checkbox', ng-model="checkedHouses.CN", ng-click="changeFilterHouses()")
           |  Congresso Nacional
           span.pull-left.fa.fa-check
         br
         label.checkbox-inline.c-checkbox
-          input(type='checkbox', ng-model="casas_marcadas.CD", ng-click="change_filtro_casas()")
+          input(type='checkbox', ng-model="checkedHouses.CD", ng-click="changeFilterHouses()")
           |  Camara dos Deputados
           span.pull-left.fa.fa-check
         br
         label.checkbox-inline.c-checkbox
-          input(type='checkbox', ng-model="casas_marcadas.SF", ng-click="change_filtro_casas()")
+          input(type='checkbox', ng-model="checkedHouses.SF", ng-click="changeFilterHouses()")
           |  Senado Federal
           span.pull-left.fa.fa-check
         br
 
-      //filtro por estado do projeto de lei
-      //.form-group.mb-xl
-        label.control-label.mb Estado do PL
-        br
-        select.chosen-select.form-control(chosen="", ng-model="filtros.status")
-          option(value="") Todos
-          option(value="0") Nao Tramitando
-          option(value="1") Tramitando
-      //filtro por tipo de projeto de lei
       .form-group.mb-xl
         label.control-label.mb Tipo de PL
         br
         label.checkbox-inline.c-checkbox
-          input(type='checkbox', ng-model="tipos_lei.PL", ng-click="change_filtro_tipos_lei()")
+          input(type='checkbox', ng-model="billTypes.PL", ng-click="changeFilterBillTypes()")
           |  Projeto de Lei Ordinário
           span.pull-left.fa.fa-check
         br
         label.checkbox-inline.c-checkbox
-          input(type='checkbox', ng-model="tipos_lei.PLComp", ng-click="change_filtro_tipos_lei()")
+          input(type='checkbox', ng-model="billTypes.PLComp", ng-click="changeFilterBillTypes()")
           |  Projeto de Lei Complementar
           span.pull-left.fa.fa-check
         br
         label.checkbox-inline.c-checkbox
-          input(type='checkbox', ng-model="tipos_lei.MPV", ng-click="change_filtro_tipos_lei()")
+          input(type='checkbox', ng-model="billTypes.MPV", ng-click="changeFilterBillTypes()")
           |  Medida Provisoria
           span.pull-left.fa.fa-check
         br
         label.checkbox-inline.c-checkbox
-          input(type='checkbox', ng-model="tipos_lei.PLN", ng-click="change_filtro_tipos_lei()")
+          input(type='checkbox', ng-model="billTypes.PLN", ng-click="changeFilterBillTypes()")
           |  Projeto de Lei Nacional
           span.pull-left.fa.fa-check
         br
         label.checkbox-inline.c-checkbox
-          input(type='checkbox', ng-model="tipos_lei.PEC", ng-click="change_filtro_tipos_lei()")
+          input(type='checkbox', ng-model="billTypes.PEC", ng-click="changeFilterBillTypes()")
           |  Proposta de Emenda Constitucional
           span.pull-left.fa.fa-check
         br
@@ -101,6 +86,6 @@ div
         label.control-label.mb Ano
         br
         p.input-group
-          input.form-control(type="number", min="1980", max="2015", ng-model="ano" ng-blur="change_filtro_ano()")
+          input.form-control(type="number", min="1980", max="2015", ng-model="year" ng-blur="changeFilterYear()")
 
-      button.btn.btn-md.btn-default(ng-click="limpar_filtros()") Limpar Filtros
+      button.btn.btn-md.btn-default(ng-click="cleanFilters()") Limpar Filtros

@@ -4,7 +4,7 @@
 // angle to myAppName
 // ----------------------------------- 
 
-var myApp = angular.module('SigaLeiApp', ['angle']);
+var myApp = angular.module('SigaLeiApp', ['angle', 'infinite-scroll']);
 
 myApp.run(["$log", function($log) {
 
@@ -52,8 +52,3 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
     ;
 
 }]);
-
-myApp.run(['$rootScope', function($rootScope){
-  $rootScope.app.token = "admin@sigalei";
-  $rootScope.app.databaseURL = 'http://sigalei-api.mybluemix.net/v1/';
-}])

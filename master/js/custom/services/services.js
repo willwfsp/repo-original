@@ -1,11 +1,11 @@
 myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
-    var databaseURL = $rootScope.app.databaseURL;
-    var databaseToken = $rootScope.app.token;
+    var databaseURL = 'http://sigalei-api.mybluemix.net/v1/';
+    var databaseToken = "admin@sigalei";
 
     var results = {};
     var query = "";
     var proposicao = "";
-
+    var bookmark = "";
     var request_stub = {
         dataType: "json",
         headers: {
@@ -18,32 +18,8 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
 
     return {
 
-        set_promise : function(url, method){
-            var defer = $q.defer();
-
-            $http({
-                url: url,
-                dataType: "json",
-                method: method,
-                headers: {
-                    'Access-Control-Allow-Origin' : '*',
-                    'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }                
-            })
-            .success(function(response){
-                defer.resolve(response);
-            })
-            .error(function(status, error){
-                defer.reject(status);
-            })
-
-            return defer.promise;
-        }, 
-
-        fetch_data_proposicoes : function(termos, filtros){
-            console.log(filtros);
+        fetchDataBills : function(termos, filters){
+            console.log(filters);
             var headers = {
                 'Access-Control-Allow-Origin' : '*',
                 'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
@@ -51,8 +27,8 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                 'Content-Type': 'application/json'
             };
 
-            for(filtro in filtros){
-                headers[filtro] = filtros[filtro];
+            for(filter in filters){
+                headers[filter] = filters[filter];
             };
 
             url = databaseURL + 'proposicoes?';
@@ -66,7 +42,13 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                 .success(function(data){
                     results = data;
                     query = termos || "";
-                    $rootScope.$broadcast('search:completed');
+                    if(filters && filters.bookmark != ""){
+                        console.log("I'm here");
+                        $rootScope.$broadcast('search more results: completed')
+                    }
+                    else{
+                        $rootScope.$broadcast('search:completed');
+                    }
                 })
                 .error(function(status, error){
                     $log.log('error');
@@ -139,89 +121,11 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                 });
         },
 
-        get_results : function(){
+        getResults : function(){
             return results;
         },
-        get_query : function(){
+        getQuery : function(){
             return query;
         }
     };
-}]);
-
-
-myApp.factory('DoSearch', ['$q', '$http', '$rootScope', '$log',
-    function($q, $http, $rootScope, $log) {
-
-    var searchResults = {};
-
-    return {
-        doRequest : function(appendUrl, body, method){
-            var url = 'http://sigalei.mybluemix.net:80/sigalei/v1/apps/9b4b92a7-f710-4722-8fa4-18535d50bcb8/' + appendUrl;
-            var defer = $q.defer();
-
-            $http({
-                url: url,
-                dataType: "json",
-                method: method,
-                headers: {
-                    'Access-Control-Allow-Origin' : '*',
-                    'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                data: body
-
-            }).success(function(res){
-
-                defer.resolve(res);
-
-            }).error(function(status, error){
-
-                defer.reject(status);
-
-            });
-            return defer.promise;
-
-        },
-
-        browse : function(termos) {
-
-            var myData = {};
-
-            url = "proposicao/query";
-            if (termos){
-                url = url + "?q=" + termos;
-            }
-            debugger;
-            var body = {
-                "casas": [
-                    "CN","CD","SF","MG"
-                ],
-                "bookmark": ""
-            };
-
-            var results = {};
-
-
-            this.doRequest(url, body, "POST").then(function(res){ //Sucess
-
-                searchResults = res;
-                $rootScope.$broadcast('search:completed');
-
-            },function(status){ //Error
-
-                $log.log('Falha');
-            }
-            );
-
-
-            return results;
-
-        },
-
-        getResults : function(){
-            return searchResults;
-        }
-    };
-
 }]);

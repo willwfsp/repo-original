@@ -1,137 +1,132 @@
 
-myApp.controller('searchBar', ['$location', '$scope','$state', '$log',  'DataFetcher', function($location, $scope, $state, $log, DataFetcher){
+myApp.controller('searchBar', ['$location', '$scope','$state',  'DataFetcher', function($location, $scope, $state, DataFetcher){
 
     $scope.searchQ = function(){
 
-        DataFetcher.fetch_data_proposicoes($scope.termos);
+        DataFetcher.fetchDataBills($scope.query);
         $state.go('app.search');
     };
 
 }]);
 
 myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'DataFetcher', function($location, $scope, $log, $state, DataFetcher) {
-    var filters_stub = {
-        "bookmark": "",
-        "casas": [],
-        "tipos": [],
-        "ano": ""
-    };
-
-    $scope.query = "";
-    $scope.dados = [];
-    $scope.hasLoaded = false;
-    $scope.numero_resultados = 0;
-
-    $scope.filters = filters_stub;
-
-    $scope.casas_marcadas = {
+    
+    //filter variables
+    $scope.checkedHouses = {
         "CN": false,
         "CD": false,
         "SF": false
     };
-    $scope.tipos_lei = {
+
+    $scope.billTypes = {
         "PL": false,
         "PLComp": false,
         "PLN": false,
         "MPV": false,
         "PEC": false
     };
+    $scope.year = "";
 
-    $scope.ano = "";
+    $scope.fetching = false;
+    //search variables
+    $scope.query = "";
+    $scope.bills = [];
+    $scope.total_results = 0;
+    $scope.bookmark = "";
 
-    $scope.change_filtro_ano = function(){
+    //filter body
+    $scope.filters = {
+        "bookmark": "",
+        "casas": [],
+        "tipos": [],
+        "ano": ""
+    };
+
+    // functions to change filter parameters and fetch data again
+    $scope.changeFilterYear = function(){
         
-        if( ($scope.ano >= 1980 && $scope.ano <= 2015) || $scope.ano == ""){
-            console.log($scope.ano);
-            $scope.filters.ano = $scope.ano.toString();
-            DataFetcher.fetch_data_proposicoes($scope.query, $scope.filters);
+        if( ($scope.year >= 1980 && $scope.year <= 2015) || $scope.year == ""){
+            $scope.filters.ano = $scope.year.toString();
+            $scope.filters.bookmark="";
+            DataFetcher.fetchDataBills($scope.query, $scope.filters);
         };
     };
 
-    $scope.limpar_filtros = function(){
-        console.log("hi!");
-        for(key in $scope.casas_marcadas){
-            $scope.casas_marcadas[key] = false;
-        };
-        for(key in $scope.tipos_lei){
-            $scope.tipos_lei[key] = false;
-        };
-        $scope.ano = "";
+    $scope.changeFilterHouses = function(){
         $scope.filters.casas = [];
-        $scope.filters.tipos = [];
-        $scope.filters.ano = "";
-        DataFetcher.fetch_data_proposicoes("", $scope.filters);
-    };
-
-    $scope.change_filtro_casas = function(){
-        $scope.filters.casas = [];
-        for(key in $scope.casas_marcadas){
-            if($scope.casas_marcadas[key]){
+        for(key in $scope.checkedHouses){
+            if($scope.checkedHouses[key]){
                 $scope.filters.casas.push(key);
             };
         };
-        console.log("hey!");
-        DataFetcher.fetch_data_proposicoes($scope.query, $scope.filters);
+        $scope.filters.bookmark="";
+        DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
     
-    $scope.change_filtro_tipos_lei = function(){
+    $scope.changeFilterBillTypes = function(){
         $scope.filters.tipos = [];
-        for(key in $scope.tipos_lei){
-            if($scope.tipos_lei[key]){
+        for(key in $scope.billTypes){
+            if($scope.billTypes[key]){
                 $scope.filters.tipos.push(key);
             };
         };
-        console.log("Hello!");
-        DataFetcher.fetch_data_proposicoes($scope.query, $scope.filters);
+        $scope.filters.bookmark="";
+        DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
-    
+
+    $scope.cleanFilters = function(){
+        //clean DOM variables
+        for(key in $scope.checked_houses){
+            $scope.checked_houses[key] = false;
+        };
+        for(key in $scope.bill_types){
+            $scope.bill_types[key] = false;
+        };
+        $scope.year = "";
+        //clean filter
+        $scope.filters.casas = [];
+        $scope.filters.tipos = [];
+        $scope.filters.ano = "";
+        $scope.bookmark = "";
+        //fetch most recent data
+        DataFetcher.fetchDataBills("", $scope.filters);
+    };
+
     $scope.init = function(){
-        /*
-        if($location.search().q === undefined){
-            console.log("no query");
-        }
-        else{
-            console.log($location.search().q);
-            $scope.query = $location.search().q;
-            DataFetcher.browse($scope.query);            
-        }
-        */
-        DataFetcher.fetch_data_proposicoes();
+        DataFetcher.fetchDataBills();
+        $scope.fetching = true;
     };
-    /*
-    $scope.filtro_casas = function(){
-        var casas = "";
-        for(key in $scope.casas_marcadas){
-            if($scope.casas_marcadas[key])
-                //casas +=
-        }
-    }
-    */
+
+    $scope.moreResults = function(){
+        if($scope.fetching == true){
+            return
+        };
+        $scope.filters.bookmark = $scope.bookmark;
+        $scope.fetching = true;
+        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+    };
+
     $scope.$on('search:completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
-        $scope.numero_resultados = DataFetcher.get_results().total_rows;
-        $scope.dados = DataFetcher.get_results().rows;
-        $scope.query = DataFetcher.get_query();
-        $scope.hasLoaded = true;
+        $scope.total_results = DataFetcher.getResults().total_rows;
+        $scope.bills = DataFetcher.getResults().rows;
+        $scope.query = DataFetcher.getQuery();
+        $scope.bookmark = DataFetcher.getResults().bookmark;
         var location = $location.path() + '?' + $scope.query;
+        $scope.fetching = false;
         console.log(location);
         $location.path(location);
-        console.log($scope.dados[0].id);
     });
-
-    //Converte a data que vem no formato "yyyymmdd", fora de padrão
-    $scope.toDate = function(dateStr){
-
-        var date = dateStr.substr(0, 4) + '-' + dateStr.substr(4, 2) + '-' + dateStr.substr(6, 2) + ' 00:00:00';
-
-        var t = date.split(/[- :]/);
-
-        // Apply each element to the Date function
-        var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
-        var actiondate = new Date(d);
-
-        return actiondate;
-
-    };
+    
+    $scope.$on('search more results: completed', function(event) {
+        // you could inspect the data to see if what you care about changed, or just update your own scope
+        for(i = 0; i < DataFetcher.getResults().rows.length; i++){
+            $scope.bills.push(DataFetcher.getResults().rows[i]);
+        }
+        $scope.bookmark = DataFetcher.getResults().bookmark;
+        $scope.query = DataFetcher.getQuery();
+        $scope.fetching = false;
+        console.log($scope.bills.length);
+    });
 
 }]);
