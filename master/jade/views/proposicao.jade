@@ -2,60 +2,116 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 	.page-header
 		h2 {{dados.SLP_NOME}}
 	.row
-		.col-sm-12.col-md-6.text-center.well
-			h3 Informações Gerais
-			h4 Tipo
-			p  {{dados.SLP_TIPO_DESC}}
-			h4 Temas
-			p.small(ng-repeat="tema in dados.SLP_TEMA") {{tema}}
-			h4 Apreciação
-			p  {{dados.SLP_APRECIACAO}}
-			h4 Autor(es)
-			p(ng-repeat="autor in dados.SLP_AUTORES") {{autor.SLPa_NOME_FANTASIA}}, {{autor.SLPa_PARTIDO}}-{{autor.SLPa_UF_REP}}
-			p  {{dados.SLP_APRECIACAO}}
-			h4 Regime de Tramitação
-			p  {{dados.SLP_REGIME_TRAMITACAO}}
-			h4 Ementa
-			p  {{dados.SLP_EMENTA}}
+		.col-sm-12.col-md-6.well
+			.page-header
+				h3 Informações Gerais
+			.form-horizontal
+						.form-group
+							.col-sm-3 Tipo: 
+							.col-sm-9 
+								strong {{dados.SLP_STATUS.CD.FASE}}
 
+			.form-horizontal
+						.form-group
+							.col-sm-3 Temas:
+							.col-sm-9 
+								strong(ng-repeat="tema in dados.SLP_TEMA") {{tema}}
+									br
 
-		.col-sm-12.col-md-6.text-center.well
-			h3 Status Geral
-			h4 Data de Apresentação
-			p  {{dados.SLP_DATA_APRESENTACAO}}
-			h4 Última Ação
-			p  {{dados.SLP_DATA_ATUALIZACAO}}
-			.well.well-sm
-				h4 Status
-				.well.well-sm
+			.form-horizontal
+						.form-group
+							.col-sm-3 Autor(es): 
+							.col-sm-9 
+								div(ng-repeat="autor in dados.SLP_AUTORES")
+									strong {{autor.SLPa_NOME_FANTASIA}}
+			.form-horizontal
+						.form-group
+							.col-sm-3 Ementa:
+							.col-sm-9 
+								strong {{dados.SLP_EMENTA}}
+
+			.form-horizontal
+						.form-group
+							.col-sm-3 Data de Apresentação:
+							.col-sm-9 
+								strong {{dados.SLP_DATA_APRESENTACAO}}
+
+			.form-horizontal
+						.form-group
+							.col-sm-3 Última Ação:
+							.col-sm-9 
+								strong {{dados.SLP_DATA_ATUALIZACAO}}
+
+		.col-sm-12.col-md-6.well
+			.page-header
+				h3 Status Geral
+			div(ng-if="dados.SLP_STATUS.CD.FASE != -1")
+				.page-header
 					h4 Câmara dos Deputados
-					p  {{dados.SLP_STATUS.CD.FASE}}
-					h4 Órgão Responsável
-					p  {{dados.SLP_STATUS.CD.ORG_DESC}}
-					h4 Data
-					p  {{dados.SLP_STATUS.CD.DATA}}
-					h4 Status
-					p  {{dados.SLP_STATUS.CD.DESC}}
-				.well.well-sm(ng-if="dados.SLP_STATUS.SF.FASE != -1")
-					h4 SENADO FEDERAL
-					p  {{dados.SLP_STATUS.SF.FASE}}
-					h4 Órgão Responsável
-					p  {{dados.SLP_STATUS.SF.ORG_DESC}}
-					h4 Data
-					p  {{dados.SLP_STATUS.SF.DATA}}
-					h4 Status
-					p  {{dados.SLP_STATUS.SF.DESC}}
+				
+				.form-horizontal
+						.form-group
+							.col-sm-4 Fase
+							.col-sm-8 
+								strong {{dados.SLP_STATUS.CD.FASE}}
+				.form-horizontal
+						.form-group
+							.col-sm-4 Órgão Responsável:
+							.col-sm-8 
+								strong {{dados.SLP_STATUS.CD.ORG_DESC}}
 
-div
-	//(ng-controller="tramitacaoController", data-ng-init="fetchData()")
-	//.row
-		.col-sm-12.col-md-6.text-center
-			p This project is an application skeleton. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects. 
-			br 
-			| The seed app doesn't do much and has most of the feature removed so you can add theme as per your needs just following the demo app examples.
-			br
-		.col-sm-12.col-md-6.text-center
-			p This project is an application skeleton. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects. 
-			br 
-			| The seed app doesn't do much and has most of the feature removed so you can add theme as per your needs just following the demo app examples.
-			br
+				.form-horizontal
+						.form-group
+							.col-sm-4 Data:
+							.col-sm-8 
+								strong {{dados.SLP_STATUS.CD.DATA}}
+
+				.form-horizontal
+						.form-group
+							.col-sm-4 Status:
+							.col-sm-8 
+								strong {{dados.SLP_STATUS.CD.DESC}}
+					
+			div(ng-if="dados.SLP_STATUS.SF.FASE != -1")
+				.page-header
+					h4 Senado Federal
+				
+				.form-horizontal
+						.form-group
+							.col-sm-4 Fase
+							.col-sm-8 
+								strong {{dados.SLP_STATUS.SF.FASE}}
+				.form-horizontal
+						.form-group
+							.col-sm-4 Órgão Responsável:
+							.col-sm-8 
+								strong {{dados.SLP_STATUS.SF.ORG_DESC}}
+
+				.form-horizontal
+						.form-group
+							.col-sm-4 Data:
+							.col-sm-8 
+								strong {{dados.SLP_STATUS.SF.DATA}}
+
+				.form-horizontal
+						.form-group
+							.col-sm-4 Status:
+							.col-sm-8 
+								strong {{dados.SLP_STATUS.SF.DESC}}
+
+div(ng-controller="tramitacaoController", data-ng-init="fetchData()")
+	.row
+		.col-sm-12.col-md-6.well
+			.page-header
+				h3 Tramitações
+			.well.well-sm(ng-repeat="tramitacao in dados")
+				.form-horizontal
+					.form-group
+						.col-sm-4 Data:
+						.col-sm-8 {{tramitacao.doc.SLT_DATA_TRAMITACAO}}
+					.form-group
+						.col-sm-4 Origem:
+						.col-sm-8 {{tramitacao.doc.SLT_ORGAO_ORIGEM_DESC}}
+					.form-group
+						.col-sm-4 Descrição:
+						.col-sm-8 {{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO}}

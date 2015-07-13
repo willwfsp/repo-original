@@ -3,6 +3,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
     var databaseToken = "admin@sigalei";
 
     var results = {};
+    var tramitacoes = [];
     var query = "";
     var proposicao = "";
     var bookmark = "";
@@ -19,7 +20,6 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
     return {
 
         fetchDataBills : function(termos, filters){
-            console.log(filters);
             var headers = {
                 'Access-Control-Allow-Origin' : '*',
                 'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
@@ -43,7 +43,6 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                     results = data;
                     query = termos || "";
                     if(filters && filters.bookmark != ""){
-                        console.log("I'm here");
                         $rootScope.$broadcast('search more results: completed')
                     }
                     else{
@@ -68,6 +67,21 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                 .error(function(status, error){
                     $log.log('error');
                 });
+        },
+
+        fetchDataTramitacoes : function(nome){
+            var req = request_stub;
+            req.url = databaseURL + 'proposicoes/' + nome +'/tramitacao?access_token='+ databaseToken;
+            req.method = 'GET';
+            $http.get(req.url)
+                .success(function(data){
+                    tramitacoes = data;
+                    $rootScope.$broadcast('fetch tramitacoes:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+
         },
 
         fetchDataCongresso : function(){
@@ -124,8 +138,13 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
         getResults : function(){
             return results;
         },
+
         getQuery : function(){
             return query;
+        },
+
+        getTramitacoes : function(){
+            return tramitacoes;
         }
     };
 }]);

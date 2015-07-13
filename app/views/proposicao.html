@@ -3,64 +3,166 @@
       <h2>{{dados.SLP_NOME}}</h2>
    </div>
    <div class="row">
-      <div class="col-sm-12 col-md-6 text-center well">
-         <h3>Informações Gerais</h3>
-         <h4>Tipo</h4>
-         <p>{{dados.SLP_TIPO_DESC}}</p>
-         <h4>Temas</h4>
-         <p ng-repeat="tema in dados.SLP_TEMA" class="small">{{tema}}</p>
-         <h4>Apreciação</h4>
-         <p>{{dados.SLP_APRECIACAO}}</p>
-         <h4>Autor(es)</h4>
-         <p ng-repeat="autor in dados.SLP_AUTORES">{{autor.SLPa_NOME_FANTASIA}}, {{autor.SLPa_PARTIDO}}-{{autor.SLPa_UF_REP}}</p>
-         <p>{{dados.SLP_APRECIACAO}}</p>
-         <h4>Regime de Tramitação</h4>
-         <p>{{dados.SLP_REGIME_TRAMITACAO}}</p>
-         <h4>Ementa</h4>
-         <p>{{dados.SLP_EMENTA}}</p>
-      </div>
-      <div class="col-sm-12 col-md-6 text-center well">
-         <h3>Status Geral</h3>
-         <h4>Data de Apresentação</h4>
-         <p>{{dados.SLP_DATA_APRESENTACAO}}</p>
-         <h4>Última Ação</h4>
-         <p>{{dados.SLP_DATA_ATUALIZACAO}}</p>
-         <div class="well well-sm">
-            <h4>Status</h4>
-            <div class="well well-sm">
-               <h4>Câmara dos Deputados</h4>
-               <p>{{dados.SLP_STATUS.CD.FASE}}</p>
-               <h4>Órgão Responsável</h4>
-               <p>{{dados.SLP_STATUS.CD.ORG_DESC}}</p>
-               <h4>Data</h4>
-               <p>{{dados.SLP_STATUS.CD.DATA}}</p>
-               <h4>Status</h4>
-               <p>{{dados.SLP_STATUS.CD.DESC}}</p>
+      <div class="col-sm-12 col-md-6 well">
+         <div class="page-header">
+            <h3>Informações Gerais</h3>
+         </div>
+         <div class="form-horizontal">
+            <div class="form-group">
+               <div class="col-sm-3">Tipo:</div>
+               <div class="col-sm-9">
+                  <strong>{{dados.SLP_STATUS.CD.FASE}}</strong>
+               </div>
             </div>
-            <div ng-if="dados.SLP_STATUS.SF.FASE != -1" class="well well-sm">
-               <h4>SENADO FEDERAL</h4>
-               <p>{{dados.SLP_STATUS.SF.FASE}}</p>
-               <h4>Órgão Responsável</h4>
-               <p>{{dados.SLP_STATUS.SF.ORG_DESC}}</p>
-               <h4>Data</h4>
-               <p>{{dados.SLP_STATUS.SF.DATA}}</p>
-               <h4>Status</h4>
-               <p>{{dados.SLP_STATUS.SF.DESC}}</p>
+         </div>
+         <div class="form-horizontal">
+            <div class="form-group">
+               <div class="col-sm-3">Temas:</div>
+               <div class="col-sm-9">
+                  <strong ng-repeat="tema in dados.SLP_TEMA">{{tema}}
+                     <br/>
+                  </strong>
+               </div>
+            </div>
+         </div>
+         <div class="form-horizontal">
+            <div class="form-group">
+               <div class="col-sm-3">Autor(es):</div>
+               <div class="col-sm-9">
+                  <div ng-repeat="autor in dados.SLP_AUTORES">
+                     <strong>{{autor.SLPa_NOME_FANTASIA}}</strong>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="form-horizontal">
+            <div class="form-group">
+               <div class="col-sm-3">Ementa:</div>
+               <div class="col-sm-9">
+                  <strong>{{dados.SLP_EMENTA}}</strong>
+               </div>
+            </div>
+         </div>
+         <div class="form-horizontal">
+            <div class="form-group">
+               <div class="col-sm-3">Data de Apresentação:</div>
+               <div class="col-sm-9">
+                  <strong>{{dados.SLP_DATA_APRESENTACAO}}</strong>
+               </div>
+            </div>
+         </div>
+         <div class="form-horizontal">
+            <div class="form-group">
+               <div class="col-sm-3">Última Ação:</div>
+               <div class="col-sm-9">
+                  <strong>{{dados.SLP_DATA_ATUALIZACAO}}</strong>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-sm-12 col-md-6 well">
+         <div class="page-header">
+            <h3>Status Geral</h3>
+         </div>
+         <div ng-if="dados.SLP_STATUS.CD.FASE != -1">
+            <div class="page-header">
+               <h4>Câmara dos Deputados</h4>
+            </div>
+            <div class="form-horizontal">
+               <div class="form-group">
+                  <div class="col-sm-4">Fase</div>
+                  <div class="col-sm-8">
+                     <strong>{{dados.SLP_STATUS.CD.FASE}}</strong>
+                  </div>
+               </div>
+            </div>
+            <div class="form-horizontal">
+               <div class="form-group">
+                  <div class="col-sm-4">Órgão Responsável:</div>
+                  <div class="col-sm-8">
+                     <strong>{{dados.SLP_STATUS.CD.ORG_DESC}}</strong>
+                  </div>
+               </div>
+            </div>
+            <div class="form-horizontal">
+               <div class="form-group">
+                  <div class="col-sm-4">Data:</div>
+                  <div class="col-sm-8">
+                     <strong>{{dados.SLP_STATUS.CD.DATA}}</strong>
+                  </div>
+               </div>
+            </div>
+            <div class="form-horizontal">
+               <div class="form-group">
+                  <div class="col-sm-4">Status:</div>
+                  <div class="col-sm-8">
+                     <strong>{{dados.SLP_STATUS.CD.DESC}}</strong>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div ng-if="dados.SLP_STATUS.SF.FASE != -1">
+            <div class="page-header">
+               <h4>Senado Federal</h4>
+            </div>
+            <div class="form-horizontal">
+               <div class="form-group">
+                  <div class="col-sm-4">Fase</div>
+                  <div class="col-sm-8">
+                     <strong>{{dados.SLP_STATUS.SF.FASE}}</strong>
+                  </div>
+               </div>
+            </div>
+            <div class="form-horizontal">
+               <div class="form-group">
+                  <div class="col-sm-4">Órgão Responsável:</div>
+                  <div class="col-sm-8">
+                     <strong>{{dados.SLP_STATUS.SF.ORG_DESC}}</strong>
+                  </div>
+               </div>
+            </div>
+            <div class="form-horizontal">
+               <div class="form-group">
+                  <div class="col-sm-4">Data:</div>
+                  <div class="col-sm-8">
+                     <strong>{{dados.SLP_STATUS.SF.DATA}}</strong>
+                  </div>
+               </div>
+            </div>
+            <div class="form-horizontal">
+               <div class="form-group">
+                  <div class="col-sm-4">Status:</div>
+                  <div class="col-sm-8">
+                     <strong>{{dados.SLP_STATUS.SF.DESC}}</strong>
+                  </div>
+               </div>
             </div>
          </div>
       </div>
    </div>
 </div>
-<div>
-   <!--(ng-controller="tramitacaoController", data-ng-init="fetchData()")-->
-   <!--.row.col-sm-12.col-md-6.text-center
-	p This project is an application skeleton. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects. 
-	br 
-	| The seed app doesn't do much and has most of the feature removed so you can add theme as per your needs just following the demo app examples.
-	br
-.col-sm-12.col-md-6.text-center
-	p This project is an application skeleton. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects. 
-	br 
-	| The seed app doesn't do much and has most of the feature removed so you can add theme as per your needs just following the demo app examples.
-	br-->
+<div ng-controller="tramitacaoController" data-ng-init="fetchData()">
+   <div class="row">
+      <div class="col-sm-12 col-md-6 well">
+         <div class="page-header">
+            <h3>Tramitações</h3>
+         </div>
+         <div ng-repeat="tramitacao in dados" class="well well-sm">
+            <div class="form-horizontal">
+               <div class="form-group">
+                  <div class="col-sm-4">Data:</div>
+                  <div class="col-sm-8">{{tramitacao.doc.SLT_DATA_TRAMITACAO}}</div>
+               </div>
+               <div class="form-group">
+                  <div class="col-sm-4">Origem:</div>
+                  <div class="col-sm-8">{{tramitacao.doc.SLT_ORGAO_ORIGEM_DESC}}</div>
+               </div>
+               <div class="form-group">
+                  <div class="col-sm-4">Descrição:</div>
+                  <div class="col-sm-8">{{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO}}</div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>

@@ -1124,6 +1124,157 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
     ;
 
 }]);
+myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
+    var databaseURL = 'http://sigalei-api.mybluemix.net/v1/';
+    var databaseToken = "admin@sigalei";
+
+    var results = {};
+    var tramitacoes = [];
+    var query = "";
+    var proposicao = "";
+    var bookmark = "";
+    var request_stub = {
+        dataType: "json",
+        headers: {
+            'Access-Control-Allow-Origin' : '*',
+            'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }           
+    };
+
+    return {
+
+        fetchDataBills : function(termos, filters){
+            var headers = {
+                'Access-Control-Allow-Origin' : '*',
+                'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            };
+
+            for(filter in filters){
+                headers[filter] = filters[filter];
+            };
+
+            url = databaseURL + 'proposicoes?';
+
+            if(termos){
+                url += 'q=' + termos + '&';
+            };
+
+            url += 'access_token=' + databaseToken;
+            $http.post(url, headers)
+                .success(function(data){
+                    results = data;
+                    query = termos || "";
+                    if(filters && filters.bookmark != ""){
+                        $rootScope.$broadcast('search more results: completed')
+                    }
+                    else{
+                        $rootScope.$broadcast('search:completed');
+                    }
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+
+        fetch_data_proposicao : function(nome){
+            var req = request_stub;
+            req.url = databaseURL + 'proposicoes/' + nome +'?access_token='+ databaseToken;
+            req.method = 'GET';
+            console.log(req.url);
+            $http.get(req.url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+
+        fetchDataTramitacoes : function(nome){
+            var req = request_stub;
+            req.url = databaseURL + 'proposicoes/' + nome +'/tramitacao?access_token='+ databaseToken;
+            req.method = 'GET';
+            $http.get(req.url)
+                .success(function(data){
+                    tramitacoes = data;
+                    $rootScope.$broadcast('fetch tramitacoes:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+
+        },
+
+        fetchDataCongresso : function(){
+            var req = request_stub;
+            var congresso_key = 'CN';
+            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
+            req.method = 'GET';
+            console.log(req);
+
+            $http(req)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+
+        fetch_data_camara : function(){
+            var req = request_stub;
+            var congresso_key = 'eed505570f32a32977ada84991c743c6';
+            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
+            req.method = 'GET';
+            console.log(req);
+
+            $http(req)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+
+        fetch_data_senado : function(){
+            var req = request_stub;
+            var congresso_key = 'eed505570f32a32977ada84991c7295c';
+            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
+            req.method = 'GET';
+            console.log(req);
+
+            $http(req)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+
+        getResults : function(){
+            return results;
+        },
+
+        getQuery : function(){
+            return query;
+        },
+
+        getTramitacoes : function(){
+            return tramitacoes;
+        }
+    };
+}]);
+
 myApp.controller('congressoDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
 	$scope.dados = {};
     $scope.fetchData = function(){
@@ -1160,12 +1311,40 @@ myApp.controller('proposicaoController', ['$location', '$scope','$state', '$log'
         console.log($location.search().p);
         DataFetcher.fetch_data_proposicao($location.search().p);
     };
+    $scope.toDate = function(dateStr){
+
+        var date = dateStr.substr(0, 4) + '-' + dateStr.substr(4, 2) + '-' + dateStr.substr(6, 2) + ' 00:00:00';
+
+        var t = date.split(/[- :]/);
+
+        // Apply each element to the Date function
+        var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+        var actiondate = new Date(d);
+
+        return actiondate;
+
+    };
     $scope.$on('fetch:completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
         $scope.dados = DataFetcher.getResults();
     });
 
 }]);
+
+myApp.controller('tramitacaoController', ['$location', '$scope','$state', '$log',  '$http', 'DataFetcher', 
+    function($location,$scope, $state, $log, $http, DataFetcher){
+    $scope.dados = [];
+    $scope.fetchData = function(){
+        DataFetcher.fetchDataTramitacoes($location.search().p);
+    };
+
+    $scope.$on('fetch tramitacoes:completed', function(event) {
+        // you could inspect the data to see if what you care about changed, or just update your own scope
+        $scope.dados = DataFetcher.getTramitacoes();
+        $log.log($scope.dados);
+    });
+}]);
+
 
 myApp.controller('searchBar', ['$location', '$scope','$state',  'DataFetcher', function($location, $scope, $state, DataFetcher){
 
@@ -1297,136 +1476,4 @@ myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'Dat
         console.log($scope.bills.length);
     });
 
-}]);
-
-myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
-    var databaseURL = 'http://sigalei-api.mybluemix.net/v1/';
-    var databaseToken = "admin@sigalei";
-
-    var results = {};
-    var query = "";
-    var proposicao = "";
-    var bookmark = "";
-    var request_stub = {
-        dataType: "json",
-        headers: {
-            'Access-Control-Allow-Origin' : '*',
-            'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }           
-    };
-
-    return {
-
-        fetchDataBills : function(termos, filters){
-            console.log(filters);
-            var headers = {
-                'Access-Control-Allow-Origin' : '*',
-                'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            };
-
-            for(filter in filters){
-                headers[filter] = filters[filter];
-            };
-
-            url = databaseURL + 'proposicoes?';
-
-            if(termos){
-                url += 'q=' + termos + '&';
-            };
-
-            url += 'access_token=' + databaseToken;
-            $http.post(url, headers)
-                .success(function(data){
-                    results = data;
-                    query = termos || "";
-                    if(filters && filters.bookmark != ""){
-                        console.log("I'm here");
-                        $rootScope.$broadcast('search more results: completed')
-                    }
-                    else{
-                        $rootScope.$broadcast('search:completed');
-                    }
-                })
-                .error(function(status, error){
-                    $log.log('error');
-                });
-        },
-
-        fetch_data_proposicao : function(nome){
-            var req = request_stub;
-            req.url = databaseURL + 'proposicoes/' + nome +'?access_token='+ databaseToken;
-            req.method = 'GET';
-            console.log(req.url);
-            $http.get(req.url)
-                .success(function(data){
-                    results = data;
-                    $rootScope.$broadcast('fetch:completed');
-                })
-                .error(function(status, error){
-                    $log.log('error');
-                });
-        },
-
-        fetchDataCongresso : function(){
-            var req = request_stub;
-            var congresso_key = 'CN';
-            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
-            req.method = 'GET';
-            console.log(req);
-
-            $http(req)
-                .success(function(data){
-                    results = data;
-                    $rootScope.$broadcast('fetch:completed');
-                })
-                .error(function(status, error){
-                    $log.log('error');
-                });
-        },
-
-        fetch_data_camara : function(){
-            var req = request_stub;
-            var congresso_key = 'eed505570f32a32977ada84991c743c6';
-            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
-            req.method = 'GET';
-            console.log(req);
-
-            $http(req)
-                .success(function(data){
-                    results = data;
-                    $rootScope.$broadcast('fetch:completed');
-                })
-                .error(function(status, error){
-                    $log.log('error');
-                });
-        },
-
-        fetch_data_senado : function(){
-            var req = request_stub;
-            var congresso_key = 'eed505570f32a32977ada84991c7295c';
-            req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
-            req.method = 'GET';
-            console.log(req);
-
-            $http(req)
-                .success(function(data){
-                    results = data;
-                    $rootScope.$broadcast('fetch:completed');
-                })
-                .error(function(status, error){
-                    $log.log('error');
-                });
-        },
-
-        getResults : function(){
-            return results;
-        },
-        getQuery : function(){
-            return query;
-        }
-    };
 }]);
