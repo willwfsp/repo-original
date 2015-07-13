@@ -36,7 +36,7 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 					p  {{dados.SLP_STATUS.CD.DATA}}
 					h4 Status
 					p  {{dados.SLP_STATUS.CD.DESC}}
-				.well.well-sm(ng-if="dados.SLP_STATUS.SF.FASE > 0")
+				.well.well-sm(ng-if="dados.SLP_STATUS.SF.FASE != -1")
 					h4 SENADO FEDERAL
 					p  {{dados.SLP_STATUS.SF.FASE}}
 					h4 Órgão Responsável

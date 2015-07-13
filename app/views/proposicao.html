@@ -37,7 +37,7 @@
                <h4>Status</h4>
                <p>{{dados.SLP_STATUS.CD.DESC}}</p>
             </div>
-            <div ng-if="dados.SLP_STATUS.SF.FASE &gt; 0" class="well well-sm">
+            <div ng-if="dados.SLP_STATUS.SF.FASE != -1" class="well well-sm">
                <h4>SENADO FEDERAL</h4>
                <p>{{dados.SLP_STATUS.SF.FASE}}</p>
                <h4>Órgão Responsável</h4>

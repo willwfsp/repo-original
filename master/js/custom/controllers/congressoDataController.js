@@ -14,7 +14,7 @@ myApp.controller('camaraDataController', ['$scope','$rootScope', '$log', '$http'
         DataFetcher.fetch_data_camara();
     };
     $scope.$on('fetch:completed', function(event) {
-        $scope.dados = DataFetcher.get_results();
+        $scope.dados = DataFetcher.getResults();
     });
 }]);
 
@@ -24,6 +24,6 @@ myApp.controller('senadoDataController', ['$scope','$rootScope', '$log', '$http'
         DataFetcher.fetch_data_senado();
     };
     $scope.$on('fetch:completed', function(event) {
-        $scope.dados = DataFetcher.get_results();
+        $scope.dados = DataFetcher.getResults();
     });
 }]);
