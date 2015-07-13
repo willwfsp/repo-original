@@ -1127,10 +1127,10 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
 myApp.controller('congressoDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
 	$scope.dados = {};
     $scope.fetchData = function(){
-        DataFetcher.fetch_data_congresso();
-    }
+        DataFetcher.fetchDataCongresso();
+    };
     $scope.$on('fetch:completed', function(event) {
-        $scope.dados = DataFetcher.get_results();
+        $scope.dados = DataFetcher.getResults();
     });
 }]);
 
@@ -1138,7 +1138,7 @@ myApp.controller('camaraDataController', ['$scope','$rootScope', '$log', '$http'
     $scope.dados = {};
     $scope.fetchData = function(){
         DataFetcher.fetch_data_camara();
-    }
+    };
     $scope.$on('fetch:completed', function(event) {
         $scope.dados = DataFetcher.get_results();
     });
@@ -1148,7 +1148,7 @@ myApp.controller('senadoDataController', ['$scope','$rootScope', '$log', '$http'
     $scope.dados = {};
     $scope.fetchData = function(){
         DataFetcher.fetch_data_senado();
-    }
+    };
     $scope.$on('fetch:completed', function(event) {
         $scope.dados = DataFetcher.get_results();
     });
@@ -1384,9 +1384,9 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                 });
         },
 
-        fetch_data_congresso : function(){
+        fetchDataCongresso : function(){
             var req = request_stub;
-            var congresso_key = 'eed505570f32a32977ada84991c73457';
+            var congresso_key = 'CN';
             req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
             req.method = 'GET';
             console.log(req);

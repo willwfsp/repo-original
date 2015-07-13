@@ -1,12 +1,13 @@
-<div>
-   <h3>Resultado da busca
-      <small>Busque e filtre os resultados</small>
-   </h3>
-   <div ng-controller="searchResults" data-ng-init="init()" class="row">
+<div ng-controller="searchResults" data-ng-init="init()">
+   <div class="row">
       <div class="col-lg-9">
          <!-- START panel-->
          <div class="panel panel-default">
-            <div ng-if="!fetching" class="panel-heading">{{total_results}} projetos de lei encontrados
+            <div class="panel-heading">
+               <h3>Resultado da busca
+                  <small>Busque e filtre os resultados</small>
+               </h3>
+               <small ng-if="!fetching">{{total_results}} projetos de lei encontrados</small>
                <paneltool tool-refresh="traditional"></paneltool>
             </div>
             <!-- START table-responsive-->
@@ -43,64 +44,70 @@
          <!-- END panel-->
       </div>
       <div class="col-lg-3">
-         <h3 class="m0 pb-lg">Filtros</h3>
-         <!--filtro por casas legislativas-->
-         <div class="form-group mb-xl">
-            <label class="control-label mb">Casas Legislativas</label>
-            <br/>
-            <label class="checkbox-inline c-checkbox">
-               <input type="checkbox" ng-model="checkedHouses.CN" ng-click="changeFilterHouses()" />Congresso Nacional
-               <span class="pull-left fa fa-check"></span>
-            </label>
-            <br/>
-            <label class="checkbox-inline c-checkbox">
-               <input type="checkbox" ng-model="checkedHouses.CD" ng-click="changeFilterHouses()" />Camara dos Deputados
-               <span class="pull-left fa fa-check"></span>
-            </label>
-            <br/>
-            <label class="checkbox-inline c-checkbox">
-               <input type="checkbox" ng-model="checkedHouses.SF" ng-click="changeFilterHouses()" />Senado Federal
-               <span class="pull-left fa fa-check"></span>
-            </label>
-            <br/>
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3>Filtros</h3>
+            </div>
+            <div class="panel-body">
+               <!--filtro por casas legislativas-->
+               <div class="form-group mb-xl">
+                  <label class="control-label mb">Casas Legislativas</label>
+                  <br/>
+                  <label class="checkbox-inline c-checkbox">
+                     <input type="checkbox" ng-model="checkedHouses.CN" ng-click="changeFilterHouses()" />Congresso Nacional
+                     <span class="pull-left fa fa-check"></span>
+                  </label>
+                  <br/>
+                  <label class="checkbox-inline c-checkbox">
+                     <input type="checkbox" ng-model="checkedHouses.CD" ng-click="changeFilterHouses()" />Camara dos Deputados
+                     <span class="pull-left fa fa-check"></span>
+                  </label>
+                  <br/>
+                  <label class="checkbox-inline c-checkbox">
+                     <input type="checkbox" ng-model="checkedHouses.SF" ng-click="changeFilterHouses()" />Senado Federal
+                     <span class="pull-left fa fa-check"></span>
+                  </label>
+                  <br/>
+               </div>
+               <div class="form-group mb-xl">
+                  <label class="control-label mb">Tipo de Proposição</label>
+                  <br/>
+                  <label class="checkbox-inline c-checkbox">
+                     <input type="checkbox" ng-model="billTypes.PL" ng-click="changeFilterBillTypes()" />Projeto de Lei Ordinário
+                     <span class="pull-left fa fa-check"></span>
+                  </label>
+                  <br/>
+                  <label class="checkbox-inline c-checkbox">
+                     <input type="checkbox" ng-model="billTypes.PLComp" ng-click="changeFilterBillTypes()" />Projeto de Lei Complementar
+                     <span class="pull-left fa fa-check"></span>
+                  </label>
+                  <br/>
+                  <label class="checkbox-inline c-checkbox">
+                     <input type="checkbox" ng-model="billTypes.MPV" ng-click="changeFilterBillTypes()" />Medida Provisoria
+                     <span class="pull-left fa fa-check"></span>
+                  </label>
+                  <br/>
+                  <label class="checkbox-inline c-checkbox">
+                     <input type="checkbox" ng-model="billTypes.PLN" ng-click="changeFilterBillTypes()" />Projeto de Lei Nacional
+                     <span class="pull-left fa fa-check"></span>
+                  </label>
+                  <br/>
+                  <label class="checkbox-inline c-checkbox">
+                     <input type="checkbox" ng-model="billTypes.PEC" ng-click="changeFilterBillTypes()" />Emenda Constitucional
+                     <span class="pull-left fa fa-check"></span>
+                  </label>
+                  <br/>
+               </div>
+               <div class="form-group mb-xl">
+                  <label class="control-label mb">Ano</label>
+                  <br/>
+                  <p class="input-group">
+                     <input type="number" min="1980" max="2015" ng-model="year" ng-blur="changeFilterYear()" class="form-control" />
+                  </p>
+               </div>
+               <button ng-click="cleanFilters()" class="btn btn-md btn-default">Limpar Filtros</button>
+            </div>
          </div>
-         <div class="form-group mb-xl">
-            <label class="control-label mb">Tipo de PL</label>
-            <br/>
-            <label class="checkbox-inline c-checkbox">
-               <input type="checkbox" ng-model="billTypes.PL" ng-click="changeFilterBillTypes()" />Projeto de Lei Ordinário
-               <span class="pull-left fa fa-check"></span>
-            </label>
-            <br/>
-            <label class="checkbox-inline c-checkbox">
-               <input type="checkbox" ng-model="billTypes.PLComp" ng-click="changeFilterBillTypes()" />Projeto de Lei Complementar
-               <span class="pull-left fa fa-check"></span>
-            </label>
-            <br/>
-            <label class="checkbox-inline c-checkbox">
-               <input type="checkbox" ng-model="billTypes.MPV" ng-click="changeFilterBillTypes()" />Medida Provisoria
-               <span class="pull-left fa fa-check"></span>
-            </label>
-            <br/>
-            <label class="checkbox-inline c-checkbox">
-               <input type="checkbox" ng-model="billTypes.PLN" ng-click="changeFilterBillTypes()" />Projeto de Lei Nacional
-               <span class="pull-left fa fa-check"></span>
-            </label>
-            <br/>
-            <label class="checkbox-inline c-checkbox">
-               <input type="checkbox" ng-model="billTypes.PEC" ng-click="changeFilterBillTypes()" />Proposta de Emenda Constitucional
-               <span class="pull-left fa fa-check"></span>
-            </label>
-            <br/>
-         </div>
-         <div class="form-group mb-xl">
-            <label class="control-label mb">Ano</label>
-            <br/>
-            <p class="input-group">
-               <input type="number" min="1980" max="2015" ng-model="year" ng-blur="changeFilterYear()" class="form-control" />
-            </p>
-         </div>
-         <button ng-click="cleanFilters()" class="btn btn-md btn-default">Limpar Filtros</button>
       </div>
    </div>
 </div>

@@ -70,9 +70,9 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                 });
         },
 
-        fetch_data_congresso : function(){
+        fetchDataCongresso : function(){
             var req = request_stub;
-            var congresso_key = 'eed505570f32a32977ada84991c73457';
+            var congresso_key = 'CN';
             req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
             req.method = 'GET';
             console.log(req);
