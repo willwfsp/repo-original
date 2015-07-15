@@ -1,15 +1,15 @@
 div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 	.page-header
-		h2 {{dados.SLP_NOME}}
+		h2 {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
 	.row
 		.col-sm-12.col-md-6.well
 			.page-header
 				h3 Informações Gerais
 			.form-horizontal
 						.form-group
-							.col-sm-3 Tipo: 
+							.col-sm-3 Regime: 
 							.col-sm-9 
-								strong {{dados.SLP_STATUS.CD.FASE}}
+								strong {{dados.SLP_REGIME_TRAMITACAO}}
 
 			.form-horizontal
 						.form-group
@@ -34,13 +34,20 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 						.form-group
 							.col-sm-3 Data de Apresentação:
 							.col-sm-9 
-								strong {{dados.SLP_DATA_APRESENTACAO}}
+								strong {{dados.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}
 
 			.form-horizontal
 						.form-group
 							.col-sm-3 Última Ação:
 							.col-sm-9 
-								strong {{dados.SLP_DATA_ATUALIZACAO}}
+								strong {{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}
+
+			//	.form-horizontal
+						.form-group
+							.col-sm-4 Documentos:
+							.col-sm-8(overflow:"scroll")
+								div(ng-repeat="doc in dados.SLP_DOCUMENTOS",)
+									img(src="img/dummy.png", href="doc.SLD_LINK")
 
 		.col-sm-12.col-md-6.well
 			.page-header
@@ -64,7 +71,7 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 						.form-group
 							.col-sm-4 Data:
 							.col-sm-8 
-								strong {{dados.SLP_STATUS.CD.DATA}}
+								strong {{dados.SLP_STATUS.CD.DATA | date:'dd/MM/yyyy'}}
 
 				.form-horizontal
 						.form-group
@@ -91,7 +98,7 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 						.form-group
 							.col-sm-4 Data:
 							.col-sm-8 
-								strong {{dados.SLP_STATUS.SF.DATA}}
+								strong {{dados.SLP_STATUS.SF.DATA | date:'dd/MM/yyyy'}}
 
 				.form-horizontal
 						.form-group
@@ -100,7 +107,6 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 								strong {{dados.SLP_STATUS.SF.DESC}}
 
 div(ng-controller="tramitacaoController", data-ng-init="fetchData()")
-	.row
 		.col-sm-12.col-md-6.well
 			.page-header
 				h3 Tramitações
@@ -108,10 +114,27 @@ div(ng-controller="tramitacaoController", data-ng-init="fetchData()")
 				.form-horizontal
 					.form-group
 						.col-sm-4 Data:
-						.col-sm-8 {{tramitacao.doc.SLT_DATA_TRAMITACAO}}
+						.col-sm-8 {{tramitacao.doc.SLT_DATA_TRAMITACAO | date:'dd/MM/yyyy'}}
 					.form-group
 						.col-sm-4 Origem:
 						.col-sm-8 {{tramitacao.doc.SLT_ORGAO_ORIGEM_DESC}}
 					.form-group
 						.col-sm-4 Descrição:
 						.col-sm-8 {{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO}}
+
+div(ng-controller="pollController", data-ng-init="fetchData()")
+		.col-sm-12.col-md-6.well
+			.page-header
+				h3 Votações
+			p(ng-if="dados.length == 0") Não há votações para este projeto de lei.
+			.well.well-sm(ng-repeat="poll in dados")
+				.form-horizontal
+					.form-group
+						.col-sm-4 Data:
+						.col-sm-8 {{formattedDate(poll.SLV_DATA_HORA) | date:"dd/MM/yyyy 'às' h:mma"}}
+					.form-group
+						.col-sm-4 Origem:
+						.col-sm-8 {{poll.SLV_OBJETO_VOTACAO}}
+					.form-group
+						.col-sm-4 Resultado:
+						.col-sm-8 {{poll.SLV_RESULTADO}}

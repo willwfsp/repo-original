@@ -4,6 +4,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
 
     var results = {};
     var tramitacoes = [];
+    var polls = [];
     var query = "";
     var proposicao = "";
     var bookmark = "";
@@ -53,7 +54,32 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                     $log.log('error');
                 });
         },
-
+        
+        fetchDataRepresentative : function(IdRepresentative){
+            var req = request_stub;
+            req.url = databaseURL + 'parlamentares/' + IdRepresentative +'?access_token='+ databaseToken;
+            req.method = 'GET';
+            $http.get(req.url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+        },
+        fetchDataRepresentativePhoto : function(IdRepresentative){
+            var url = databaseURL + 'parlamentares/' + IdRepresentative +'/photo?access_token='+ databaseToken;
+            var promise = $http.get(req.url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+            return 
+        },
         fetch_data_proposicao : function(nome){
             var req = request_stub;
             req.url = databaseURL + 'proposicoes/' + nome +'?access_token='+ databaseToken;
@@ -84,6 +110,18 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
 
         },
 
+        fetchDataPolls : function(name){
+            var url = databaseURL + 'proposicoes/' + name +'/votacao?access_token='+ databaseToken;
+            $http.get(url)
+                .success(function(data){
+                    polls = data;
+                    $rootScope.$broadcast('fetch polls:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error' + error);
+                });
+        },
+
         fetchDataCongresso : function(){
             var req = request_stub;
             var congresso_key = 'CN';
@@ -106,7 +144,6 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
             var congresso_key = 'eed505570f32a32977ada84991c743c6';
             req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
             req.method = 'GET';
-            console.log(req);
 
             $http(req)
                 .success(function(data){
@@ -123,7 +160,6 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
             var congresso_key = 'eed505570f32a32977ada84991c7295c';
             req.url = databaseURL + 'assembleias/' + congresso_key+ '?access_token=' + databaseToken;
             req.method = 'GET';
-            console.log(req);
 
             $http(req)
                 .success(function(data){
@@ -145,6 +181,10 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
 
         getTramitacoes : function(){
             return tramitacoes;
+        },
+
+        getPolls : function(){
+            return polls;
         }
     };
 }]);

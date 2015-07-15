@@ -1,6 +1,6 @@
 <div ng-controller="proposicaoController" data-ng-init="fetchData()">
    <div class="page-header">
-      <h2>{{dados.SLP_NOME}}</h2>
+      <h2>{{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}</h2>
    </div>
    <div class="row">
       <div class="col-sm-12 col-md-6 well">
@@ -9,9 +9,9 @@
          </div>
          <div class="form-horizontal">
             <div class="form-group">
-               <div class="col-sm-3">Tipo:</div>
+               <div class="col-sm-3">Regime:</div>
                <div class="col-sm-9">
-                  <strong>{{dados.SLP_STATUS.CD.FASE}}</strong>
+                  <strong>{{dados.SLP_REGIME_TRAMITACAO}}</strong>
                </div>
             </div>
          </div>
@@ -47,7 +47,7 @@
             <div class="form-group">
                <div class="col-sm-3">Data de Apresentação:</div>
                <div class="col-sm-9">
-                  <strong>{{dados.SLP_DATA_APRESENTACAO}}</strong>
+                  <strong>{{dados.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}</strong>
                </div>
             </div>
          </div>
@@ -55,10 +55,16 @@
             <div class="form-group">
                <div class="col-sm-3">Última Ação:</div>
                <div class="col-sm-9">
-                  <strong>{{dados.SLP_DATA_ATUALIZACAO}}</strong>
+                  <strong>{{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}</strong>
                </div>
             </div>
          </div>
+         <!--	.form-horizontal.form-group
+	.col-sm-4 Documentos:
+	.col-sm-8(overflow:"scroll")
+		div(ng-repeat="doc in dados.SLP_DOCUMENTOS",)
+			img(src="img/dummy.png", href="doc.SLD_LINK")
+-->
       </div>
       <div class="col-sm-12 col-md-6 well">
          <div class="page-header">
@@ -88,7 +94,7 @@
                <div class="form-group">
                   <div class="col-sm-4">Data:</div>
                   <div class="col-sm-8">
-                     <strong>{{dados.SLP_STATUS.CD.DATA}}</strong>
+                     <strong>{{dados.SLP_STATUS.CD.DATA | date:'dd/MM/yyyy'}}</strong>
                   </div>
                </div>
             </div>
@@ -125,7 +131,7 @@
                <div class="form-group">
                   <div class="col-sm-4">Data:</div>
                   <div class="col-sm-8">
-                     <strong>{{dados.SLP_STATUS.SF.DATA}}</strong>
+                     <strong>{{dados.SLP_STATUS.SF.DATA | date:'dd/MM/yyyy'}}</strong>
                   </div>
                </div>
             </div>
@@ -142,25 +148,47 @@
    </div>
 </div>
 <div ng-controller="tramitacaoController" data-ng-init="fetchData()">
-   <div class="row">
-      <div class="col-sm-12 col-md-6 well">
-         <div class="page-header">
-            <h3>Tramitações</h3>
+   <div class="col-sm-12 col-md-6 well">
+      <div class="page-header">
+         <h3>Tramitações</h3>
+      </div>
+      <div ng-repeat="tramitacao in dados" class="well well-sm">
+         <div class="form-horizontal">
+            <div class="form-group">
+               <div class="col-sm-4">Data:</div>
+               <div class="col-sm-8">{{tramitacao.doc.SLT_DATA_TRAMITACAO | date:'dd/MM/yyyy'}}</div>
+            </div>
+            <div class="form-group">
+               <div class="col-sm-4">Origem:</div>
+               <div class="col-sm-8">{{tramitacao.doc.SLT_ORGAO_ORIGEM_DESC}}</div>
+            </div>
+            <div class="form-group">
+               <div class="col-sm-4">Descrição:</div>
+               <div class="col-sm-8">{{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO}}</div>
+            </div>
          </div>
-         <div ng-repeat="tramitacao in dados" class="well well-sm">
-            <div class="form-horizontal">
-               <div class="form-group">
-                  <div class="col-sm-4">Data:</div>
-                  <div class="col-sm-8">{{tramitacao.doc.SLT_DATA_TRAMITACAO}}</div>
-               </div>
-               <div class="form-group">
-                  <div class="col-sm-4">Origem:</div>
-                  <div class="col-sm-8">{{tramitacao.doc.SLT_ORGAO_ORIGEM_DESC}}</div>
-               </div>
-               <div class="form-group">
-                  <div class="col-sm-4">Descrição:</div>
-                  <div class="col-sm-8">{{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO}}</div>
-               </div>
+      </div>
+   </div>
+</div>
+<div ng-controller="pollController" data-ng-init="fetchData()">
+   <div class="col-sm-12 col-md-6 well">
+      <div class="page-header">
+         <h3>Votações</h3>
+      </div>
+      <p ng-if="dados.length == 0">Não há votações para este projeto de lei.</p>
+      <div ng-repeat="poll in dados" class="well well-sm">
+         <div class="form-horizontal">
+            <div class="form-group">
+               <div class="col-sm-4">Data:</div>
+               <div class="col-sm-8">{{formattedDate(poll.SLV_DATA_HORA) | date:"dd/MM/yyyy 'às' h:mma"}}</div>
+            </div>
+            <div class="form-group">
+               <div class="col-sm-4">Origem:</div>
+               <div class="col-sm-8">{{poll.SLV_OBJETO_VOTACAO}}</div>
+            </div>
+            <div class="form-group">
+               <div class="col-sm-4">Resultado:</div>
+               <div class="col-sm-8">{{poll.SLV_RESULTADO}}</div>
             </div>
          </div>
       </div>

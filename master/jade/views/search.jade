@@ -21,9 +21,11 @@ div(ng-controller="searchResults" data-ng-init="init()")
                       .media-box-body
                         a(ng-href="#/app/proposicao?p={{bill.fields.SLP_NOME}}")
                           h4.media-box-heading {{bill.fields.SLP_NOME}}
-                        small.text-muted(ng-if="bill.fields.SLR_NOME != undefined") Outros Nomes: {{bill.fields.SLR_NOME}}
+                        a(ng-href="#/app/proposicao?p={{bill.fields.SLR_NOME}}")  
+                          small.text-muted(ng-if="bill.fields.SLR_NOME != undefined") Outros Nomes: {{bill.fields.SLR_NOME}}
                         br(ng-if="bill.fields.SLR_NOME != undefined")
-                        small.text-muted Autor: {{bill.fields.SLPa_NOME_FANTASIA}}
+                        a(ng-href="#/app/parlamentar?id={{bill.fields.id_Autor}}")
+                          small.text-muted Autor: {{bill.fields.SLPa_NOME_FANTASIA}}
                         br
                         small.text-muted Tema: {{bill.fields.SLP_TEMA}}
                         p {{bill.fields.SLP_EMENTA}}

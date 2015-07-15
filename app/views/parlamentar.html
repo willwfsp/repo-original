@@ -1,0 +1,50 @@
+<div ng-controller="RepresentativeDataController" data-ng-init="fetchData()" class="well media">
+   <div class="media-left">
+      <img ng-src="http://sigalei-api.mybluemix.net/v1/parlamentares/{{dados._id}}/foto?access_token=admin%40sigalei" />
+   </div>
+   <div class="media-body">
+      <div class="media-heading">
+         <h4>{{dados.SLPa_NOME_FANTASIA}}</h4>
+      </div>
+      <div class="form-horizontal">
+         <div class="form-group">
+            <div class="col-sm-3">Nome:</div>
+            <div class="col-sm-9">
+               <strong>{{dados.SLPa_NOME_CIVIL}}</strong>
+            </div>
+         </div>
+      </div>
+      <div class="form-horizontal">
+         <div class="form-group">
+            <div class="col-sm-3">Partido:</div>
+            <div class="col-sm-9">
+               <strong>{{dados.SLPa_PARTIDO}} - {{dados.SLPa_PARTIDO_DESC}}</strong>
+            </div>
+         </div>
+      </div>
+      <div class="form-horizontal">
+         <div class="form-group">
+            <div class="col-sm-3">Data de Nascimento:</div>
+            <div class="col-sm-9">
+               <strong>{{dados.SLPa_DATA_NASC | date:"dd/MM/yyyy"}}</strong>
+            </div>
+         </div>
+      </div>
+      <div class="form-horizontal">
+         <div class="form-group">
+            <div class="col-sm-3">UF:</div>
+            <div class="col-sm-9">
+               <strong>{{dados.SLPa_UF_REP}}</strong>
+            </div>
+         </div>
+      </div>
+      <div class="form-horizontal">
+         <div class="form-group">
+            <div class="col-sm-3">E-mail:</div>
+            <div class="col-sm-9">
+               <strong>{{dados.SLPa_EMAIL}}</strong>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

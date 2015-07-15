@@ -26,9 +26,13 @@
                                  <a ng-href="#/app/proposicao?p={{bill.fields.SLP_NOME}}">
                                     <h4 class="media-box-heading">{{bill.fields.SLP_NOME}}</h4>
                                  </a>
-                                 <small ng-if="bill.fields.SLR_NOME != undefined" class="text-muted">Outros Nomes: {{bill.fields.SLR_NOME}}</small>
+                                 <a ng-href="#/app/proposicao?p={{bill.fields.SLR_NOME}}">
+                                    <small ng-if="bill.fields.SLR_NOME != undefined" class="text-muted">Outros Nomes: {{bill.fields.SLR_NOME}}</small>
+                                 </a>
                                  <br ng-if="bill.fields.SLR_NOME != undefined" />
-                                 <small class="text-muted">Autor: {{bill.fields.SLPa_NOME_FANTASIA}}</small>
+                                 <a ng-href="#/app/parlamentar?id={{bill.fields.id_Autor}}">
+                                    <small class="text-muted">Autor: {{bill.fields.SLPa_NOME_FANTASIA}}</small>
+                                 </a>
                                  <br/>
                                  <small class="text-muted">Tema: {{bill.fields.SLP_TEMA}}</small>
                                  <p>{{bill.fields.SLP_EMENTA}}</p>

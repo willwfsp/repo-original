@@ -49,6 +49,17 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
         title: 'Visualizar Projeto de Lei',
         templateUrl: helper.basepath('proposicao.html')
     })
+    .state('app.parlamentar', {
+        url: '/parlamentar',
+        title: 'Visualizar dados de parlamentares',
+        templateUrl: helper.basepath('parlamentar.html')
+    })
     ;
 
+}]);
+
+myApp.filter('trusted', ['$sce', function ($sce) {
+    return function(url) {
+        return $sce.trustAsResourceUrl(url);
+    };
 }]);
