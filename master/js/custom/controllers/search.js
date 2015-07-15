@@ -4,12 +4,12 @@ myApp.controller('searchBar', ['$location', '$scope','$state',  'DataFetcher', f
     $scope.searchQ = function(){
 
         DataFetcher.fetchDataBills($scope.query);
-        $state.go('app.search');
+        $state.go('app.search', {q: $scope.query});
     };
 
 }]);
 
-myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'DataFetcher', function($location, $scope, $log, $state, DataFetcher) {
+myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log', '$state', 'DataFetcher', function($stateParams, $location, $scope, $log, $state, DataFetcher) {
     
     //filter variables
     $scope.checkedHouses = {
@@ -94,6 +94,7 @@ myApp.controller('searchResults', ['$location', '$scope', '$log', '$state', 'Dat
 
     $scope.init = function(){
         DataFetcher.fetchDataBills();
+        console.log($stateParams);
         $scope.fetching = true;
     };
 

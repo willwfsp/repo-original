@@ -25,11 +25,6 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'AppController',
         resolve: helper.resolveFor('modernizr', 'icons')
     })
-    .state('app.search', {
-        url: '/search',
-        title: 'Pesquisar',
-        templateUrl: helper.basepath('search.html')
-    })
     // 
     // CUSTOM RESOLVES
     //   Add your own resolves properties

@@ -42,12 +42,18 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 							.col-sm-9 
 								strong {{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}
 
-			//	.form-horizontal
-						.form-group
-							.col-sm-4 Documentos:
-							.col-sm-8(overflow:"scroll")
-								div(ng-repeat="doc in dados.SLP_DOCUMENTOS",)
-									img(src="img/dummy.png", href="doc.SLD_LINK")
+			.form-horizontal
+				.form-group
+					.col-sm-3 Documentos:
+					.col-sm-9(overflow="scroll")
+						.media(ng-repeat="doc in dados.SLP_DOCUMENTOS", display="inline-block")
+							.media-left
+								a(href="{{doc.SLD_LINK}}", target="_blank")
+									img.media-object(src="app/img/document.png" height="50px")
+							.media-body
+								h4.media-heading{{doc.SLD_NOME}}
+								p Data: {{doc.SLD_DATA | date:"dd/MM/yyyy"}}
+
 
 		.col-sm-12.col-md-6.well
 			.page-header

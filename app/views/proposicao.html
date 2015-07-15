@@ -59,12 +59,24 @@
                </div>
             </div>
          </div>
-         <!--	.form-horizontal.form-group
-	.col-sm-4 Documentos:
-	.col-sm-8(overflow:"scroll")
-		div(ng-repeat="doc in dados.SLP_DOCUMENTOS",)
-			img(src="img/dummy.png", href="doc.SLD_LINK")
--->
+         <div class="form-horizontal">
+            <div class="form-group">
+               <div class="col-sm-3">Documentos:</div>
+               <div overflow="scroll" class="col-sm-9">
+                  <div ng-repeat="doc in dados.SLP_DOCUMENTOS" display="inline-block" class="media">
+                     <div class="media-left">
+                        <a href="{{doc.SLD_LINK}}" target="_blank">
+                           <img src="app/img/document.png" height="50px" class="media-object" />
+                        </a>
+                     </div>
+                     <div class="media-body">
+                        <h4 class="media-heading">{{doc.SLD_NOME}}</h4>
+                        <p>Data: {{doc.SLD_DATA | date:"dd/MM/yyyy"}}</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
       </div>
       <div class="col-sm-12 col-md-6 well">
          <div class="page-header">

@@ -54,6 +54,11 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
         title: 'Visualizar dados de parlamentares',
         templateUrl: helper.basepath('parlamentar.html')
     })
+    .state('app.search', {
+        url: '/search',
+        title: 'Pesquisar',
+        templateUrl: helper.basepath('search.html')
+    })
     ;
 
 }]);
