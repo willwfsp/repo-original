@@ -4,7 +4,7 @@
 // angle to myAppName
 // ----------------------------------- 
 
-var myApp = angular.module('SigaLeiApp', ['angle', 'infinite-scroll']);
+var myApp = angular.module('SigaLeiApp', ['angle', 'ngDialog']);
 
 myApp.run(["$log", function($log) {
 
@@ -61,10 +61,4 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
     })
     ;
 
-}]);
-
-myApp.filter('trusted', ['$sce', function ($sce) {
-    return function(url) {
-        return $sce.trustAsResourceUrl(url);
-    };
 }]);

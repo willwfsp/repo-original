@@ -5,31 +5,32 @@ div.well.media(ng-controller="RepresentativeDataController", data-ng-init="fetch
 		.media-heading
 			h4 {{dados.SLPa_NOME_FANTASIA}}
 		.form-horizontal
-						.form-group
-							.col-sm-3 Nome: 
-							.col-sm-9 
-								strong {{dados.SLPa_NOME_CIVIL}}
+			.form-group
+				.col-sm-3 Nome: 
+				.col-sm-9 
+					strong {{dados.SLPa_NOME_CIVIL}}
 
 		.form-horizontal
-						.form-group
-							.col-sm-3 Partido: 
-							.col-sm-9 
-								strong {{dados.SLPa_PARTIDO}} - {{dados.SLPa_PARTIDO_DESC}}
+			.form-group
+				.col-sm-3 Partido: 
+				.col-sm-9 
+					strong {{dados.SLPa_PARTIDO}}
+						strong(ng-if="dados.SLPa_PARTIDO_DESC != undefined") - {{dados.SLPa_PARTIDO_DESC}}
 
 		.form-horizontal
-						.form-group
-							.col-sm-3 Data de Nascimento: 
-							.col-sm-9 
-								strong {{dados.SLPa_DATA_NASC | date:"dd/MM/yyyy"}}
+			.form-group
+				.col-sm-3 Data de Nascimento: 
+				.col-sm-9 
+					strong {{dados.SLPa_DATA_NASC | date:"dd/MM/yyyy"}}
 
 		.form-horizontal
-						.form-group
-							.col-sm-3 UF: 
-							.col-sm-9 
-								strong {{dados.SLPa_UF_REP}}
+			.form-group
+				.col-sm-3 UF: 
+				.col-sm-9 
+					strong {{dados.SLPa_UF_REP}}
 
 		.form-horizontal
-						.form-group
-							.col-sm-3 E-mail: 
-							.col-sm-9 
-								strong {{dados.SLPa_EMAIL}}
+			.form-group
+				.col-sm-3 E-mail: 
+				.col-sm-9 
+					strong {{dados.SLPa_EMAIL}}

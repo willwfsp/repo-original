@@ -9,13 +9,52 @@ myApp.controller('searchBar', ['$location', '$scope','$state',  'DataFetcher', f
 
 }]);
 
-myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log', '$state', 'DataFetcher', function($stateParams, $location, $scope, $log, $state, DataFetcher) {
+myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope', '$log', '$state', 'ngDialog', 'DataFetcher', 
+    function($http, $stateParams, $location, $scope, $log, $state, ngDialog, DataFetcher) {
+    
+    $scope.oneAtATime = true;
+    $scope.accordionGroups = [
+        {
+            'title': 'Casas Legislativas',
+            'open': false
+        },
+        {
+            'title': 'Tipos de Lei',
+            'open': false
+        }
+    ];
+
+    $scope.getSubthemes = function(theme){
+        for(index in $scope.themesAndSubthemes){
+            if($scope.themesAndSubthemes[index].tema == theme){
+                return $scope.themesAndSubthemes[index].subtemas;
+            }
+        }
+        return null;
+    };
+
+    $scope.loadThemes = function(){
+        var themesJson = 'server/onthology.json';
+        $http.get(themesJson)
+            .success(function(data){
+                $scope.themesAndSubthemes = data;
+            })
+            .error(function(data, status, headers, config){
+                console.log("error loading themes");
+            });
+    };
+
+    $scope.loadThemes();
+
+    $scope.themesAndSubthemes = [];
+    $scope.themeSelected = "";
+    $scope.subthemeSelected = "";
     
     //filter variables
     $scope.checkedHouses = {
         "CN": false,
-        "CD": false,
-        "SF": false
+        "SP": false,
+        "MG": false
     };
 
     $scope.billTypes = {
@@ -41,7 +80,6 @@ myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log'
         "tipos": [],
         "ano": ""
     };
-
     // functions to change filter parameters and fetch data again
     $scope.changeFilterYear = function(){
         
@@ -56,7 +94,14 @@ myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log'
         $scope.filters.casas = [];
         for(key in $scope.checkedHouses){
             if($scope.checkedHouses[key]){
-                $scope.filters.casas.push(key);
+                if(key == "CN"){
+                    $scope.filters.casas.push(key);
+                    $scope.filters.casas.push("CD");
+                    $scope.filters.casas.push("SF");
+                }
+                else{
+                    $scope.filters.casas.push(key);
+                }
             };
         };
         $scope.filters.bookmark="";
@@ -76,11 +121,11 @@ myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log'
 
     $scope.cleanFilters = function(){
         //clean DOM variables
-        for(key in $scope.checked_houses){
-            $scope.checked_houses[key] = false;
+        for(key in $scope.checkedHouses){
+            $scope.checkedHouses[key] = false;
         };
-        for(key in $scope.bill_types){
-            $scope.bill_types[key] = false;
+        for(key in $scope.billTypes){
+            $scope.billTypes[key] = false;
         };
         $scope.year = "";
         //clean filter
@@ -88,6 +133,7 @@ myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log'
         $scope.filters.tipos = [];
         $scope.filters.ano = "";
         $scope.bookmark = "";
+        $scope.themeSelected = "";
         //fetch most recent data
         DataFetcher.fetchDataBills("", $scope.filters);
     };
