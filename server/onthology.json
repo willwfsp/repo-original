@@ -1,0 +1,73 @@
+[
+  {
+    "tema":"Administrativo",
+    "subtemas": [ 
+      "Administração pública: órgãos públicos", 
+      "Licitação e contratos",
+      "Militares dos estados, DF e territórios",
+      "Organização político-administrativa do Estado",
+      "Servidores públicos"
+    ]
+  },
+  {
+    "tema":"Econômico",
+    "subtemas": [
+      "Agricultura, pecuária, pesca e abastecimento",
+      "Desenvolvimento regional",
+      "Fiscalização e controle",
+      "Indústria, comércio e abastecimento",
+      "Minas e energia",
+      "Planejamento e orçamento",
+      "Política econômica e sistema financeiro",
+      "Política fundiária e reforma agrária",
+      "Política urbana",
+      "Recursos hídricos",
+      "Tributação",
+      "Turismo",
+      "Viação, transportes e trânsito",
+      "Zona de processamento de exportação"
+    ]
+  },
+  {
+    "tema":"Honorífico",
+    "subtemas": ["Homenagens e Data Comemorativas"]
+  },
+  {
+    "tema":"Jurídico",
+    "subtemas": [
+      "Defesa do consumidor",
+      "Defesa nacional e forças armadas",
+      "Direito aeronáutico e direito espacial",
+      "Direito civil e processual civil",
+      "Direito comercial e econômico",
+      "Direito Constitucional",
+      "Direito dos estrangeiros",
+      "Direito e Justiça",
+      "Direito eleitoral e partidos políticos",
+      "Direito marítimo",
+      "Direito penal e processual penal",
+      "Direitos políticos, nacionalidade e cidadania",
+      "Processo legislativo",
+      "Relaçães internacionais",
+      "Segurança pública",
+      "Direito do trabalho e processual do Trabalho"
+    ]
+  },
+  {
+    "tema":"Social",
+    "subtemas": [
+      "Arte e cultura",
+      "Ciência, tecnologia e informática",
+      "Comunicaçães",
+      "Desenvolvimento social e combate à fome",
+      "Desporto e lazer",
+      "Educação",
+      "Família, proteção a crianças, adolescentes, mulheres e idosos",
+      "Meio ambiente",
+      "Previdência social",
+      "Saúde",
+      "Trabalho, emprego e renda",
+      "Drogas"
+    ]
+  }
+]

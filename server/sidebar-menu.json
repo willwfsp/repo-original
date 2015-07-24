@@ -5,10 +5,9 @@
     "translate": "sidebar.heading.HEADER"
   },
   {
-    "text": "Pesquisar",
-    "sref": "app.search",
-    "icon": "fa fa-file-o",
-    "translate": "sidebar.nav.SEARCH"
+    "text": "Calendários",
+    "sref": "app.calendar",
+    "icon": "fa fa-file-o"
   },
   {
     "text": "Casas Legislativas",

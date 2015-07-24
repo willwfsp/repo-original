@@ -11,7 +11,10 @@ myApp.controller('searchBar', ['$location', '$scope','$state',  'DataFetcher', f
 
 myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope', '$log', '$state', 'ngDialog', 'DataFetcher', 
     function($http, $stateParams, $location, $scope, $log, $state, ngDialog, DataFetcher) {
-    
+    $scope.toDate = function(date){
+        return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
+    };
+
     $scope.oneAtATime = true;
     $scope.accordionGroups = [
         {
@@ -23,6 +26,44 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
             'open': false
         }
     ];
+
+    $scope.getMainAuthor = function(data){
+        if (typeof(data) == "string"){
+            var author = data.split(",");
+            if(author.length == 1)
+                //if no id
+                return {"name": author[0]};
+            return {"name": author[0], "id": author[1].trim()};
+        }
+        //if array, return first author
+        if (data instanceof Array){
+            var author = data[0].split(",");
+            if(author.length == 1)
+                //if no id
+                return {"name": author[0]};
+            return {"name": author[0], "id": author[1].trim()};
+        }
+        return "Error";
+    };
+
+    $scope.getOtherAuthors = function(data){
+        if(data instanceof Array){
+            authors = [];
+            for(var i = 1; i < data.length; i++){
+                var author = data[i].split(",");
+                if(author.length == 1){
+                    //if no id
+                    authors.push({"name": author[0]} );
+                }
+                else{
+                    authors.push({"name": author[0], "id": author[1].trim()} );
+                }
+            }
+            console.log(authors);
+            return {"totalAuthors": authors.length, "authors": authors};
+        }
+        return undefined;
+    }
 
     $scope.getSubthemes = function(theme){
         for(index in $scope.themesAndSubthemes){
@@ -49,7 +90,7 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
     $scope.themesAndSubthemes = [];
     $scope.themeSelected = "";
     $scope.subthemeSelected = "";
-    
+    $scope.orderedBy = 1;
     //filter variables
     $scope.checkedHouses = {
         "CN": false,
@@ -86,6 +127,7 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         if( ($scope.year >= 1980 && $scope.year <= 2015) || $scope.year == ""){
             $scope.filters.ano = $scope.year.toString();
             $scope.filters.bookmark="";
+            $scope.fetching = true;
             DataFetcher.fetchDataBills($scope.query, $scope.filters);
         };
     };
@@ -105,6 +147,7 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
             };
         };
         $scope.filters.bookmark="";
+        $scope.fetching = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
     
@@ -116,6 +159,7 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
             };
         };
         $scope.filters.bookmark="";
+        $scope.fetching = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
 
@@ -135,6 +179,7 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         $scope.bookmark = "";
         $scope.themeSelected = "";
         //fetch most recent data
+        $scope.fetching = true;
         DataFetcher.fetchDataBills("", $scope.filters);
     };
 
@@ -177,3 +222,4 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
     });
 
 }]);
+

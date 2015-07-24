@@ -92,9 +92,6 @@ now {
 .panel .panel-heading a {
   text-decoration: none !important;
 }
-.panel.panel-default {
-  border-top-width: 3px;
-}
 .well {
   border: 1px solid #dde6e9;
 }
@@ -345,7 +342,8 @@ body {
   margin-bottom: 60px !important;
 }
 .wrapper > footer {
-  position: absolute;
+  position: relative;
+  margin: auto;
   left: 0;
   right: 0;
   bottom: 0;
@@ -941,12 +939,10 @@ body {
   border-bottom: 1px solid #e1e1e1;
 }
 .topnavbar .navbar-form {
-  position: absolute;
-  top: -100%;
   left: 0;
   right: 0;
   margin: 0;
-  padding: 0;
+  padding: auto;
   height: 55px;
   z-index: 9001;
   -webkit-transition: all 0.3s;
@@ -4729,6 +4725,13 @@ fieldset[disabled] .btn-pink.active {
   -webkit-animation-name: zoomBack;
   animation-name: zoomBack;
 }
+.ngdialog.ngdialog-theme-default .ngdialog-content {
+  background-color: #fff !important;
+  border-radius: 4px !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
 /* ========================================================================
    Component: form-elements.less
  ========================================================================== */
@@ -6372,4 +6375,15 @@ body .ng-table-pager:after {
   .content-wrapper {
     overflow: hidden !important;
   }
+}
+a {
+  color: #1A8B4C;
+}
+.sigalei-table-head {
+  background-color: #aaa9a9;
+  color: #fff;
+  padding: 50%;
+}
+.sigalei-content-box {
+  height: 40%;
 }

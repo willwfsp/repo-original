@@ -18,7 +18,9 @@
          <div class="form-group">
             <div class="col-sm-3">Partido:</div>
             <div class="col-sm-9">
-               <strong>{{dados.SLPa_PARTIDO}} - {{dados.SLPa_PARTIDO_DESC}}</strong>
+               <strong>{{dados.SLPa_PARTIDO}}
+                  <strong ng-if="dados.SLPa_PARTIDO_DESC != undefined">- {{dados.SLPa_PARTIDO_DESC}}</strong>
+               </strong>
             </div>
          </div>
       </div>

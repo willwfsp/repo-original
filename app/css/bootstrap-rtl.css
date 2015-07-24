@@ -1446,8 +1446,8 @@ img {
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img {
   display: block;
-  max-width: 100%;
-  height: auto;
+  max-height: 80%;
+  width: auto;
 }
 
 .img-rounded {
@@ -1464,8 +1464,8 @@ img {
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
   display: inline-block;
-  max-width: 100%;
-  height: auto;
+  max-height: 80%;
+  width: auto;
 }
 
 .img-circle {

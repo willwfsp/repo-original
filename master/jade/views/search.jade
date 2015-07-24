@@ -1,5 +1,5 @@
 div(ng-controller="searchResults" data-ng-init="init()")
-  .col-lg-3
+  .col-lg-3.col-md-3
     .panel.panel-default
       .panel-heading
         h3 Filtros
@@ -75,11 +75,13 @@ div(ng-controller="searchResults" data-ng-init="init()")
 
         button.btn.btn-md.btn-default(ng-click="cleanFilters()") Limpar Filtros
 
-  .col-lg-9
+  .col-lg-9.col-md-9
     // START panel
     .panel.panel-default
       .panel-heading
-        h3 Resultados
+        paneltool(tool-refresh="standard")
+        h3(ng-if="fetching")  Buscando
+        h3(ng-if="!fetching") Resultados da busca
           small(ng-if="query != \"\" ") por "{{query}}"
         p(ng-if="!fetching") {{total_results}} projetos de lei encontrados
       // START table-responsive
@@ -88,6 +90,10 @@ div(ng-controller="searchResults" data-ng-init="init()")
           thead
             tr
               th Descrição
+                label.control-label.mb.pull-right Ordernar por: 
+                  select(ng-model="orderedBy")
+                    option(value="1") Data
+                    option(value="2") Relevância
           tbody
             tr(ng-repeat="bill in bills")
               td
@@ -95,11 +101,19 @@ div(ng-controller="searchResults" data-ng-init="init()")
                     .media-box-body
                       a(ng-href="#/app/proposicao?p={{bill.fields.SLP_NOME}}")
                         h4.media-box-heading {{bill.fields.SLP_NOME}}
-                      small.text-muted(ng-if="bill.fields.SLR_NOME != undefined") Outros Nomes: 
-                        a(ng-href="#/app/proposicao?p={{bill.fields.SLR_NOME}}")  {{bill.fields.SLR_NOME}}
+                      small.text-muted(ng-if="bill.fields.SLR_NOME != undefined") Outros Nomes: {{bill.fields.SLR_NOME}}
                       br(ng-if="bill.fields.SLR_NOME != undefined")
                       small.text-muted Autor: 
-                        a(ng-href="#/app/parlamentar?id={{bill.fields.id_Autor}}", ng-disabled="bill.fields.id_Autor == undefined") {{bill.fields.SLPa_NOME_FANTASIA}}
+                        //one author and has id
+                        strong
+                          a(ng-if="getMainAuthor(bill.fields.SLP_AUTOR).id != undefined", ng-href="#/app/parlamentar?id={{getMainAuthor(bill.fields.SLP_AUTOR).id}}") {{getMainAuthor(bill.fields.SLP_AUTOR).name}}
+                        //one author and doesn't have id
+                        strong(ng-if="getMainAuthor(bill.fields.SLP_AUTOR).id === undefined") {{getMainAuthor(bill.fields.SLP_AUTOR).name}}
+                          //get multiple authors
+                        strong(ng-if="getOtherAuthors(bill.fields.SLP_AUTOR) != undefined") e 
+                          a(tooltip-template="'getOtherAuthorsPopover.html'", tooltip-trigger="mouseover") {{getOtherAuthors(bill.fields.SLP_AUTOR).totalAuthors}} outros
+                      br
+                      small.text-muted Última atualização: {{toDate(bill.fields.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
                       br
                       small.text-muted Tema: {{bill.fields.SLP_TEMA}}
                       p {{bill.fields.SLP_EMENTA}}
@@ -112,3 +126,5 @@ div(ng-controller="searchResults" data-ng-init="init()")
         // END table-responsive
       // END panel
 
+script(type="text/ng-template", id="getOtherAuthorsPopover.html")
+  | HI

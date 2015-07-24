@@ -8,6 +8,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
     var query = "";
     var proposicao = "";
     var bookmark = "";
+    var popoverContent = {};
     var request_stub = {
         dataType: "json",
         headers: {
@@ -118,7 +119,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                     $rootScope.$broadcast('fetch polls:completed');
                 })
                 .error(function(status, error){
-                    $log.log('error' + error);
+                    $log.log('error');
                 });
         },
 
@@ -185,6 +186,14 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
 
         getPolls : function(){
             return polls;
+        },
+
+        setPopoverContent: function(data){
+            popoverContent = data;
+        },
+
+        getPopoverContent: function(data){
+            return popoverContent;
         }
     };
 }]);

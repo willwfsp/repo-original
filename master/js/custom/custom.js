@@ -59,6 +59,11 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
         title: 'Pesquisar',
         templateUrl: helper.basepath('search.html')
     })
+    .state('app.calendar', {
+        url: '/calendar',
+        title: 'Calendários',
+        templateUrl: helper.basepath('calendar.html')
+    })
     ;
 
 }]);

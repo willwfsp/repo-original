@@ -13,17 +13,18 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 
 			.form-horizontal
 						.form-group
+							.col-sm-3 Autor(es): 
+							.col-sm-9 
+								div(ng-repeat="autor in dados.SLP_AUTORES")
+									strong(ng-if="autor._id === undefined") {{autor.SLPa_NOME_FANTASIA}}
+									a(href="#/app/parlamentar?id={{autor._id}}", ng-if="autor._id != undefined") {{autor.SLPa_NOME_FANTASIA}}
+			.form-horizontal
+						.form-group
 							.col-sm-3 Temas:
 							.col-sm-9 
 								strong(ng-repeat="tema in dados.SLP_TEMA") {{tema}}
 									br
 
-			.form-horizontal
-						.form-group
-							.col-sm-3 Autor(es): 
-							.col-sm-9 
-								div(ng-repeat="autor in dados.SLP_AUTORES")
-									strong {{autor.SLPa_NOME_FANTASIA}}
 			.form-horizontal
 						.form-group
 							.col-sm-3 Ementa:
@@ -45,8 +46,8 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 			.form-horizontal
 				.form-group
 					.col-sm-3 Documentos:
-					.col-sm-9(overflow="scroll")
-						.media(ng-repeat="doc in dados.SLP_DOCUMENTOS", display="inline-block")
+					.col-sm-9
+						.media(ng-repeat="doc in dados.SLP_DOCUMENTOS", style="height:100px, overflow: scroll")
 							.media-left
 								a(href="{{doc.SLD_LINK}}", target="_blank")
 									img.media-object(src="app/img/document.png" height="50px")

@@ -1071,7 +1071,7 @@ App.service('Utils', ["$window", "APP_MEDIAQUERY", function($window, APP_MEDIAQU
 // angle to myAppName
 // ----------------------------------- 
 
-var myApp = angular.module('SigaLeiApp', ['angle', 'infinite-scroll']);
+var myApp = angular.module('SigaLeiApp', ['angle', 'ngDialog']);
 
 myApp.run(["$log", function($log) {
 
@@ -1126,14 +1126,13 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
         title: 'Pesquisar',
         templateUrl: helper.basepath('search.html')
     })
+    .state('app.calendar', {
+        url: '/calendar',
+        title: 'Calendários',
+        templateUrl: helper.basepath('calendar.html')
+    })
     ;
 
-}]);
-
-myApp.filter('trusted', ['$sce', function ($sce) {
-    return function(url) {
-        return $sce.trustAsResourceUrl(url);
-    };
 }]);
 myApp.controller('congressoDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
 	$scope.dados = {};
@@ -1228,13 +1227,93 @@ myApp.controller('searchBar', ['$location', '$scope','$state',  'DataFetcher', f
 
 }]);
 
-myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log', '$state', 'DataFetcher', function($stateParams, $location, $scope, $log, $state, DataFetcher) {
-    
+myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope', '$log', '$state', 'ngDialog', 'DataFetcher', 
+    function($http, $stateParams, $location, $scope, $log, $state, ngDialog, DataFetcher) {
+    $scope.toDate = function(date){
+        return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
+    };
+
+    $scope.oneAtATime = true;
+    $scope.accordionGroups = [
+        {
+            'title': 'Casas Legislativas',
+            'open': false
+        },
+        {
+            'title': 'Tipos de Lei',
+            'open': false
+        }
+    ];
+
+    $scope.getMainAuthor = function(data){
+        if (typeof(data) == "string"){
+            var author = data.split(",");
+            if(author.length == 1)
+                //if no id
+                return {"name": author[0]};
+            return {"name": author[0], "id": author[1].trim()};
+        }
+        //if array, return first author
+        if (data instanceof Array){
+            var author = data[0].split(",");
+            if(author.length == 1)
+                //if no id
+                return {"name": author[0]};
+            return {"name": author[0], "id": author[1].trim()};
+        }
+        return "Error";
+    };
+
+    $scope.getOtherAuthors = function(data){
+        if(data instanceof Array){
+            authors = [];
+            for(var i = 1; i < data.length; i++){
+                var author = data[i].split(",");
+                if(author.length == 1){
+                    //if no id
+                    authors.push({"name": author[0]} );
+                }
+                else{
+                    authors.push({"name": author[0], "id": author[1].trim()} );
+                }
+            }
+            console.log(authors);
+            return {"totalAuthors": authors.length, "authors": authors};
+        }
+        return undefined;
+    }
+
+    $scope.getSubthemes = function(theme){
+        for(index in $scope.themesAndSubthemes){
+            if($scope.themesAndSubthemes[index].tema == theme){
+                return $scope.themesAndSubthemes[index].subtemas;
+            }
+        }
+        return null;
+    };
+
+    $scope.loadThemes = function(){
+        var themesJson = 'server/onthology.json';
+        $http.get(themesJson)
+            .success(function(data){
+                $scope.themesAndSubthemes = data;
+            })
+            .error(function(data, status, headers, config){
+                console.log("error loading themes");
+            });
+    };
+
+    $scope.loadThemes();
+
+    $scope.themesAndSubthemes = [];
+    $scope.themeSelected = "";
+    $scope.subthemeSelected = "";
+    $scope.orderedBy = 1;
     //filter variables
     $scope.checkedHouses = {
         "CN": false,
-        "CD": false,
-        "SF": false
+        "SP": false,
+        "MG": false
     };
 
     $scope.billTypes = {
@@ -1260,13 +1339,13 @@ myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log'
         "tipos": [],
         "ano": ""
     };
-
     // functions to change filter parameters and fetch data again
     $scope.changeFilterYear = function(){
         
         if( ($scope.year >= 1980 && $scope.year <= 2015) || $scope.year == ""){
             $scope.filters.ano = $scope.year.toString();
             $scope.filters.bookmark="";
+            $scope.fetching = true;
             DataFetcher.fetchDataBills($scope.query, $scope.filters);
         };
     };
@@ -1275,10 +1354,18 @@ myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log'
         $scope.filters.casas = [];
         for(key in $scope.checkedHouses){
             if($scope.checkedHouses[key]){
-                $scope.filters.casas.push(key);
+                if(key == "CN"){
+                    $scope.filters.casas.push(key);
+                    $scope.filters.casas.push("CD");
+                    $scope.filters.casas.push("SF");
+                }
+                else{
+                    $scope.filters.casas.push(key);
+                }
             };
         };
         $scope.filters.bookmark="";
+        $scope.fetching = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
     
@@ -1290,16 +1377,17 @@ myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log'
             };
         };
         $scope.filters.bookmark="";
+        $scope.fetching = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
 
     $scope.cleanFilters = function(){
         //clean DOM variables
-        for(key in $scope.checked_houses){
-            $scope.checked_houses[key] = false;
+        for(key in $scope.checkedHouses){
+            $scope.checkedHouses[key] = false;
         };
-        for(key in $scope.bill_types){
-            $scope.bill_types[key] = false;
+        for(key in $scope.billTypes){
+            $scope.billTypes[key] = false;
         };
         $scope.year = "";
         //clean filter
@@ -1307,7 +1395,9 @@ myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log'
         $scope.filters.tipos = [];
         $scope.filters.ano = "";
         $scope.bookmark = "";
+        $scope.themeSelected = "";
         //fetch most recent data
+        $scope.fetching = true;
         DataFetcher.fetchDataBills("", $scope.filters);
     };
 
@@ -1351,6 +1441,7 @@ myApp.controller('searchResults', ['$stateParams', '$location', '$scope', '$log'
 
 }]);
 
+
 myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
     var databaseURL = 'http://sigalei-api.mybluemix.net/v1/';
     var databaseToken = "admin@sigalei";
@@ -1361,6 +1452,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
     var query = "";
     var proposicao = "";
     var bookmark = "";
+    var popoverContent = {};
     var request_stub = {
         dataType: "json",
         headers: {
@@ -1471,7 +1563,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                     $rootScope.$broadcast('fetch polls:completed');
                 })
                 .error(function(status, error){
-                    $log.log('error' + error);
+                    $log.log('error');
                 });
         },
 
@@ -1538,6 +1630,14 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
 
         getPolls : function(){
             return polls;
+        },
+
+        setPopoverContent: function(data){
+            popoverContent = data;
+        },
+
+        getPopoverContent: function(data){
+            return popoverContent;
         }
     };
 }]);

@@ -17,21 +17,21 @@
          </div>
          <div class="form-horizontal">
             <div class="form-group">
-               <div class="col-sm-3">Temas:</div>
+               <div class="col-sm-3">Autor(es):</div>
                <div class="col-sm-9">
-                  <strong ng-repeat="tema in dados.SLP_TEMA">{{tema}}
-                     <br/>
-                  </strong>
+                  <div ng-repeat="autor in dados.SLP_AUTORES">
+                     <strong ng-if="autor._id === undefined">{{autor.SLPa_NOME_FANTASIA}}</strong><a href="#/app/parlamentar?id={{autor._id}}" ng-if="autor._id != undefined">{{autor.SLPa_NOME_FANTASIA}}</a>
+                  </div>
                </div>
             </div>
          </div>
          <div class="form-horizontal">
             <div class="form-group">
-               <div class="col-sm-3">Autor(es):</div>
+               <div class="col-sm-3">Temas:</div>
                <div class="col-sm-9">
-                  <div ng-repeat="autor in dados.SLP_AUTORES">
-                     <strong>{{autor.SLPa_NOME_FANTASIA}}</strong>
-                  </div>
+                  <strong ng-repeat="tema in dados.SLP_TEMA">{{tema}}
+                     <br/>
+                  </strong>
                </div>
             </div>
          </div>
@@ -62,8 +62,8 @@
          <div class="form-horizontal">
             <div class="form-group">
                <div class="col-sm-3">Documentos:</div>
-               <div overflow="scroll" class="col-sm-9">
-                  <div ng-repeat="doc in dados.SLP_DOCUMENTOS" display="inline-block" class="media">
+               <div class="col-sm-9">
+                  <div ng-repeat="doc in dados.SLP_DOCUMENTOS" style="height:100px, overflow: scroll" class="media">
                      <div class="media-left">
                         <a href="{{doc.SLD_LINK}}" target="_blank">
                            <img src="app/img/document.png" height="50px" class="media-object" />
