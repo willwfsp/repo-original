@@ -9,23 +9,13 @@ myApp.controller('searchBar', ['$location', '$scope','$state',  'DataFetcher', f
 
 }]);
 
-myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope', '$log', '$state', 'ngDialog', 'DataFetcher', 
-    function($http, $stateParams, $location, $scope, $log, $state, ngDialog, DataFetcher) {
+myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal', 'DataFetcher', 
+    function($http, $stateParams, $location, $scope, $log, $state, $modal, DataFetcher) {
+
+        
     $scope.toDate = function(date){
         return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
     };
-
-    $scope.oneAtATime = true;
-    $scope.accordionGroups = [
-        {
-            'title': 'Casas Legislativas',
-            'open': false
-        },
-        {
-            'title': 'Tipos de Lei',
-            'open': false
-        }
-    ];
 
     $scope.getMainAuthor = function(data){
         if (typeof(data) == "string"){
@@ -41,7 +31,11 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
             if(author.length == 1)
                 //if no id
                 return {"name": author[0]};
-            return {"name": author[0], "id": author[1].trim()};
+            return {
+                "name": author[0], 
+                "id": author[1].trim(),
+                "length": data.length - 1
+            };
         }
         return "Error";
     };

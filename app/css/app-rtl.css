@@ -7563,3 +7563,13 @@ a {
 .sigalei-content-box {
   height: 40%;
 }
+
+.doc-box-height {
+  height: 180px;
+  overflow: scroll;
+}
+
+.bill-box-height {
+  height: 700px;
+  overflow: scroll;
+}

@@ -69,11 +69,12 @@ div(ng-controller="searchResults" data-ng-init="init()")
           label.control-label.mb Ano
           br
           p.input-group
-            input.form-control(type="number", min="1980", max="2015", ng-model="year" ng-blur="changeFilterYear()")
+            input.form-control(type="number", min="1980", max="2015", ng-model="year" ng-change="changeFilterYear()")
 
         .form-group.mg-xl
 
         button.btn.btn-md.btn-default(ng-click="cleanFilters()") Limpar Filtros
+  //END filters
 
   .col-lg-9.col-md-9
     // START panel
@@ -110,8 +111,8 @@ div(ng-controller="searchResults" data-ng-init="init()")
                         //one author and doesn't have id
                         strong(ng-if="getMainAuthor(bill.fields.SLP_AUTOR).id === undefined") {{getMainAuthor(bill.fields.SLP_AUTOR).name}}
                           //get multiple authors
-                        strong(ng-if="getOtherAuthors(bill.fields.SLP_AUTOR) != undefined") e 
-                          a(tooltip-template="'getOtherAuthorsPopover.html'", tooltip-trigger="mouseover") {{getOtherAuthors(bill.fields.SLP_AUTOR).totalAuthors}} outros
+                        strong(ng-if="getMainAuthor(bill.fields.SLP_AUTOR).length != undefined") e 
+                          a(popover-template="getOtherAuthorsPopover.templateUrl", popover-trigger="mouseover click") {{getMainAuthor(bill.fields.SLP_AUTOR).length}} outros
                       br
                       small.text-muted Última atualização: {{toDate(bill.fields.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
                       br
@@ -127,4 +128,4 @@ div(ng-controller="searchResults" data-ng-init="init()")
       // END panel
 
 script(type="text/ng-template", id="getOtherAuthorsPopover.html")
-  | HI
+  | Hi!!
