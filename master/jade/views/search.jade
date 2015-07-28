@@ -105,15 +105,24 @@ div(ng-controller="searchResults" data-ng-init="init()")
                       small.text-muted(ng-if="bill.fields.SLR_NOME != undefined") Outros Nomes: {{bill.fields.SLR_NOME}}
                       br(ng-if="bill.fields.SLR_NOME != undefined")
                       small.text-muted Autor: 
-                        //one author and has id
-                        strong
-                          a(ng-if="getMainAuthor(bill.fields.SLP_AUTOR).id != undefined", ng-href="#/app/parlamentar?id={{getMainAuthor(bill.fields.SLP_AUTOR).id}}") {{getMainAuthor(bill.fields.SLP_AUTOR).name}}
                         //one author and doesn't have id
-                        strong(ng-if="getMainAuthor(bill.fields.SLP_AUTOR).id === undefined") {{getMainAuthor(bill.fields.SLP_AUTOR).name}}
-                          //get multiple authors
+                        strong(ng-if="parseAuthor(bill.fields.SLP_AUTOR).id === undefined") {{parseAuthor(bill.fields.SLP_AUTOR).name}}   
+                                           
+                        //one author and has id
+                        strong(ng-if="getMainAuthor(bill.fields.SLP_AUTOR).id != undefined")
+                          a(ng-href="#/app/parlamentar?id={{getMainAuthor(bill.fields.SLP_AUTOR).id}}") {{getMainAuthor(bill.fields.SLP_AUTOR).name}}
+
+                        //get other authors
                         strong(ng-if="getMainAuthor(bill.fields.SLP_AUTOR).length != undefined") e 
-                          a(popover-template="getOtherAuthorsPopover.templateUrl", popover-trigger="mouseover click") {{getMainAuthor(bill.fields.SLP_AUTOR).length}} outros
-                      br
+                          a(ng-click="showOtherAuthors = !showOtherAuthors") {{getMainAuthor(bill.fields.SLP_AUTOR).length}} outros
+                          div(collapse="!showOtherAuthors")
+                            strong(ng-repeat="author in bill.fields.SLP_AUTOR", ng-show="! $last")
+                              strong(ng-if="parseAuthor(author).id === undefined") {{parseAuthor(author).name}}
+
+                              strong(ng-if="parseAuthor(author).id != undefined")
+                                a(ng-href="#/app/parlamentar?id={{parseAuthor(author).id}}") {{parseAuthor(author).name}}
+                              span(ng-show="$index != bill.fields.SLP_AUTOR.length - 2"), 
+                        br
                       small.text-muted Última atualização: {{toDate(bill.fields.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
                       br
                       small.text-muted Tema: {{bill.fields.SLP_TEMA}}
@@ -126,6 +135,3 @@ div(ng-controller="searchResults" data-ng-init="init()")
                 button.btn.btn-block.btn-default(ng-click="moreResults()" ng-show="bills.length < total_results") Carregar Mais resultados
         // END table-responsive
       // END panel
-
-script(type="text/ng-template", id="getOtherAuthorsPopover.html")
-  | Hi!!

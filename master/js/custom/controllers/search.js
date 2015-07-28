@@ -12,52 +12,33 @@ myApp.controller('searchBar', ['$location', '$scope','$state',  'DataFetcher', f
 myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal', 'DataFetcher', 
     function($http, $stateParams, $location, $scope, $log, $state, $modal, DataFetcher) {
 
-        
     $scope.toDate = function(date){
         return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
     };
 
-    $scope.getMainAuthor = function(data){
-        if (typeof(data) == "string"){
-            var author = data.split(",");
-            if(author.length == 1)
-                //if no id
-                return {"name": author[0]};
-            return {"name": author[0], "id": author[1].trim()};
-        }
-        //if array, return first author
-        if (data instanceof Array){
-            var author = data[0].split(",");
-            if(author.length == 1)
-                //if no id
-                return {"name": author[0]};
-            return {
-                "name": author[0], 
-                "id": author[1].trim(),
-                "length": data.length - 1
-            };
-        }
-        return "Error";
+    $scope.parseAuthor = function(authorString){
+        var author = ""
+            try{
+                author = authorString.split(",");
+            }
+            catch(err){
+                return authorString;
+            }
+            return {"name": author[0], "id": author[1]};
     };
 
-    $scope.getOtherAuthors = function(data){
-        if(data instanceof Array){
-            authors = [];
-            for(var i = 1; i < data.length; i++){
-                var author = data[i].split(",");
-                if(author.length == 1){
-                    //if no id
-                    authors.push({"name": author[0]} );
-                }
-                else{
-                    authors.push({"name": author[0], "id": author[1].trim()} );
-                }
-            }
-            console.log(authors);
-            return {"totalAuthors": authors.length, "authors": authors};
-        }
-        return undefined;
-    }
+    $scope.getMainAuthor = function(data){
+        if (typeof(data) == "string"){
+            return $scope.parseAuthor(data);
+        };
+        //if array, return first author
+        if (data instanceof Array){
+            authors = $scope.parseAuthor(data[data.length - 1]);
+            authors.length = data.length - 1;
+            return authors;
+        };
+        return "Error";
+    };
 
     $scope.getSubthemes = function(theme){
         for(index in $scope.themesAndSubthemes){
@@ -81,6 +62,7 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
 
     $scope.loadThemes();
 
+    $scope.showOtherAuthors = false;
     $scope.themesAndSubthemes = [];
     $scope.themeSelected = "";
     $scope.subthemeSelected = "";
@@ -174,11 +156,11 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         $scope.themeSelected = "";
         //fetch most recent data
         $scope.fetching = true;
-        DataFetcher.fetchDataBills("", $scope.filters);
+        DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
 
     $scope.init = function(){
-        DataFetcher.fetchDataBills();
+        DataFetcher.fetchDataBills($stateParams.q);
         console.log($stateParams);
         $scope.fetching = true;
     };
@@ -198,10 +180,7 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         $scope.bills = DataFetcher.getResults().rows;
         $scope.query = DataFetcher.getQuery();
         $scope.bookmark = DataFetcher.getResults().bookmark;
-        var location = $location.path() + '?' + $scope.query;
         $scope.fetching = false;
-        console.log(location);
-        $location.path(location);
     });
     
     $scope.$on('search more results: completed', function(event) {
@@ -212,8 +191,10 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         $scope.bookmark = DataFetcher.getResults().bookmark;
         $scope.query = DataFetcher.getQuery();
         $scope.fetching = false;
-        console.log($scope.bills.length);
+        //console.log($scope.bills.length);
     });
 
 }]);
 
+myApp.controller('popOverController', ['$scope', function($scope){
+}]);

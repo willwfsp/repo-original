@@ -143,4 +143,5 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 					.col-sm-8 {{poll.SLV_OBJETO_VOTACAO}}
 				.form-group
 					.col-sm-4 Resultado:
-					.col-sm-8 {{poll.SLV_RESULTADO}}
+					.col-sm-8 
+						a(ng-click="viewPollDetails()") {{poll.SLV_RESULTADO}} - {{poll.id}}

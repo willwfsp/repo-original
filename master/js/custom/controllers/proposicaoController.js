@@ -25,8 +25,8 @@ myApp.controller('tramitacaoController', ['$location', '$scope','$state', '$log'
     });
 }]);
 
-myApp.controller('pollController', ['$location', '$scope','$state', '$log',  '$http', 'DataFetcher', 
-    function($location,$scope, $state, $log, $http, DataFetcher){
+myApp.controller('pollController', ['$location', '$scope','$state', '$log',  '$modal', 'DataFetcher', 
+    function($location,$scope, $state, $log, $modal, DataFetcher){
     $scope.dados = [];
     $scope.fetchData = function(){
         DataFetcher.fetchDataPolls($location.search().p);
@@ -38,4 +38,15 @@ myApp.controller('pollController', ['$location', '$scope','$state', '$log',  '$h
         // you could inspect the data to see if what you care about changed, or just update your own scope
         $scope.dados = DataFetcher.getPolls();
     });
+    $scope.viewPollDetails = function(){
+        var modalInstance = $modal.open({
+            templateUrl: '#app/views/partials/pollDetails.html',
+            
+            resolve: {
+                items: function () {
+                  return $scope.items;
+                }
+            }
+        });        
+    }
 }]);

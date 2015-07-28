@@ -55,14 +55,20 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
         templateUrl: helper.basepath('parlamentar.html')
     })
     .state('app.search', {
-        url: '/search',
+        url: '/search?q',
         title: 'Pesquisar',
-        templateUrl: helper.basepath('search.html')
+        templateUrl: helper.basepath('search.html'),
+        params: {
+            q: ""
+        }
     })
     .state('app.calendar', {
         url: '/calendar',
         title: 'Calendários',
         templateUrl: helper.basepath('calendar.html')
+    })
+    .state('app.showAuthorsModal', {
+        templateUrl: helper.basepath('showAuthorsModal.html')
     })
     ;
 
