@@ -7560,16 +7560,16 @@ a {
   padding: 50%;
 }
 
-.sigalei-content-box {
-  height: 40%;
-}
-
 .doc-box-height {
-  height: 180px;
+  height: 200px;
   overflow: scroll;
 }
 
 .bill-box-height {
   height: 700px;
   overflow: scroll;
+}
+
+.img-logo-custom {
+  height: 42px;
 }

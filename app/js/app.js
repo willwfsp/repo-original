@@ -203,6 +203,46 @@ App
   })
 ;
 /**=========================================================
+ * Module: access-login.js
+ * Demo for login api
+ =========================================================*/
+
+App.controller('LoginFormController', ['$scope', '$http', '$state', function($scope, $http, $state) {
+
+  // bind here all data from the form
+  $scope.account = {};
+  // place the message if something goes wrong
+  $scope.authMsg = '';
+
+  $scope.login = function() {
+    $scope.authMsg = '';
+
+    if($scope.loginForm.$valid) {
+
+      $http
+        .post('api/account/login', {email: $scope.account.email, password: $scope.account.password})
+        .then(function(response) {
+          // assumes if ok, response is an object with some data, if not, a string with error
+          // customize according to your api
+          if ( !response.account ) {
+            $scope.authMsg = 'Incorrect credentials.';
+          }else{
+            $state.go('app.dashboard');
+          }
+        }, function(x) {
+          $scope.authMsg = 'Server Request Error';
+        });
+    }
+    else {
+      // set as dirty if the user click directly to login so we show the validation messages
+      $scope.loginForm.account_email.$dirty = true;
+      $scope.loginForm.account_password.$dirty = true;
+    }
+  };
+
+}]);
+
+/**=========================================================
  * Module: main.js
  * Main Application Controller
  =========================================================*/
@@ -1122,14 +1162,30 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
         templateUrl: helper.basepath('parlamentar.html')
     })
     .state('app.search', {
-        url: '/search',
+        url: '/search?q',
         title: 'Pesquisar',
-        templateUrl: helper.basepath('search.html')
+        templateUrl: helper.basepath('search.html'),
+        params: {
+            q: ""
+        }
     })
     .state('app.calendar', {
         url: '/calendar',
         title: 'Calendários',
         templateUrl: helper.basepath('calendar.html')
+    })
+    .state('page', {
+        url: '/page',
+        templateUrl: 'app/pages/page.html',
+        resolve: helper.resolveFor('modernizr', 'icons'),
+        controller: ["$rootScope", function($rootScope) {
+            $rootScope.app.layout.isBoxed = false;
+        }]
+    })
+    .state('page.login', {
+        url: '/login',
+        title: 'Login',
+        templateUrl: 'app/pages/login.html'
     })
     ;
 
@@ -1201,8 +1257,8 @@ myApp.controller('tramitacaoController', ['$location', '$scope','$state', '$log'
     });
 }]);
 
-myApp.controller('pollController', ['$location', '$scope','$state', '$log',  '$http', 'DataFetcher', 
-    function($location,$scope, $state, $log, $http, DataFetcher){
+myApp.controller('pollController', ['$location', '$scope','$state', '$log',  '$modal', 'DataFetcher', 
+    function($location,$scope, $state, $log, $modal, DataFetcher){
     $scope.dados = [];
     $scope.fetchData = function(){
         DataFetcher.fetchDataPolls($location.search().p);
@@ -1214,6 +1270,17 @@ myApp.controller('pollController', ['$location', '$scope','$state', '$log',  '$h
         // you could inspect the data to see if what you care about changed, or just update your own scope
         $scope.dados = DataFetcher.getPolls();
     });
+    $scope.viewPollDetails = function(){
+        var modalInstance = $modal.open({
+            templateUrl: '#app/views/partials/pollDetails.html',
+            
+            resolve: {
+                items: function () {
+                  return $scope.items;
+                }
+            }
+        });        
+    }
 }]);
 
 
@@ -1230,52 +1297,33 @@ myApp.controller('searchBar', ['$location', '$scope','$state',  'DataFetcher', f
 myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal', 'DataFetcher', 
     function($http, $stateParams, $location, $scope, $log, $state, $modal, DataFetcher) {
 
-        
     $scope.toDate = function(date){
         return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
     };
 
-    $scope.getMainAuthor = function(data){
-        if (typeof(data) == "string"){
-            var author = data.split(",");
-            if(author.length == 1)
-                //if no id
-                return {"name": author[0]};
-            return {"name": author[0], "id": author[1].trim()};
-        }
-        //if array, return first author
-        if (data instanceof Array){
-            var author = data[0].split(",");
-            if(author.length == 1)
-                //if no id
-                return {"name": author[0]};
-            return {
-                "name": author[0], 
-                "id": author[1].trim(),
-                "length": data.length - 1
-            };
-        }
-        return "Error";
+    $scope.parseAuthor = function(authorString){
+        var author = ""
+            try{
+                author = authorString.split(",");
+            }
+            catch(err){
+                return authorString;
+            }
+            return {"name": author[0], "id": author[1]};
     };
 
-    $scope.getOtherAuthors = function(data){
-        if(data instanceof Array){
-            authors = [];
-            for(var i = 1; i < data.length; i++){
-                var author = data[i].split(",");
-                if(author.length == 1){
-                    //if no id
-                    authors.push({"name": author[0]} );
-                }
-                else{
-                    authors.push({"name": author[0], "id": author[1].trim()} );
-                }
-            }
-            console.log(authors);
-            return {"totalAuthors": authors.length, "authors": authors};
-        }
-        return undefined;
-    }
+    $scope.getMainAuthor = function(data){
+        if (typeof(data) == "string"){
+            return $scope.parseAuthor(data);
+        };
+        //if array, return first author
+        if (data instanceof Array){
+            authors = $scope.parseAuthor(data[data.length - 1]);
+            authors.length = data.length - 1;
+            return authors;
+        };
+        return "Error";
+    };
 
     $scope.getSubthemes = function(theme){
         for(index in $scope.themesAndSubthemes){
@@ -1299,6 +1347,7 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
 
     $scope.loadThemes();
 
+    $scope.showOtherAuthors = false;
     $scope.themesAndSubthemes = [];
     $scope.themeSelected = "";
     $scope.subthemeSelected = "";
@@ -1392,11 +1441,11 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         $scope.themeSelected = "";
         //fetch most recent data
         $scope.fetching = true;
-        DataFetcher.fetchDataBills("", $scope.filters);
+        DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
 
     $scope.init = function(){
-        DataFetcher.fetchDataBills();
+        DataFetcher.fetchDataBills($stateParams.q);
         console.log($stateParams);
         $scope.fetching = true;
     };
@@ -1416,10 +1465,7 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         $scope.bills = DataFetcher.getResults().rows;
         $scope.query = DataFetcher.getQuery();
         $scope.bookmark = DataFetcher.getResults().bookmark;
-        var location = $location.path() + '?' + $scope.query;
         $scope.fetching = false;
-        console.log(location);
-        $location.path(location);
     });
     
     $scope.$on('search more results: completed', function(event) {
@@ -1430,12 +1476,13 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         $scope.bookmark = DataFetcher.getResults().bookmark;
         $scope.query = DataFetcher.getQuery();
         $scope.fetching = false;
-        console.log($scope.bills.length);
+        //console.log($scope.bills.length);
     });
 
 }]);
 
-
+myApp.controller('popOverController', ['$scope', function($scope){
+}]);
 myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
     var databaseURL = 'http://sigalei-api.mybluemix.net/v1/';
     var databaseToken = "admin@sigalei";

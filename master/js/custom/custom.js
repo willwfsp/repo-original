@@ -67,8 +67,18 @@ myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider,
         title: 'Calendários',
         templateUrl: helper.basepath('calendar.html')
     })
-    .state('app.showAuthorsModal', {
-        templateUrl: helper.basepath('showAuthorsModal.html')
+    .state('page', {
+        url: '/page',
+        templateUrl: 'app/pages/page.html',
+        resolve: helper.resolveFor('modernizr', 'icons'),
+        controller: ["$rootScope", function($rootScope) {
+            $rootScope.app.layout.isBoxed = false;
+        }]
+    })
+    .state('page.login', {
+        url: '/login',
+        title: 'Login',
+        templateUrl: 'app/pages/login.html'
     })
     ;
 
