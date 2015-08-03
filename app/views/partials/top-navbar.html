@@ -8,20 +8,21 @@
          <span class="icon-bar"></span>
          <span class="icon-bar"></span>
       </button>
-      <a href="#/" class="navbar-brand">
-         <div class="brand-logo">
-            <img src="app/img/logo_3x.png" alt="Sigalei" class="img-responsive img-logo-custom" />
-         </div>
-         <div class="brand-logo-collapsed img-logo-custom-collapsed">
-            <img src="app/img/logo_3x.png" alt="Sigalei" class="img-responsive img-logo-custom-collapsed" />
-         </div>
+      <a href="/" class="navbar-brand">
+         <img src="app/img/logo_3x.png" alt="Sigalei" class="img-responsive" />
       </a>
    </div>
    <!-- END navbar header-->
    <!-- START Nav wrapper-->
    <div collapse="navCollapsed" class="collapse navbar-collapse">
-      <!-- Navbar Menu -->
-      <div class="container-fluid">
+      <div class="nav navbar-left">
+         <form ng-controller="SearchBarController" ng-submit="searchQ()" class="navbar-form">
+            <div class="form-group">
+               <input type="text" ng-model="query" placeholder="{{'topbar.search.PLACEHOLDER' | translate }}" class="form-control" />
+            </div>
+         </form>
+      </div>
+      <div class="nav navbar-right">
          <ul ng-controller="SidebarController" class="nav navbar-nav">
             <li ng-repeat="item in menuItems | limitTo: 3 " ng-class="{'dropdown': item.submenu}" dropdown="!!item.submenu">
                <a ng-if="!item.heading &amp;&amp; !item.submenu" ng-href="{{$state.href(item.sref)}}" title="{{item.text}}">
@@ -39,25 +40,14 @@
                   </li>
                </ul>
             </li>
+            <li>
+               <a href="#">
+                  <em class="icon-user"></em>
+               </a>
+            </li>
          </ul>
-         <!-- End Navbar Menu-->
-         <!-- START Right Navbar-->
-         <div ng-controller="searchBar" ng-submit="searchQ()" style="padding-top: 12px" class="col-sm-2 col-md-4">
-            <form role="search">
-               <div class="form-group">
-                  <input type="text" ng-model="query" placeholder="Digite aqui sua busca..." class="form-control" />
-               </div>
-            </form>
-         </div>
       </div>
-      <!-- END Right Navbar-->
    </div>
    <!-- END Nav wrapper-->
-   <!-- START Search form-->
-   <!--form.navbar-form(role='search', action="search.html").form-group.has-feedback
-  input.form-control(type='text', placeholder="{{ 'topbar.search.PLACEHOLDER' | translate }}")
-  .fa.fa-times.form-control-feedback(search-dismiss)
-button.hidden.btn.btn-default(type='submit') Submit-->
-   <!-- END Search form-->
 </nav>
 <!-- END Top Navbar-->

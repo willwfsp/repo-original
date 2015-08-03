@@ -14,7 +14,7 @@ var isProduction = false;
 // styles sourcemaps
 var useSourceMaps = false;
 
-// Switch to sass mode. 
+// Switch to sass mode.
 // Example:
 //    gulp --usesass
 var useSass = args.usesass;
@@ -29,7 +29,7 @@ var paths = {
   markup:  'jade/',
   styles:  'less/',
   scripts: 'js/',
-  css:     '../app/css/' 
+  css:     '../app/css/'
 }
 
 // if sass -> switch to sass folder
@@ -55,7 +55,7 @@ var vendor = {
 };
 
 
-// SOURCES CONFIG 
+// SOURCES CONFIG
 var source = {
   scripts: [paths.scripts + 'app.init.js',
             paths.scripts + 'modules/*.js',
@@ -76,7 +76,7 @@ var source = {
   }
 };
 
-// BUILD TARGET CONFIG 
+// BUILD TARGET CONFIG
 var build = {
   scripts: paths.app + 'js',
   styles:  paths.app + 'css',
@@ -91,7 +91,7 @@ var build = {
 var prettifyOpts = {
   indent_char: ' ',
   indent_size: 3,
-  unformatted: ['a', 'sub', 'sup', 'b', 'i', 'u']
+  unformatted: ['a', 'sub', 'sup', 'b', 'i', 'u', 'pre', 'code']
 };
 
 var vendorUglifyOpts = {
@@ -124,6 +124,8 @@ gulp.task('scripts:app', function() {
     log('Building scripts..');
     // Minify and copy all JavaScript (except vendor scripts)
     return gulp.src(source.scripts)
+        .pipe($.jsvalidate())
+        .on('error', handleError)
         .pipe( $.if( useSourceMaps, $.sourcemaps.init() ))
         .pipe($.concat( 'app.js' ))
         .pipe($.ngAnnotate())
@@ -278,9 +280,9 @@ gulp.task('build', gulpsync.sync([
           'assets'
         ]));
 
-gulp.task('prod', function() { 
+gulp.task('prod', function() {
   log('Starting production build...');
-  isProduction = true; 
+  isProduction = true;
 });
 
 // build with sourcemaps (no minify)
@@ -321,7 +323,7 @@ function handleError(err) {
 
 // Mini gulp plugin to flip css (rtl)
 function flipcss(opt) {
-  
+
   if (!opt) opt = {};
 
   // creating a stream through which each file will pass
@@ -341,9 +343,9 @@ function flipcss(opt) {
   return stream;
 }
 
-// log to console using 
+// log to console using
 function log(msg) {
-  $.util.log( $.util.colors.blue( msg ) );  
+  $.util.log( $.util.colors.blue( msg ) );
 }
 
 // JSHint task

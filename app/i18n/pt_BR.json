@@ -4,7 +4,7 @@
   },
   "topbar": {
     "search": {
-      "PLACEHOLDER": "Digite sua busca e aperte enter"
+      "PLACEHOLDER": "Saúde, Romário, Direitos Humanos..."
     }
   },
   "sidebar": {
@@ -18,7 +18,9 @@
         "CASAS": "Casas Legislativas",
         "CN": "Congresso Nacional",
         "CD": "Câmara dos Deputados",
-        "SF": "Senado Federal"
+        "SF": "Senado Federal",
+        "SP": "São Paulo",
+        "MG": "Minas Gerais"
       }
     }
   }

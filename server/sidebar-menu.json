@@ -14,18 +14,26 @@
     "sref": "#",
     "icon": "icon-folder",
     "submenu": [
-      { "text": "Congresso Nacional", 
-        "sref": "app.congresso_nacional", 
-        "translate": "sidebar.nav.menu.CN" 
+      { "text": "Congresso Nacional",
+        "sref": "app.congresso_nacional",
+        "translate": "sidebar.nav.menu.CN"
       },
-      { "text": "Câmara dos Deputados", 
-        "sref": "app.camara_deputados", 
-        "translate": "sidebar.nav.menu.CD" 
+      { "text": "Câmara dos Deputados",
+        "sref": "app.camara_deputados",
+        "translate": "sidebar.nav.menu.CD"
       },
-      { "text": "Senado Federal", 
-        "sref": "app.senado_federal", 
-        "translate": "sidebar.nav.menu.SF" 
-      }      
+      { "text": "Senado Federal",
+        "sref": "app.senado_federal",
+        "translate": "sidebar.nav.menu.SF"
+      },
+      { "text": "Minas Gerais",
+        "sref": "app.minas_gerais",
+        "translate": "sidebar.nav.menu.MG"
+      },
+      { "text": "Senado Federal",
+        "sref": "app.senado_federal",
+        "translate": "sidebar.nav.menu.SP"
+      }
     ],
     "translate": "sidebar.nav.menu.CASAS"
   }

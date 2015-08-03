@@ -1,51 +1,40 @@
 // START Top Navbar
 nav.navbar.topnavbar(role='navigation')
-    // START navbar header
-    .navbar-header
-      button.navbar-toggle.collapsed(type='button', ng-init="navCollapsed = true", ng-click="navCollapsed = !navCollapsed")
-        span.sr-only Toggle navigation
-        span.icon-bar
-        span.icon-bar
-        span.icon-bar
-      a.navbar-brand(href='#/') 
-        .brand-logo 
-          img.img-responsive.img-logo-custom(src="app/img/logo_3x.png", alt="Sigalei")
-        .brand-logo-collapsed.img-logo-custom-collapsed 
-          img.img-responsive.img-logo-custom-collapsed(src="app/img/logo_3x.png", alt="Sigalei")
+  // START navbar header
+  .navbar-header
+    button.navbar-toggle.collapsed(type='button', ng-init="navCollapsed = true", ng-click="navCollapsed = !navCollapsed")
+      span.sr-only Toggle navigation
+      span.icon-bar
+      span.icon-bar
+      span.icon-bar
+    a.navbar-brand(href='/')
+      img.img-responsive(src="app/img/logo_3x.png", alt="Sigalei")
 
-    // END navbar header
+  // END navbar header
 
-    // START Nav wrapper
-    .collapse.navbar-collapse(collapse="navCollapsed")
-      // Navbar Menu 
-      .container-fluid
-        ul.nav.navbar-nav(ng-controller="SidebarController")
-          li(ng-repeat='item in menuItems | limitTo: 3 ', ng-class="{'dropdown': item.submenu}", dropdown="!!item.submenu")
-            a(ng-if="!item.heading && !item.submenu", ng-href="{{$state.href(item.sref)}}", title="{{item.text}}")
-              span {{(item.translate | translate) || item.text}}
-            a(dropdown-toggle="", ng-if="item.submenu")
-              span {{(item.translate | translate) || item.text}}
-            // START Dropdown menu
-            ul.dropdown-menu(class="animated fadeInUp")
-              li(ng-repeat="subitem in item.submenu")
-                a(ng-href="{{$state.href(subitem.sref)}}", title="{{subitem.text}}")
-                  span {{(subitem.translate | translate) || subitem.text}}
-        // End Navbar Menu
+  // START Nav wrapper
+  .collapse.navbar-collapse(collapse="navCollapsed")
+    .nav.navbar-left
+      form.navbar-form(ng-controller="SearchBarController", ng-submit="searchQ()")
+        .form-group
+          input.form-control(type="text", ng-model="query", placeholder="{{'topbar.search.PLACEHOLDER' | translate }}")
 
-        // START Right Navbar
-        .col-sm-2.col-md-4(ng-controller="searchBar", ng-submit="searchQ()" style="padding-top: 12px")
-          form(role="search")
-            .form-group
-              input.form-control(type="text", ng-model="query", placeholder="Digite aqui sua busca...")
-      // END Right Navbar
-    // END Nav wrapper
-    
-    // START Search form
-    //form.navbar-form(role='search', action="search.html")
-      .form-group.has-feedback
-        input.form-control(type='text', placeholder="{{ 'topbar.search.PLACEHOLDER' | translate }}")
-        .fa.fa-times.form-control-feedback(search-dismiss)
-      button.hidden.btn.btn-default(type='submit') Submit
-    // END Search form
+    .nav.navbar-right
+      ul.nav.navbar-nav(ng-controller="SidebarController")
+        li(ng-repeat='item in menuItems | limitTo: 3 ', ng-class="{'dropdown': item.submenu}", dropdown="!!item.submenu")
+          a(ng-if="!item.heading && !item.submenu", ng-href="{{$state.href(item.sref)}}", title="{{item.text}}")
+            span {{(item.translate | translate) || item.text}}
+          a(dropdown-toggle="", ng-if="item.submenu")
+            span {{(item.translate | translate) || item.text}}
+          // START Dropdown menu
+          ul.dropdown-menu(class="animated fadeInUp")
+            li(ng-repeat="subitem in item.submenu")
+              a(ng-href="{{$state.href(subitem.sref)}}", title="{{subitem.text}}")
+                span {{(subitem.translate | translate) || subitem.text}}
+        li
+          a(href='#')
+            em.icon-user
+  // END Nav wrapper
+
 
 // END Top Navbar

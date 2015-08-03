@@ -3,13 +3,13 @@
 @import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,400italic);
 
 /*!
- * 
+ *
  * Angle - Bootstrap Admin App + AngularJS
- * 
+ *
  * Author: @themicon_co
  * Website: http://themicon.co
  * License: http://support.wrapbootstrap.com/knowledge_base/topics/usage-licenses
- * 
+ *
  */
 
 /* ========================================================================
@@ -265,7 +265,7 @@ fieldset .form-group {
 }
 
 .nav.nav-pills .active > a {
-  background-color: #5d9cec;
+  background-color: #b5b5b5;
 }
 
 .dropdown-menu {
@@ -380,7 +380,7 @@ body {
 
 .wrapper > .aside {
   position: absolute;
-  width: 220px;
+  width: 110px;
   top: 0;
   right: 0;
   bottom: 0;
@@ -394,13 +394,13 @@ body {
 .wrapper > .aside .aside-inner {
   padding-top: 110px;
   height: 100%;
-  width: 220px;
+  width: 110px;
   overflow: hidden;
 }
 
 .wrapper > .aside > .nav-floating {
   right: inherit;
-  margin-right: 220px;
+  margin-right: 110px;
   z-index: 1110;
   min-width: 190px;
   overflow: auto;
@@ -520,11 +520,11 @@ body {
 
   .wrapper > section,
   .wrapper > footer {
-    margin-right: 220px;
+    margin-right: 110px;
   }
 
   .wrapper > section.has-sidebar-right {
-    margin-left: 240px;
+    margin-left: 130px;
   }
 
   .wrapper > section.has-sidebar-right + .offsidebar {
@@ -534,12 +534,12 @@ body {
 
 @media only screen and (max-width: 767px) {
   .wrapper > .aside {
-    margin-right: -220px;
+    margin-right: -110px;
   }
 
   .aside-toggled .wrapper > section,
   .aside-toggled .wrapper > footer {
-    margin-right: 220px;
+    margin-right: 110px;
   }
 
   .aside-toggled .wrapper > .aside {
@@ -565,8 +565,8 @@ body {
 
   .csstransforms3d .wrapper > .aside {
     margin-right: 0;
-    -webkit-transform: translate3d(220px, 0, 0);
-    transform: translate3d(220px, 0, 0);
+    -webkit-transform: translate3d(110px, 0, 0);
+    transform: translate3d(110px, 0, 0);
     -webkit-transition: -webkit-transform 0.3s ease;
     -moz-transition: -moz-transform 0.3s ease;
     -o-transition: -o-transform 0.3s ease;
@@ -575,8 +575,8 @@ body {
 
   .csstransforms3d .aside-toggled .wrapper > section,
   .csstransforms3d .aside-toggled .wrapper > footer {
-    -webkit-transform: translate3d(-220px, 0, 0);
-    transform: translate3d(-220px, 0, 0);
+    -webkit-transform: translate3d(-110px, 0, 0);
+    transform: translate3d(-110px, 0, 0);
   }
 
   .csstransforms3d .aside-toggled .wrapper > .aside {
@@ -1013,7 +1013,7 @@ body {
 
 @media only screen and (min-width: 768px) {
   .topnavbar .navbar-header {
-    width: 220px;
+    width: 110px;
     text-align: center;
   }
 
@@ -1047,7 +1047,7 @@ body {
 }
 
 .topnavbar .navbar-header .navbar-brand {
-  padding: 0;
+  width: 110px;
 }
 
 .topnavbar .navbar-header .brand-logo > img,
@@ -1086,27 +1086,6 @@ body {
   background-color: transparent;
 }
 
-.topnavbar .navbar-nav > li > [data-toggle='navbar-search'] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 20;
-  font-size: 16px;
-  line-height: 55px;
-  color: #fff;
-  padding-top: 0;
-  padding-bottom: 0;
-  -webkit-transition: color 0.3s ease;
-  -o-transition: color 0.3s ease;
-  transition: color 0.3s ease;
-}
-
-@media only screen and (min-width: 768px) {
-  .topnavbar .navbar-nav > li > [data-toggle='navbar-search'] {
-    color: #ffffff;
-  }
-}
-
 @media only screen and (max-width: 767px) {
   .sidebar-toggle {
     position: absolute !important;
@@ -1135,26 +1114,12 @@ body {
   float: right;
 }
 
-.nav-wrapper .navbar-nav .open .dropdown-menu {
-  position: absolute;
-  background-color: #ffffff;
-  right: 0px;
-  left: 0px;
-  border-top: 1px solid #e1e1e1;
-  border-bottom: 1px solid #e1e1e1;
-}
-
 .topnavbar .navbar-form {
-  right: 0;
-  left: 0;
-  margin: 0;
-  padding: auto;
-  height: 55px;
+  width: 350px;
   z-index: 9001;
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
-  border-bottom: 1px solid #e1e2e3;
 }
 
 .topnavbar .navbar-form .form-group {
@@ -1164,8 +1129,8 @@ body {
 
 .topnavbar .navbar-form .form-control {
   height: 100%;
-  border: 0;
-  border-radius: 0;
+  border: 1px;
+  border-radius: 2px;
   width: 100%;
 }
 
@@ -1187,7 +1152,7 @@ body {
 
 @media only screen and (min-width: 768px) {
   .topnavbar .navbar-form {
-    right: 220px;
+    right: 110px;
   }
 }
 
@@ -1534,7 +1499,7 @@ body {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 235px;
+  width: 125px;
   margin-top: 115px;
   border-right: 1px solid #cccccc;
   background-color: #ffffff;
@@ -1579,7 +1544,7 @@ body {
 }
 
 .offsidebar .nav-tabs.nav-justified > li.active > a {
-  color: #5d9cec;
+  color: #b5b5b5;
 }
 
 @media only screen and (min-width: 768px) {
@@ -1599,7 +1564,7 @@ body {
 }
 
 .no-csstransforms3d .offsidebar {
-  left: -235px;
+  left: -125px;
 }
 
 .no-csstransforms3d .offsidebar-open .offsidebar {
@@ -1609,8 +1574,8 @@ body {
 /* Transformation ready devices*/
 
 .csstransforms3d .offsidebar {
-  -webkit-transform: translate3d(-235px, 0, 0);
-  transform: translate3d(-235px, 0, 0);
+  -webkit-transform: translate3d(-125px, 0, 0);
+  transform: translate3d(-125px, 0, 0);
 }
 
 .csstransforms3d .offsidebar-open .offsidebar {
@@ -1830,7 +1795,7 @@ fieldset[disabled] .btn-pink.active {
 .btn-outline:hover,
 .btn-outline:focus {
   background-color: #fff;
-  color: #5d9cec;
+  color: #b5b5b5;
 }
 
 .btn-flat {
@@ -5478,14 +5443,6 @@ fieldset[disabled] .btn-pink.active {
   animation-name: zoomBack;
 }
 
-.ngdialog.ngdialog-theme-default .ngdialog-content {
-  background-color: #fff !important;
-  border-radius: 4px !important;
-  font-family: inherit !important;
-  font-size: inherit !important;
-  line-height: inherit !important;
-}
-
 /* ========================================================================
    Component: form-elements.less
  ========================================================================== */
@@ -5536,7 +5493,7 @@ fieldset[disabled] .btn-pink.active {
 
 .c-checkbox:hover span,
 .c-radio:hover span {
-  border-color: #5d9cec;
+  border-color: #b5b5b5;
 }
 
 .form-inline .c-checkbox span,
@@ -5595,8 +5552,8 @@ fieldset[disabled] .btn-pink.active {
 .c-radio input[type=checkbox]:checked + span,
 .c-checkbox input[type=radio]:checked + span,
 .c-radio input[type=radio]:checked + span {
-  border-color: #5d9cec;
-  background-color: #5d9cec;
+  border-color: #b5b5b5;
+  background-color: #b5b5b5;
 }
 
 .c-checkbox input[type=radio]:checked + span,
@@ -5606,7 +5563,7 @@ fieldset[disabled] .btn-pink.active {
 
 .c-checkbox input[type=radio]:checked + span:before,
 .c-radio input[type=radio]:checked + span:before {
-  color: #5d9cec;
+  color: #b5b5b5;
 }
 
 .c-checkbox input[type=checkbox]:disabled + span,
@@ -5651,8 +5608,8 @@ fieldset[disabled] .btn-pink.active {
 }
 
 .c-radio.c-radio-nofont input[type=radio]:checked + span {
-  border-color: #5d9cec;
-  background-color: #5d9cec;
+  border-color: #b5b5b5;
+  background-color: #b5b5b5;
 }
 
 .c-radio.c-radio-nofont input[type=radio]:checked + span {
@@ -5660,7 +5617,7 @@ fieldset[disabled] .btn-pink.active {
 }
 
 .c-radio.c-radio-nofont input[type=radio]:checked + span:before {
-  background-color: #5d9cec;
+  background-color: #b5b5b5;
 }
 
 .c-radio.c-radio-nofont input[type=radio]:disabled + span {
@@ -5743,8 +5700,8 @@ fieldset[disabled] .btn-pink.active {
 }
 
 .switch input:checked + span {
-  background-color: #5d9cec;
-  border-color: #5d9cec;
+  background-color: #b5b5b5;
+  border-color: #b5b5b5;
   transition: all .5s;
 }
 
@@ -5928,14 +5885,14 @@ body .bootstrap-tagsinput .tag {
 }
 
 .form-wizard > ol > li .label {
-  background-color: #5d9cec;
+  background-color: #b5b5b5;
   vertical-align: super;
   margin-left: 6px;
 }
 
 .form-wizard > ol > li .label[href]:hover,
 .form-wizard > ol > li .label[href]:focus {
-  background-color: #2f80e7;
+  background-color: #9c9c9c;
 }
 
 .form-wizard > ol > li h4 {
@@ -5949,7 +5906,7 @@ body .bootstrap-tagsinput .tag {
 }
 
 .form-wizard > ol > li.active {
-  background-color: #5d9cec;
+  background-color: #b5b5b5;
 }
 
 .form-wizard > ol > li.active h4,
@@ -5960,7 +5917,7 @@ body .bootstrap-tagsinput .tag {
 .form-wizard > ol > li.active .label {
   background-color: #fff;
   border-color: #fff;
-  color: #5d9cec;
+  color: #b5b5b5;
 }
 
 .form-wizard .bwizard-buttons {
@@ -6976,17 +6933,17 @@ body .ng-table-pager:after {
 }
 
 .bg-primary {
-  background-color: #5d9cec;
+  background-color: #b5b5b5;
   color: #ffffff !important;
 }
 
 .bg-primary-light {
-  background-color: #8bb8f1;
+  background-color: #cfcfcf;
   color: #ffffff !important;
 }
 
 .bg-primary-dark {
-  background-color: #2f80e7;
+  background-color: #9c9c9c;
   color: #ffffff !important;
 }
 
@@ -7568,8 +7525,4 @@ a {
 .bill-box-height {
   height: 700px;
   overflow: scroll;
-}
-
-.img-logo-custom {
-  height: 42px;
 }

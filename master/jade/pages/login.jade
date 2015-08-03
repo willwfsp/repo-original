@@ -5,17 +5,17 @@
       a(href="#")
         img.block-center.img-rounded(src='app/img/logo.png', alt='Image')
     .panel-body
-      p.text-center.pv SIGN IN TO CONTINUE.
+      p.text-center.pv LOGIN
       form.form-validate(role='form', ng-submit="login()", name='loginForm', novalidate='').mb-lg
         .form-group.has-feedback
-          input#exampleInputEmail1.form-control(type='email', name="account_email" placeholder='Enter email', autocomplete="off", ng-model="account.email", required='')
+          input#exampleInputEmail1.form-control(type='email', name="account_email" placeholder='Email', autocomplete="off", ng-model="account.email", required='')
           span.fa.fa-envelope.form-control-feedback.text-muted
-          span.text-danger(ng-show="loginForm.account_email.$dirty && loginForm.account_email.$error.required") This field is required
-          span.text-danger(ng-show="loginForm.account_email.$dirty && loginForm.account_email.$error.email") This field must be a valid email address
+          span.text-danger(ng-show="loginForm.account_email.$dirty && loginForm.account_email.$error.required") Obrigatório
+          span.text-danger(ng-show="loginForm.account_email.$dirty && loginForm.account_email.$error.email") Por favor, insira um e-mail válido
         .form-group.has-feedback
-          input#exampleInputPassword1.form-control(type='password', name="account_password" placeholder='Password', ng-model="account.password", required='')
+          input#exampleInputPassword1.form-control(type='password', name="account_password" placeholder='Senha', ng-model="account.password", required='')
           span.fa.fa-lock.form-control-feedback.text-muted
-          span.text-danger(ng-show="loginForm.account_password.$dirty && loginForm.account_password.$error.required") This field is required
+          span.text-danger(ng-show="loginForm.account_password.$dirty && loginForm.account_password.$error.required") Obrigatório
         .clearfix
           .checkbox.c-checkbox.pull-left.mt0
             label
@@ -24,17 +24,17 @@
               |  Remember Me
           .pull-right
             a.text-muted(ui-sref="page.recover") Forgot your password?
-        
-        button.btn.btn-block.btn-primary.mt-lg(type='submit') Login
-      
+
+        button.btn.btn-block.btn-primary.mt-lg(type='submit') Entrar
+
       .alert.alert-danger.text-center(ng-show='authMsg') {{authMsg}}
       p.pt-lg.text-center Need to Signup?
       a(ui-sref="page.register").btn.btn-block.btn-default Register Now
   // END panel
   .p-lg.text-center
-    span &copy; 
-    span(ng-bind="app.year") 
-    span  - 
+    span &copy;
+    span(ng-bind="app.year")
+    span  -
     span(ng-bind="app.name")
     br
     span(ng-bind="app.description")

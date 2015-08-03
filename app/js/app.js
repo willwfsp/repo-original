@@ -1,17 +1,17 @@
 /*!
- * 
+ *
  * Angle - Bootstrap Admin App + AngularJS
- * 
+ *
  * Author: @themicon_co
  * Website: http://themicon.co
  * License: http://support.wrapbootstrap.com/knowledge_base/topics/usage-licenses
- * 
+ *
  */
 
 if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript requires jQuery'); }
 
 // APP START
-// ----------------------------------- 
+// -----------------------------------
 
 var App = angular.module('angle', [
     'ngRoute',
@@ -43,7 +43,7 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
     });
 
     // Scope Globals
-    // ----------------------------------- 
+    // -----------------------------------
     $rootScope.app = {
       name: 'SigaLei',
       description: 'Busque e acompanhe os projetos de lei em discussão no Congresso Nacional e nas Assembleias Legislativas',
@@ -63,11 +63,6 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
       hiddenFooter: false,
       viewAnimation: 'ng-fadeInUp'
     };
-    $rootScope.user = {
-      name:     'John',
-      job:      'ng-developer',
-      picture:  'app/img/user/02.jpg'
-    };
 
 }]);
 
@@ -85,11 +80,11 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
   $locationProvider.html5Mode(false);
 
   // default route
-  $urlRouterProvider.otherwise('/app/search');
+  $urlRouterProvider.otherwise('/app/searchBills');
 
-  // 
+  //
   // Application Routes
-  // -----------------------------------   
+  // -----------------------------------
   $stateProvider
     .state('app', {
         url: '/app',
@@ -98,12 +93,50 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'AppController',
         resolve: helper.resolveFor('modernizr', 'icons')
     })
-    // 
+    .state('app.searchBills', {
+        url: '/searchBills',
+        title: 'Pesquisar Proposições',
+        templateUrl: helper.basepath('searchBills.html'),
+        resolve: helper.resolveFor('select'),
+        controller: 'SearchBillsController',
+        params: {
+            q: ""
+        }
+    })
+    .state('app.proposicao', {
+        url: '/proposicao',
+        title: 'Visualizar Projeto de Lei',
+        templateUrl: helper.basepath('proposicao.html')
+    })
+    .state('app.parlamentar', {
+        url: '/parlamentar',
+        title: 'Visualizar dados de parlamentares',
+        templateUrl: helper.basepath('parlamentar.html')
+    })
+    .state('app.calendar', {
+        url: '/calendar',
+        title: 'Calendários',
+        templateUrl: helper.basepath('calendar.html')
+    })
+    .state('page', {
+        url: '/page',
+        templateUrl: 'app/pages/page.html',
+        resolve: helper.resolveFor('modernizr', 'icons'),
+        controller: ["$rootScope", function($rootScope) {
+            $rootScope.app.layout.isBoxed = false;
+        }]
+    })
+    .state('login', {
+        url: '/login',
+        title: 'Login',
+        templateUrl: 'app/pages/login.html'
+    })
+    //
     // CUSTOM RESOLVES
     //   Add your own resolves properties
     //   following this object extend
     //   method
-    // ----------------------------------- 
+    // -----------------------------------
     // .state('app.someroute', {
     //   url: '/some_url',
     //   templateUrl: 'path_to_template.html',
@@ -144,7 +177,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         prefix : 'app/i18n/',
         suffix : '.json'
     });
-    $translateProvider.preferredLanguage('en');
+    $translateProvider.preferredLanguage('pt_BR');
     $translateProvider.useLocalStorage();
     $translateProvider.usePostCompiling(true);
 
@@ -193,7 +226,9 @@ App
     scripts: {
       'modernizr':          ['vendor/modernizr/modernizr.js'],
       'icons':              ['vendor/fontawesome/css/font-awesome.min.css',
-                             'vendor/simple-line-icons/css/simple-line-icons.css']
+                             'vendor/simple-line-icons/css/simple-line-icons.css'],
+      'select':             ['vendor/bootstrap-select/bootstrap-select.css',
+                             'vendor/bootstrap-select/bootstrap-select.js']
     },
     // Angular based script (use the right module name)
     modules: [
@@ -202,6 +237,7 @@ App
 
   })
 ;
+
 /**=========================================================
  * Module: access-login.js
  * Demo for login api
@@ -256,7 +292,7 @@ App.controller('AppController',
     $rootScope.app.layout.horizontal = true ;
 
     // Loading bar transition
-    // ----------------------------------- 
+    // -----------------------------------
     var thBar;
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
         if($('.wrapper > section').length) // check if bar container exists
@@ -294,10 +330,11 @@ App.controller('AppController',
       });
 
     $rootScope.currTitle = $state.current.title;
+
     $rootScope.pageTitle = function() {
       var title = $rootScope.app.name + ' - ' + ($rootScope.currTitle || $rootScope.app.description);
       document.title = title;
-      return title; 
+      return title;
     };
 
     // iPad may presents ghost click issues
@@ -320,7 +357,7 @@ App.controller('AppController',
       $localStorage.layout = $scope.app.layout;
     }, true);
 
-    
+
     // Allows to use branding color with interpolation
     // {{ colorByName('primary') }}
     $scope.colorByName = colors.byName;
@@ -333,9 +370,7 @@ App.controller('AppController',
       listIsOpen: false,
       // list of available languages
       available: {
-        'en':       'English',
         'pt_BR':    'Português',
-        'es_AR':    'Español'
       },
       // display always the current ui language
       init: function () {
@@ -1105,13 +1140,13 @@ App.service('Utils', ["$window", "APP_MEDIAQUERY", function($window, APP_MEDIAQU
       }
     };
 }]);
-// To run this code, edit file 
+// To run this code, edit file
 // index.html or index.jade and change
 // html data-ng-app attribute from
 // angle to myAppName
-// ----------------------------------- 
+// -----------------------------------
 
-var myApp = angular.module('SigaLeiApp', ['angle', 'ngDialog']);
+var myApp = angular.module('sigaLeiApp', ['angle']);
 
 myApp.run(["$log", function($log) {
 
@@ -1119,78 +1154,8 @@ myApp.run(["$log", function($log) {
 
 }]);
 
-myApp.config(["RouteHelpersProvider", function(RouteHelpersProvider) {
 
-  // Custom Route definition
-  
-}]);
-
-myApp.controller('oneOfMyOwnController', ["$scope", function($scope) {
-  /* controller code */
-}]);
-
-myApp.directive('oneOfMyOwnDirectives', function() {
-  /*directive code*/
-});
-
-myApp.config(["$stateProvider", 'RouteHelpersProvider', function($stateProvider, helper) {
-  /* specific routes here (see file config.js) */
-  $stateProvider
-    .state('app.congresso_nacional', {
-        url: '/congresso_nacional',
-        title: 'Congresso Nacional',
-        templateUrl: helper.basepath('congresso_nacional.html')
-    })
-    .state('app.camara_deputados', {
-        url: '/camara_deputados',
-        title: 'Câmara dos Deputados',
-        templateUrl: helper.basepath('camara_deputados.html')
-    })
-    .state('app.senado_federal', {
-        url: '/senado_federal',
-        title: 'Senado Federal',
-        templateUrl: helper.basepath('senado_federal.html')
-    })
-    .state('app.proposicao', {
-        url: '/proposicao',
-        title: 'Visualizar Projeto de Lei',
-        templateUrl: helper.basepath('proposicao.html')
-    })
-    .state('app.parlamentar', {
-        url: '/parlamentar',
-        title: 'Visualizar dados de parlamentares',
-        templateUrl: helper.basepath('parlamentar.html')
-    })
-    .state('app.search', {
-        url: '/search?q',
-        title: 'Pesquisar',
-        templateUrl: helper.basepath('search.html'),
-        params: {
-            q: ""
-        }
-    })
-    .state('app.calendar', {
-        url: '/calendar',
-        title: 'Calendários',
-        templateUrl: helper.basepath('calendar.html')
-    })
-    .state('page', {
-        url: '/page',
-        templateUrl: 'app/pages/page.html',
-        resolve: helper.resolveFor('modernizr', 'icons'),
-        controller: ["$rootScope", function($rootScope) {
-            $rootScope.app.layout.isBoxed = false;
-        }]
-    })
-    .state('page.login', {
-        url: '/login',
-        title: 'Login',
-        templateUrl: 'app/pages/login.html'
-    })
-    ;
-
-}]);
-myApp.controller('congressoDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
+myApp.controller('CongressoDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
 	$scope.dados = {};
     $scope.fetchData = function(){
         DataFetcher.fetchDataCongresso();
@@ -1200,7 +1165,7 @@ myApp.controller('congressoDataController', ['$scope','$rootScope', '$log', '$ht
     });
 }]);
 
-myApp.controller('camaraDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
+myApp.controller('CamaraDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
     $scope.dados = {};
     $scope.fetchData = function(){
         DataFetcher.fetch_data_camara();
@@ -1210,7 +1175,7 @@ myApp.controller('camaraDataController', ['$scope','$rootScope', '$log', '$http'
     });
 }]);
 
-myApp.controller('senadoDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
+myApp.controller('SenadoDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
     $scope.dados = {};
     $scope.fetchData = function(){
         DataFetcher.fetch_data_senado();
@@ -1220,7 +1185,7 @@ myApp.controller('senadoDataController', ['$scope','$rootScope', '$log', '$http'
     });
 }]);
 
-myApp.controller('RepresentativeDataController', ['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher', 
+myApp.controller('RepresentativeDataController', ['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
     function($location, $scope, $rootScope, $log, $http, DataFetcher){
     $scope.dados = {};
     $scope.fetchData = function(){
@@ -1230,7 +1195,9 @@ myApp.controller('RepresentativeDataController', ['$location','$scope','$rootSco
         $scope.dados = DataFetcher.getResults();
     });
 }]);
-myApp.controller('proposicaoController', ['$location', '$scope','$state', '$log',  '$http', 'DataFetcher', 
+
+
+myApp.controller('ProposicaoController', ['$location', '$scope','$state', '$log',  '$http', 'DataFetcher',
     function($location,$scope, $state, $log, $http, DataFetcher){
 	$scope.dados = {};
     $scope.fetchData = function(){
@@ -1244,7 +1211,7 @@ myApp.controller('proposicaoController', ['$location', '$scope','$state', '$log'
 
 }]);
 
-myApp.controller('tramitacaoController', ['$location', '$scope','$state', '$log',  '$http', 'DataFetcher', 
+myApp.controller('TramitacaoController', ['$location', '$scope','$state', '$log',  '$http', 'DataFetcher',
     function($location,$scope, $state, $log, $http, DataFetcher){
     $scope.dados = [];
     $scope.fetchData = function(){
@@ -1252,57 +1219,54 @@ myApp.controller('tramitacaoController', ['$location', '$scope','$state', '$log'
     };
 
     $scope.$on('fetch tramitacoes:completed', function(event) {
-        // you could inspect the data to see if what you care about changed, or just update your own scope
+        // you could inspect the data to see if what you care about changed,
+        // or just update your own scope
         $scope.dados = DataFetcher.getTramitacoes();
     });
 }]);
 
-myApp.controller('pollController', ['$location', '$scope','$state', '$log',  '$modal', 'DataFetcher', 
+myApp.controller('PollController', ['$location', '$scope','$state', '$log',  '$modal', 'DataFetcher',
     function($location,$scope, $state, $log, $modal, DataFetcher){
     $scope.dados = [];
     $scope.fetchData = function(){
         DataFetcher.fetchDataPolls($location.search().p);
     };
+
     $scope.formattedDate = function(dateStr){
         return dateStr.replace(" ", "T");
-    }
+    };
+
     $scope.$on('fetch polls:completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
         $scope.dados = DataFetcher.getPolls();
     });
-    $scope.viewPollDetails = function(){
-        var modalInstance = $modal.open({
-            templateUrl: '#app/views/partials/pollDetails.html',
-            
-            resolve: {
-                items: function () {
-                  return $scope.items;
-                }
-            }
-        });        
-    }
+
 }]);
 
+/**=========================================================
+ * Module: search.js
+ * Searches logic (bills, representatives and comissions)
+ =========================================================*/
 
-myApp.controller('searchBar', ['$location', '$scope','$state',  'DataFetcher', function($location, $scope, $state, DataFetcher){
+myApp.controller('SearchBarController', ['$location', '$scope','$state',  'DataFetcher', function($location, $scope, $state, DataFetcher){
 
     $scope.searchQ = function(){
-
         DataFetcher.fetchDataBills($scope.query);
-        $state.go('app.search', {q: $scope.query});
+        $state.go('app.searchBills', {q: $scope.query});
     };
 
 }]);
 
-myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal', 'DataFetcher', 
+myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
+    '$scope', '$log', '$state', '$modal', 'DataFetcher',
     function($http, $stateParams, $location, $scope, $log, $state, $modal, DataFetcher) {
 
     $scope.toDate = function(date){
-        return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
+      return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
     };
 
     $scope.parseAuthor = function(authorString){
-        var author = ""
+        var author = "";
             try{
                 author = authorString.split(",");
             }
@@ -1315,24 +1279,16 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
     $scope.getMainAuthor = function(data){
         if (typeof(data) == "string"){
             return $scope.parseAuthor(data);
-        };
+        }
         //if array, return first author
         if (data instanceof Array){
             authors = $scope.parseAuthor(data[data.length - 1]);
             authors.length = data.length - 1;
             return authors;
-        };
+        }
         return "Error";
     };
 
-    $scope.getSubthemes = function(theme){
-        for(index in $scope.themesAndSubthemes){
-            if($scope.themesAndSubthemes[index].tema == theme){
-                return $scope.themesAndSubthemes[index].subtemas;
-            }
-        }
-        return null;
-    };
 
     $scope.loadThemes = function(){
         var themesJson = 'server/onthology.json';
@@ -1359,6 +1315,12 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         "MG": false
     };
 
+    $scope.statusBill = {
+        "tramitando": false,
+        "arquivado": false,
+        "lei": false
+    };
+
     $scope.billTypes = {
         "PL": false,
         "PLComp": false,
@@ -1367,7 +1329,6 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         "PEC": false
     };
     $scope.year = "";
-
     $scope.fetching = false;
     //search variables
     $scope.query = "";
@@ -1380,22 +1341,32 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         "bookmark": "",
         "casas": [],
         "tipos": [],
+        "status":[],
+        "subtema": "",
         "ano": ""
     };
     // functions to change filter parameters and fetch data again
     $scope.changeFilterYear = function(){
-        
-        if( ($scope.year >= 1980 && $scope.year <= 2015) || $scope.year == ""){
+
+        if( ($scope.year >= 1980 && $scope.year <= 2015) || $scope.year === ""){
             $scope.filters.ano = $scope.year.toString();
             $scope.filters.bookmark="";
             $scope.fetching = true;
             DataFetcher.fetchDataBills($scope.query, $scope.filters);
-        };
+        }
+    };
+    $scope.changeFilterTheme = function(){
+
+        $scope.filters.subtema = $scope.themeSelected.subtema;
+        $scope.filters.bookmark="";
+        $scope.fetching = true;
+        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+
     };
 
     $scope.changeFilterHouses = function(){
         $scope.filters.casas = [];
-        for(key in $scope.checkedHouses){
+        for(var key in $scope.checkedHouses){
             if($scope.checkedHouses[key]){
                 if(key == "CN"){
                     $scope.filters.casas.push(key);
@@ -1405,20 +1376,32 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
                 else{
                     $scope.filters.casas.push(key);
                 }
-            };
-        };
+            }
+        }
         $scope.filters.bookmark="";
         $scope.fetching = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
-    
+
     $scope.changeFilterBillTypes = function(){
         $scope.filters.tipos = [];
-        for(key in $scope.billTypes){
+        for(var key in $scope.billTypes){
             if($scope.billTypes[key]){
                 $scope.filters.tipos.push(key);
-            };
-        };
+            }
+        }
+        $scope.filters.bookmark="";
+        $scope.fetching = true;
+        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+    };
+
+    $scope.changeStatus = function(){
+        $scope.filters.status = [];
+        for(var key in $scope.statusBill){
+            if($scope.statusBill[key]){
+                $scope.filters.status.push(key);
+            }
+        }
         $scope.filters.bookmark="";
         $scope.fetching = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
@@ -1426,12 +1409,13 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
 
     $scope.cleanFilters = function(){
         //clean DOM variables
-        for(key in $scope.checkedHouses){
+        for(var key in $scope.checkedHouses){
             $scope.checkedHouses[key] = false;
-        };
-        for(key in $scope.billTypes){
-            $scope.billTypes[key] = false;
-        };
+        }
+
+        for(var key1 in $scope.billTypes){
+            $scope.billTypes[key1] = false;
+        }
         $scope.year = "";
         //clean filter
         $scope.filters.casas = [];
@@ -1445,15 +1429,15 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
     };
 
     $scope.init = function(){
-        DataFetcher.fetchDataBills($stateParams.q);
-        console.log($stateParams);
         $scope.fetching = true;
+        DataFetcher.fetchDataBills($stateParams.q);
     };
 
     $scope.moreResults = function(){
-        if($scope.fetching == true){
-            return
-        };
+
+        if($scope.fetching === true){
+            return;
+        }
         $scope.filters.bookmark = $scope.bookmark;
         $scope.fetching = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
@@ -1467,7 +1451,7 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
         $scope.bookmark = DataFetcher.getResults().bookmark;
         $scope.fetching = false;
     });
-    
+
     $scope.$on('search more results: completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
         for(i = 0; i < DataFetcher.getResults().rows.length; i++){
@@ -1481,10 +1465,11 @@ myApp.controller('searchResults', ['$http', '$stateParams', '$location', '$scope
 
 }]);
 
-myApp.controller('popOverController', ['$scope', function($scope){
+myApp.controller('PopOverController', ['$scope', function($scope){
 }]);
+
 myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
-    var databaseURL = 'http://sigalei-api.mybluemix.net/v1/';
+    var databaseURL = 'https://sigalei-api.mybluemix.net/v1/';
     var databaseToken = "admin@sigalei";
 
     var results = {};
@@ -1501,7 +1486,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
             'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-        }           
+        }
     };
 
     return {
@@ -1514,23 +1499,23 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                 'Content-Type': 'application/json'
             };
 
-            for(filter in filters){
+            for(var filter in filters){
                 headers[filter] = filters[filter];
-            };
+            }
 
             url = databaseURL + 'proposicoes?';
 
             if(termos){
                 url += 'q=' + termos + '&';
-            };
+            }
 
             url += 'access_token=' + databaseToken;
             $http.post(url, headers)
                 .success(function(data){
                     results = data;
                     query = termos || "";
-                    if(filters && filters.bookmark != ""){
-                        $rootScope.$broadcast('search more results: completed')
+                    if(filters && filters.bookmark !== ""){
+                        $rootScope.$broadcast('search more results: completed');
                     }
                     else{
                         $rootScope.$broadcast('search:completed');
@@ -1540,7 +1525,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                     $log.log('error');
                 });
         },
-        
+
         fetchDataRepresentative : function(IdRepresentative){
             var req = request_stub;
             req.url = databaseURL + 'parlamentares/' + IdRepresentative +'?access_token='+ databaseToken;
@@ -1564,7 +1549,8 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                 .error(function(status, error){
                     $log.log('error');
                 });
-            return 
+
+            return;
         },
         fetch_data_proposicao : function(nome){
             var req = request_stub;

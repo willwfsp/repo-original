@@ -1,0 +1,147 @@
+div(data-ng-init="init()")
+  .col-lg-3
+    .panel
+      .panel-heading
+        h3 Filtros
+      .panel-body
+        //filtro por casas legislativas
+        .form-group.mb-sm
+          label.control-label.mb Casas Legislativas
+          br
+          label.checkbox-inline.c-checkbox
+            input(type='checkbox', ng-model="checkedHouses.CN", ng-click="changeFilterHouses()")
+            |  Congresso Nacional
+            span.pull-left.fa.fa-check
+          br
+          label.checkbox-inline.c-checkbox
+            input(type='checkbox', ng-model="checkedHouses.SP", ng-click="changeFilterHouses()")
+            |  São Paulo
+            span.pull-left.fa.fa-check
+          br
+          label.checkbox-inline.c-checkbox
+            input(type='checkbox', ng-model="checkedHouses.MG", ng-click="changeFilterHouses()")
+            |  Minas Gerais
+            span.pull-left.fa.fa-check
+          br
+
+        .form-group.mb-sm
+          label.control-label.mb Situação
+          br
+          label.checkbox-inline.c-checkbox
+            input(type='checkbox', ng-model="statusBill.tramitando", ng-click="changeStatus()")
+            |  Tramitando
+            span.pull-left.fa.fa-check
+          br
+          label.checkbox-inline.c-checkbox
+            input(type='checkbox', ng-model="statusBill.arquivado", ng-click="changeStatus()")
+            |  Arquivado
+            span.pull-left.fa.fa-check
+          br
+          label.checkbox-inline.c-checkbox
+            input(type='checkbox', ng-model="statusBill.lei", ng-click="changeStatus()")
+            |  Transformado em Lei
+            span.pull-left.fa.fa-check
+          br
+
+        .form-group.mb-sm
+          label.control-label.mb Tipo de Proposição
+          br
+          label.checkbox-inline.c-checkbox
+            input(type='checkbox', ng-model="billTypes.PL", ng-click="changeFilterBillTypes()")
+            |  Projeto de Lei Ordinário
+            span.pull-left.fa.fa-check
+          br
+          label.checkbox-inline.c-checkbox
+            input(type='checkbox', ng-model="billTypes.PLComp", ng-click="changeFilterBillTypes()")
+            |  Projeto de Lei Complementar
+            span.pull-left.fa.fa-check
+          br
+          label.checkbox-inline.c-checkbox
+            input(type='checkbox', ng-model="billTypes.MPV", ng-click="changeFilterBillTypes()")
+            |  Medida Provisoria
+            span.pull-left.fa.fa-check
+          br
+          label.checkbox-inline.c-checkbox
+            input(type='checkbox', ng-model="billTypes.PLN", ng-click="changeFilterBillTypes()")
+            |  Projeto de Lei Nacional
+            span.pull-left.fa.fa-check
+          br
+          label.checkbox-inline.c-checkbox
+            input(type='checkbox', ng-model="billTypes.PEC", ng-click="changeFilterBillTypes()")
+            |  Emenda Constitucional
+            span.pull-left.fa.fa-check
+          br
+
+        .form-group.mb-xl
+          label.control-label.mb Temas
+          select.form-control(ng-model="themeSelected", ng-options="item.subtema group by item.tema for item in themesAndSubthemes", ng-change="changeFilterTheme()")
+        .form-group.mb-xl
+          label.control-label.mb Ano
+          br
+          p.input-group
+            input.form-control(type="number", min="1980", max="2015", ng-model="year" ng-change="changeFilterYear()")
+        hr
+        .btn.btn-md.btn-default.dropdown-menu-right.pull-right(ng-click="cleanFilters()") Limpar Filtros
+  //END filters
+
+  .col-lg-9.col-md-12.col-sm-12
+    // START panel
+    .panel
+      .panel-heading
+        paneltool(tool-refresh="standard")
+        h3(ng-if="fetching")  Buscando
+        h3(ng-if="!fetching") Resultados da busca
+          small(ng-if="query != \"\" ") por "{{query}}"
+        p(ng-if="!fetching") {{total_results}} projetos de lei encontrados
+        label.control-label.mb Ordernar por:
+          select.form-control(ng-model="orderedBy")
+            option(value="1") Data
+            option(value="2") Relevância
+      // START table-responsive
+      .table-responsive
+        table.table.table-striped.table-bordered.table-hover
+          tbody
+            tr(ng-repeat="bill in bills")
+              td
+                .media-box
+                    small.text-muted.pull-right Última atualização: {{toDate(bill.fields.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
+                    .media-box-body
+                      a(ng-href="#/app/proposicao?p={{bill.fields.SLP_NOME}}")
+                        h4.media-box-heading {{bill.fields.SLP_NOME}}
+                      p.media-box-heading {{bill.fields.SLP_STATUS_DESC}}
+                      small.text-muted(ng-if="bill.fields.SLR_NOME != undefined") Outros Nomes: {{bill.fields.SLR_NOME}}
+                      br(ng-if="bill.fields.SLR_NOME != undefined")
+
+                      small.text-muted(ng-if="bill.fields.SLR_NOME != undefined") Outros Nomes: {{bill.fields.SLR_NOME}}
+                      small.text-muted Autor:
+                        //one author and doesn't have id
+                        strong(ng-if="parseAuthor(bill.fields.SLP_AUTOR).id === undefined") {{parseAuthor(bill.fields.SLP_AUTOR).name}}
+
+                        //one author and has id
+                        strong(ng-if="getMainAuthor(bill.fields.SLP_AUTOR).id != undefined")
+                          a(ng-href="#/app/parlamentar?id={{getMainAuthor(bill.fields.SLP_AUTOR).id}}") {{getMainAuthor(bill.fields.SLP_AUTOR).name}}
+
+                        //get other authors
+                        strong(ng-if="getMainAuthor(bill.fields.SLP_AUTOR).length != undefined") e
+                          a(ng-click="showOtherAuthors = !showOtherAuthors") {{getMainAuthor(bill.fields.SLP_AUTOR).length}} outros
+                          div(collapse="!showOtherAuthors")
+                            strong(ng-repeat="author in bill.fields.SLP_AUTOR", ng-show="! $last")
+                              strong(ng-if="parseAuthor(author).id === undefined") {{parseAuthor(author).name}}
+
+                              strong(ng-if="parseAuthor(author).id != undefined")
+                                a(ng-href="#/app/parlamentar?id={{parseAuthor(author).id}}") {{parseAuthor(author).name}}
+                              span(ng-show="$index != bill.fields.SLP_AUTOR.length - 2") ,
+                      br
+                      small.text-muted Tema: {{bill.fields.SLP_SL_TEMA || '-'}}
+                      br
+                      small.text-muted SubTema: {{bill.fields.SLP_SL_SUBTEMA}}
+                      p {{bill.fields.SLP_EMENTA}}
+
+            tr(ng-if="fetching")
+              td
+                p Carregando...
+            tr
+              td
+                button.btn.btn-block.btn-default(ng-click="moreResults()" ng-show="bills.length < total_results") Carregar Mais resultados
+        // END table-responsive
+      // END panel

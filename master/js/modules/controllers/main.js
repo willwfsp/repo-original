@@ -12,7 +12,7 @@ App.controller('AppController',
     $rootScope.app.layout.horizontal = true ;
 
     // Loading bar transition
-    // ----------------------------------- 
+    // -----------------------------------
     var thBar;
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
         if($('.wrapper > section').length) // check if bar container exists
@@ -50,10 +50,11 @@ App.controller('AppController',
       });
 
     $rootScope.currTitle = $state.current.title;
+
     $rootScope.pageTitle = function() {
       var title = $rootScope.app.name + ' - ' + ($rootScope.currTitle || $rootScope.app.description);
       document.title = title;
-      return title; 
+      return title;
     };
 
     // iPad may presents ghost click issues
@@ -76,7 +77,7 @@ App.controller('AppController',
       $localStorage.layout = $scope.app.layout;
     }, true);
 
-    
+
     // Allows to use branding color with interpolation
     // {{ colorByName('primary') }}
     $scope.colorByName = colors.byName;
@@ -89,9 +90,7 @@ App.controller('AppController',
       listIsOpen: false,
       // list of available languages
       available: {
-        'en':       'English',
         'pt_BR':    'Português',
-        'es_AR':    'Español'
       },
       // display always the current ui language
       init: function () {

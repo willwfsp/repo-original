@@ -1,17 +1,17 @@
 /*!
- * 
+ *
  * Angle - Bootstrap Admin App + AngularJS
- * 
+ *
  * Author: @themicon_co
  * Website: http://themicon.co
  * License: http://support.wrapbootstrap.com/knowledge_base/topics/usage-licenses
- * 
+ *
  */
 
 if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript requires jQuery'); }
 
 // APP START
-// ----------------------------------- 
+// -----------------------------------
 
 var App = angular.module('angle', [
     'ngRoute',
@@ -43,7 +43,7 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
     });
 
     // Scope Globals
-    // ----------------------------------- 
+    // -----------------------------------
     $rootScope.app = {
       name: 'SigaLei',
       description: 'Busque e acompanhe os projetos de lei em discussão no Congresso Nacional e nas Assembleias Legislativas',
@@ -62,11 +62,6 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
       useFullLayout: false,
       hiddenFooter: false,
       viewAnimation: 'ng-fadeInUp'
-    };
-    $rootScope.user = {
-      name:     'John',
-      job:      'ng-developer',
-      picture:  'app/img/user/02.jpg'
     };
 
 }]);

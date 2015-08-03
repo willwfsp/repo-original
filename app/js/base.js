@@ -9205,7 +9205,7 @@ return jQuery;
 }));
 
 /**
- * @license AngularJS v1.3.15
+ * @license AngularJS v1.3.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -9260,7 +9260,7 @@ function minErr(module, ErrorConstructor) {
       return match;
     });
 
-    message = message + '\nhttp://errors.angularjs.org/1.3.15/' +
+    message = message + '\nhttp://errors.angularjs.org/1.3.16/' +
       (module ? module + '/' : '') + code;
     for (i = 2; i < arguments.length; i++) {
       message = message + (i == 2 ? '?' : '&') + 'p' + (i - 2) + '=' +
@@ -9355,6 +9355,7 @@ function minErr(module, ErrorConstructor) {
   createMap: true,
 
   NODE_TYPE_ELEMENT: true,
+  NODE_TYPE_ATTRIBUTE: true,
   NODE_TYPE_TEXT: true,
   NODE_TYPE_COMMENT: true,
   NODE_TYPE_DOCUMENT: true,
@@ -9466,7 +9467,9 @@ function isArrayLike(obj) {
     return false;
   }
 
-  var length = obj.length;
+  // Support: iOS 8.2 (not reproducible in simulator)
+  // "length" in obj used to prevent JIT error (gh-11508)
+  var length = "length" in Object(obj) && obj.length;
 
   if (obj.nodeType === NODE_TYPE_ELEMENT && length) {
     return true;
@@ -10248,8 +10251,8 @@ function toJsonReplacer(key, value) {
  * stripped since angular uses this notation internally.
  *
  * @param {Object|Array|Date|string|number} obj Input to be serialized into JSON.
- * @param {boolean|number=} pretty If set to true, the JSON output will contain newlines and whitespace.
- *    If set to an integer, the JSON output will contain that many spaces per indentation (the default is 2).
+ * @param {boolean|number} [pretty=2] If set to true, the JSON output will contain newlines and whitespace.
+ *    If set to an integer, the JSON output will contain that many spaces per indentation.
  * @returns {string|undefined} JSON-ified string representing `obj`.
  */
 function toJson(obj, pretty) {
@@ -10881,6 +10884,7 @@ function createMap() {
 }
 
 var NODE_TYPE_ELEMENT = 1;
+var NODE_TYPE_ATTRIBUTE = 2;
 var NODE_TYPE_TEXT = 3;
 var NODE_TYPE_COMMENT = 8;
 var NODE_TYPE_DOCUMENT = 9;
@@ -11117,10 +11121,17 @@ function setupModuleLoader(window) {
            * @ngdoc method
            * @name angular.Module#filter
            * @module ng
-           * @param {string} name Filter name.
+           * @param {string} name Filter name - this must be a valid angular expression identifier
            * @param {Function} filterFactory Factory function for creating new instance of filter.
            * @description
            * See {@link ng.$filterProvider#register $filterProvider.register()}.
+           *
+           * <div class="alert alert-warning">
+           * **Note:** Filter names must be valid angular {@link expression} identifiers, such as `uppercase` or `orderBy`.
+           * Names with special characters, such as hyphens and dots, are not allowed. If you wish to namespace
+           * your filters, then you can use capitalization (`myappSubsectionFilterx`) or underscores
+           * (`myapp_subsection_filterx`).
+           * </div>
            */
           filter: invokeLater('$filterProvider', 'register'),
 
@@ -11334,11 +11345,11 @@ function toDebugString(obj) {
  * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
  */
 var version = {
-  full: '1.3.15',    // all of these placeholder strings will be replaced by grunt's
+  full: '1.3.16',    // all of these placeholder strings will be replaced by grunt's
   major: 1,    // package task
   minor: 3,
-  dot: 15,
-  codeName: 'locality-filtration'
+  dot: 16,
+  codeName: 'cookie-oatmealification'
 };
 
 
@@ -11514,7 +11525,7 @@ function publishExternalAPI(angular) {
  * Angular to manipulate the DOM in a cross-browser compatible way. **jqLite** implements only the most
  * commonly needed functionality with the goal of having a very small footprint.</div>
  *
- * To use jQuery, simply load it before `DOMContentLoaded` event fired.
+ * To use `jQuery`, simply ensure it is loaded before the `angular.js` file.
  *
  * <div class="alert">**Note:** all element references in Angular are always wrapped with jQuery or
  * jqLite; they are never raw DOM references.</div>
@@ -11530,7 +11541,7 @@ function publishExternalAPI(angular) {
  * - [`children()`](http://api.jquery.com/children/) - Does not support selectors
  * - [`clone()`](http://api.jquery.com/clone/)
  * - [`contents()`](http://api.jquery.com/contents/)
- * - [`css()`](http://api.jquery.com/css/) - Only retrieves inline-styles, does not call `getComputedStyle()`
+ * - [`css()`](http://api.jquery.com/css/) - Only retrieves inline-styles, does not call `getComputedStyle()`. As a setter, does not convert numbers to strings or append 'px'.
  * - [`data()`](http://api.jquery.com/data/)
  * - [`detach()`](http://api.jquery.com/detach/)
  * - [`empty()`](http://api.jquery.com/empty/)
@@ -12073,6 +12084,10 @@ forEach({
   },
 
   attr: function(element, name, value) {
+    var nodeType = element.nodeType;
+    if (nodeType === NODE_TYPE_TEXT || nodeType === NODE_TYPE_ATTRIBUTE || nodeType === NODE_TYPE_COMMENT) {
+      return;
+    }
     var lowercasedName = lowercase(name);
     if (BOOLEAN_ATTR[lowercasedName]) {
       if (isDefined(value)) {
@@ -12763,7 +12778,7 @@ function annotate(fn, strictDi, name) {
  * Return an instance of the service.
  *
  * @param {string} name The name of the instance to retrieve.
- * @param {string} caller An optional string to provide the origin of the function call for error messages.
+ * @param {string=} caller An optional string to provide the origin of the function call for error messages.
  * @return {*} The instance.
  */
 
@@ -12774,8 +12789,8 @@ function annotate(fn, strictDi, name) {
  * @description
  * Invoke the method and supply the method arguments from the `$injector`.
  *
- * @param {!Function} fn The function to invoke. Function parameters are injected according to the
- *   {@link guide/di $inject Annotation} rules.
+ * @param {Function|Array.<string|Function>} fn The injectable function to invoke. Function parameters are
+ *   injected according to the {@link guide/di $inject Annotation} rules.
  * @param {Object=} self The `this` for the invoked method.
  * @param {Object=} locals Optional object. If preset then any argument names are read from this
  *                         object first, before the `$injector` is consulted.
@@ -13042,8 +13057,8 @@ function annotate(fn, strictDi, name) {
  * configure your service in a provider.
  *
  * @param {string} name The name of the instance.
- * @param {function()} $getFn The $getFn for the instance creation. Internally this is a short hand
- *                            for `$provide.provider(name, {$get: $getFn})`.
+ * @param {Function|Array.<string|Function>} $getFn The injectable $getFn for the instance creation.
+ *                      Internally this is a short hand for `$provide.provider(name, {$get: $getFn})`.
  * @returns {Object} registered provider instance
  *
  * @example
@@ -13078,7 +13093,8 @@ function annotate(fn, strictDi, name) {
  * as a type/class.
  *
  * @param {string} name The name of the instance.
- * @param {Function} constructor A class (constructor function) that will be instantiated.
+ * @param {Function|Array.<string|Function>} constructor An injectable class (constructor function)
+ *     that will be instantiated.
  * @returns {Object} registered provider instance
  *
  * @example
@@ -13177,7 +13193,7 @@ function annotate(fn, strictDi, name) {
  * object which replaces or wraps and delegates to the original service.
  *
  * @param {string} name The name of the service to decorate.
- * @param {function()} decorator This function will be invoked when the service needs to be
+ * @param {Function|Array.<string|Function>} decorator This function will be invoked when the service needs to be
  *    instantiated and should return the decorated service instance. The function is called using
  *    the {@link auto.$injector#invoke injector.invoke} method and is therefore fully injectable.
  *    Local injection arguments:
@@ -15026,7 +15042,8 @@ function $TemplateCacheProvider() {
  *       templateNamespace: 'html',
  *       scope: false,
  *       controller: function($scope, $element, $attrs, $transclude, otherInjectables) { ... },
- *       controllerAs: 'stringAlias',
+ *       controllerAs: 'stringIdentifier',
+ *       bindToController: false,
  *       require: 'siblingDirectiveName', // or // ['^parentDirectiveName', '?optionalDirectiveName', '?^optionalParent'],
  *       compile: function compile(tElement, tAttrs, transclude) {
  *         return {
@@ -15345,9 +15362,15 @@ function $TemplateCacheProvider() {
  *   * `iAttrs` - instance attributes - Normalized list of attributes declared on this element shared
  *     between all directive linking functions.
  *
- *   * `controller` - a controller instance - A controller instance if at least one directive on the
- *     element defines a controller. The controller is shared among all the directives, which allows
- *     the directives to use the controllers as a communication channel.
+ *   * `controller` - the directive's required controller instance(s) - Instances are shared
+ *     among all directives, which allows the directives to use the controllers as a communication
+ *     channel. The exact value depends on the directive's `require` property:
+ *       * `string`: the controller instance
+ *       * `array`: array of controller instances
+ *       * no controller(s) required: `undefined`
+ *
+ *     If a required controller cannot be found, and it is optional, the instance is `null`,
+ *     otherwise the {@link error:$compile:ctreq Missing Required Controller} error is thrown.
  *
  *   * `transcludeFn` - A transclude linking function pre-bound to the correct transclusion scope.
  *     This is the same as the `$transclude`
@@ -15701,6 +15724,14 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
     return bindings;
   }
 
+  function assertValidDirectiveName(name) {
+    var letter = name.charAt(0);
+    if (!letter || letter !== lowercase(letter)) {
+      throw $compileMinErr('baddir', "Directive name '{0}' is invalid. The first character must be a lowercase letter", name);
+    }
+    return name;
+  }
+
   /**
    * @ngdoc method
    * @name $compileProvider#directive
@@ -15719,6 +15750,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
    this.directive = function registerDirective(name, directiveFactory) {
     assertNotHasOwnProperty(name, 'directive');
     if (isString(name)) {
+      assertValidDirectiveName(name);
       assertArg(directiveFactory, 'directiveFactory');
       if (!hasDirectives.hasOwnProperty(name)) {
         hasDirectives[name] = [];
@@ -18175,7 +18207,7 @@ function $HttpProvider() {
      *  headers: {
      *    'Content-Type': undefined
      *  },
-     *  data: { test: 'test' },
+     *  data: { test: 'test' }
      * }
      *
      * $http(req).success(function(){...}).error(function(){...});
@@ -18610,6 +18642,8 @@ function $HttpProvider() {
       }
 
       promise.success = function(fn) {
+        assertArgFn(fn, 'fn');
+
         promise.then(function(response) {
           fn(response.data, response.status, response.headers, config);
         });
@@ -18617,6 +18651,8 @@ function $HttpProvider() {
       };
 
       promise.error = function(fn) {
+        assertArgFn(fn, 'fn');
+
         promise.then(null, function(response) {
           fn(response.data, response.status, response.headers, config);
         });
@@ -19097,7 +19133,7 @@ function createHttpBackend($browser, createXhr, $browserDefer, callbacks, rawDoc
   };
 
   function jsonpReq(url, callbackId, done) {
-    // we can't use jQuery/jqLite here because jQuery does crazy shit with script elements, e.g.:
+    // we can't use jQuery/jqLite here because jQuery does crazy stuff with script elements, e.g.:
     // - fetches local scripts via XHR and evals them
     // - adds and immediately removes script elements from the document
     var script = rawDocument.createElement('script'), callback = null;
@@ -20158,11 +20194,19 @@ var locationPrototype = {
    *
    * Return host of current url.
    *
+   * Note: compared to the non-angular version `location.host` which returns `hostname:port`, this returns the `hostname` portion only.
+   *
    *
    * ```js
    * // given url http://example.com/#/some/path?foo=bar&baz=xoxo
    * var host = $location.host();
    * // => "example.com"
+   *
+   * // given url http://user:password@example.com:8080/#/some/path?foo=bar&baz=xoxo
+   * host = $location.host();
+   * // => "example.com"
+   * host = location.host;
+   * // => "example.com:8080"
    * ```
    *
    * @return {string} host of current url.
@@ -22717,7 +22761,7 @@ function $$RAFProvider() { //rAF
                                $window.webkitCancelRequestAnimationFrame;
 
     var rafSupported = !!requestAnimationFrame;
-    var raf = rafSupported
+    var rafFn = rafSupported
       ? function(fn) {
           var id = requestAnimationFrame(fn);
           return function() {
@@ -22731,9 +22775,47 @@ function $$RAFProvider() { //rAF
           };
         };
 
-    raf.supported = rafSupported;
+    queueFn.supported = rafSupported;
 
-    return raf;
+    var cancelLastRAF;
+    var taskCount = 0;
+    var taskQueue = [];
+    return queueFn;
+
+    function flush() {
+      for (var i = 0; i < taskQueue.length; i++) {
+        var task = taskQueue[i];
+        if (task) {
+          taskQueue[i] = null;
+          task();
+        }
+      }
+      taskCount = taskQueue.length = 0;
+    }
+
+    function queueFn(asyncFn) {
+      var index = taskQueue.length;
+
+      taskCount++;
+      taskQueue.push(asyncFn);
+
+      if (index === 0) {
+        cancelLastRAF = rafFn(flush);
+      }
+
+      return function cancelQueueFn() {
+        if (index >= 0) {
+          taskQueue[index] = null;
+          index = null;
+
+          if (--taskCount === 0 && cancelLastRAF) {
+            cancelLastRAF();
+            cancelLastRAF = null;
+            taskQueue.length = 0;
+          }
+        }
+      };
+    }
   }];
 }
 
@@ -22823,7 +22905,6 @@ function $RootScopeProvider() {
           this.$$childHead = this.$$childTail = null;
       this.$$listeners = {};
       this.$$listenerCount = {};
-      this.$$watchersCount = 0;
       this.$id = nextUid();
       this.$$ChildScope = null;
     }
@@ -25714,6 +25795,13 @@ function $WindowProvider() {
  * Dependency Injected. To achieve this a filter definition consists of a factory function which is
  * annotated with dependencies and is responsible for creating a filter function.
  *
+ * <div class="alert alert-warning">
+ * **Note:** Filter names must be valid angular {@link expression} identifiers, such as `uppercase` or `orderBy`.
+ * Names with special characters, such as hyphens and dots, are not allowed. If you wish to namespace
+ * your filters, then you can use capitalization (`myappSubsectionFilterx`) or underscores
+ * (`myapp_subsection_filterx`).
+ * </div>
+ *
  * ```js
  *   // Filter registration
  *   function MyModule($provide, $filterProvider) {
@@ -25795,6 +25883,13 @@ function $FilterProvider($provide) {
    * @name $filterProvider#register
    * @param {string|Object} name Name of the filter function, or an object map of filters where
    *    the keys are the filter names and the values are the filter factories.
+   *
+   *    <div class="alert alert-warning">
+   *    **Note:** Filter names must be valid angular {@link expression} identifiers, such as `uppercase` or `orderBy`.
+   *    Names with special characters, such as hyphens and dots, are not allowed. If you wish to namespace
+   *    your filters, then you can use capitalization (`myappSubsectionFilterx`) or underscores
+   *    (`myapp_subsection_filterx`).
+   *    </div>
    * @returns {Object} Registered filter instance, or if a map of filters was provided then a map
    *    of the registered filter instances.
    */
@@ -25968,14 +26063,16 @@ function filterFilter() {
   return function(array, expression, comparator) {
     if (!isArray(array)) return array;
 
+    var expressionType = (expression !== null) ? typeof expression : 'null';
     var predicateFn;
     var matchAgainstAnyProp;
 
-    switch (typeof expression) {
+    switch (expressionType) {
       case 'function':
         predicateFn = expression;
         break;
       case 'boolean':
+      case 'null':
       case 'number':
       case 'string':
         matchAgainstAnyProp = true;
@@ -26001,6 +26098,14 @@ function createPredicateFn(expression, comparator, matchAgainstAnyProp) {
     comparator = equals;
   } else if (!isFunction(comparator)) {
     comparator = function(actual, expected) {
+      if (isUndefined(actual)) {
+        // No substring matching against `undefined`
+        return false;
+      }
+      if ((actual === null) || (expected === null)) {
+        // No substring matching against `null`; only match against `null`
+        return actual === expected;
+      }
       if (isObject(actual) || isObject(expected)) {
         // Prevent an object to be considered equal to a string like `'[object'`
         return false;
@@ -26151,6 +26256,8 @@ function currencyFilter($locale) {
  * @description
  * Formats a number as text.
  *
+ * If the input is null or undefined, it will just be returned.
+ * If the input is infinite (Infinity/-Infinity) the Infinity symbol '∞' is returned.
  * If the input is not a number an empty string is returned.
  *
  * @param {number|string} number Number to format.
@@ -26759,7 +26866,7 @@ function limitToFilter() {
  *    Can be one of:
  *
  *    - `function`: Getter function. The result of this function will be sorted using the
- *      `<`, `=`, `>` operator.
+ *      `<`, `===`, `>` operator.
  *    - `string`: An Angular expression. The result of this expression is used to compare elements
  *      (for example `name` to sort by a property called `name` or `name.substr(0, 3)` to sort by
  *      3 first characters of a property called `name`). The result of a constant expression
@@ -27870,11 +27977,11 @@ function FormController(element, attrs, $scope, $animate, $interpolate) {
        <form name="myForm" ng-controller="FormController" class="my-form">
          userType: <input name="input" ng-model="userType" required>
          <span class="error" ng-show="myForm.input.$error.required">Required!</span><br>
-         <tt>userType = {{userType}}</tt><br>
-         <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br>
-         <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br>
-         <tt>myForm.$valid = {{myForm.$valid}}</tt><br>
-         <tt>myForm.$error.required = {{!!myForm.$error.required}}</tt><br>
+         <code>userType = {{userType}}</code><br>
+         <code>myForm.input.$valid = {{myForm.input.$valid}}</code><br>
+         <code>myForm.input.$error = {{myForm.input.$error}}</code><br>
+         <code>myForm.$valid = {{myForm.$valid}}</code><br>
+         <code>myForm.$error.required = {{!!myForm.$error.required}}</code><br>
         </form>
       </file>
       <file name="protractor.js" type="protractor">
@@ -28562,7 +28669,11 @@ var inputType = {
    * Text input with number validation and transformation. Sets the `number` validation
    * error if not a valid number.
    *
-   * The model must always be a number, otherwise Angular will throw an error.
+   * <div class="alert alert-warning">
+   * The model must always be of type `number` otherwise Angular will throw an error.
+   * Be aware that a string containing a number is not enough. See the {@link ngModel:numfmt}
+   * error docs for more information and an example of how to convert your model if necessary.
+   * </div>
    *
    * @param {string} ngModel Assignable angular expression to data-bind to.
    * @param {string=} name Property name of the form under which the control is published.
@@ -30270,17 +30381,13 @@ var ngClassEvenDirective = classDirective('Even', 1);
  * document; alternatively, the css rule above must be included in the external stylesheet of the
  * application.
  *
- * Legacy browsers, like IE7, do not provide attribute selector support (added in CSS 2.1) so they
- * cannot match the `[ng\:cloak]` selector. To work around this limitation, you must add the css
- * class `ng-cloak` in addition to the `ngCloak` directive as shown in the example below.
- *
  * @element ANY
  *
  * @example
    <example>
      <file name="index.html">
         <div id="template1" ng-cloak>{{ 'hello' }}</div>
-        <div id="template2" ng-cloak class="ng-cloak">{{ 'hello IE7' }}</div>
+        <div id="template2" class="ng-cloak">{{ 'world' }}</div>
      </file>
      <file name="protractor.js" type="protractor">
        it('should remove the template directive and css class', function() {
@@ -32305,7 +32412,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
    * If the validity changes to invalid, the model will be set to `undefined`,
    * unless {@link ngModelOptions `ngModelOptions.allowInvalid`} is `true`.
    * If the validity changes to valid, it will set the model to the last available valid
-   * modelValue, i.e. either the last parsed value or the last value set from the scope.
+   * `$modelValue`, i.e. either the last parsed value or the last value set from the scope.
    */
   this.$validate = function() {
     // ignore $validate before model is initialized
@@ -32613,7 +32720,10 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
 
     // if scope model value and ngModel value are out of sync
     // TODO(perf): why not move this to the action fn?
-    if (modelValue !== ctrl.$modelValue) {
+    if (modelValue !== ctrl.$modelValue &&
+       // checks for NaN is needed to allow setting the model to NaN when there's an asyncValidator
+       (ctrl.$modelValue === ctrl.$modelValue || modelValue === modelValue)
+    ) {
       ctrl.$modelValue = ctrl.$$rawModelValue = modelValue;
       parserValid = undefined;
 
@@ -32790,10 +32900,11 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
            var _name = 'Brian';
            $scope.user = {
              name: function(newName) {
-               if (angular.isDefined(newName)) {
-                 _name = newName;
-               }
-               return _name;
+              // Note that newName can be undefined for two reasons:
+              // 1. Because it is called as a getter and thus called with no arguments
+              // 2. Because the property should actually be set to undefined. This happens e.g. if the
+              //    input is invalid
+              return arguments.length ? (_name = newName) : _name;
              }
            };
          }]);
@@ -33001,7 +33112,11 @@ var DEFAULT_REGEXP = /(\s+|^)default(\s+|$)/;
           var _name = 'Brian';
           $scope.user = {
             name: function(newName) {
-              return angular.isDefined(newName) ? (_name = newName) : _name;
+              // Note that newName can be undefined for two reasons:
+              // 1. Because it is called as a getter and thus called with no arguments
+              // 2. Because the property should actually be set to undefined. This happens e.g. if the
+              //    input is invalid
+              return arguments.length ? (_name = newName) : _name;
             }
           };
         }]);
@@ -34291,12 +34406,12 @@ var ngHideDirective = ['$animate', function($animate) {
    </example>
  */
 var ngStyleDirective = ngDirective(function(scope, element, attr) {
-  scope.$watchCollection(attr.ngStyle, function ngStyleWatchAction(newStyles, oldStyles) {
+  scope.$watch(attr.ngStyle, function ngStyleWatchAction(newStyles, oldStyles) {
     if (oldStyles && (newStyles !== oldStyles)) {
       forEach(oldStyles, function(val, style) { element.css(style, '');});
     }
     if (newStyles) element.css(newStyles);
-  });
+  }, true);
 });
 
 /**
@@ -34342,7 +34457,7 @@ var ngStyleDirective = ngDirective(function(scope, element, attr) {
  *
  * @scope
  * @priority 1200
- * @param {*} ngSwitch|on expression to match against <tt>ng-switch-when</tt>.
+ * @param {*} ngSwitch|on expression to match against <code>ng-switch-when</code>.
  * On child elements add:
  *
  * * `ngSwitchWhen`: the case statement to match against. If match then this
@@ -34359,7 +34474,7 @@ var ngStyleDirective = ngDirective(function(scope, element, attr) {
       <div ng-controller="ExampleController">
         <select ng-model="selection" ng-options="item for item in items">
         </select>
-        <tt>selection={{selection}}</tt>
+        <code>selection={{selection}}</code>
         <hr/>
         <div class="animate-switch-container"
           ng-switch on="selection">
@@ -34940,7 +35055,7 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
             selectElement.val(viewValue);
             if (viewValue === '') emptyOption.prop('selected', true); // to make IE9 happy
           } else {
-            if (isUndefined(viewValue) && emptyOption) {
+            if (viewValue == null && emptyOption) {
               selectElement.val('');
             } else {
               selectCtrl.renderUnknownOption(viewValue);
@@ -35514,7 +35629,7 @@ var minlengthDirective = function() {
 
 !window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}</style>');
 /**
- * @license AngularJS v1.3.15
+ * @license AngularJS v1.3.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -35955,9 +36070,11 @@ function $RouteProvider() {
      * @name $route#$routeUpdate
      * @eventType broadcast on root scope
      * @description
-     *
      * The `reloadOnSearch` property has been set to false, and we are reusing the same
      * instance of the Controller.
+     *
+     * @param {Object} angularEvent Synthetic event object
+     * @param {Route} current Current/previous route information.
      */
 
     var forceReload = false,
@@ -36504,7 +36621,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 })(window, window.angular);
 
 /**
- * @license AngularJS v1.3.15
+ * @license AngularJS v1.3.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -36596,6 +36713,7 @@ angular.module('ngCookies', ['ng']).
         for (name in lastCookies) {
           if (isUndefined(cookies[name])) {
             $browser.cookies(name, undefined);
+            delete lastCookies[name];
           }
         }
 
@@ -36608,13 +36726,13 @@ angular.module('ngCookies', ['ng']).
           }
           if (value !== lastCookies[name]) {
             $browser.cookies(name, value);
+            lastCookies[name] = value;
             updated = true;
           }
         }
 
         //verify what was actually stored
         if (updated) {
-          updated = false;
           browserCookies = $browser.cookies();
 
           for (name in cookies) {
@@ -36622,10 +36740,10 @@ angular.module('ngCookies', ['ng']).
               //delete or reset all cookies that the browser dropped from $cookies
               if (isUndefined(browserCookies[name])) {
                 delete cookies[name];
+                delete lastCookies[name];
               } else {
-                cookies[name] = browserCookies[name];
+                cookies[name] = lastCookies[name] = browserCookies[name];
               }
-              updated = true;
             }
           }
         }
@@ -36711,7 +36829,7 @@ angular.module('ngCookies', ['ng']).
 })(window, window.angular);
 
 /**
- * @license AngularJS v1.3.15
+ * @license AngularJS v1.3.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -37150,9 +37268,11 @@ angular.module('ngAnimate', ['ng'])
         //so that all the animated elements within the animation frame
         //will be properly updated and drawn on screen. This is
         //required to perform multi-class CSS based animations with
-        //Firefox. DO NOT REMOVE THIS LINE.
-        var a = bod.offsetWidth + 1;
-        fn();
+        //Firefox. DO NOT REMOVE THIS LINE. DO NOT OPTIMIZE THIS LINE.
+        //THE MINIFIER WILL REMOVE IT OTHERWISE WHICH WILL RESULT IN AN
+        //UNPREDICTABLE BUG THAT IS VERY HARD TO TRACK DOWN AND WILL
+        //TAKE YEARS AWAY FROM YOUR LIFE!
+        fn(bod.offsetWidth);
       });
     };
   }])
@@ -43184,741 +43304,6 @@ angular.module('ui.router.state')
 
 })();
 
-/*
- * ngDialog - easy modals and popup windows
- * http://github.com/likeastore/ngDialog
- * (c) 2013-2015 MIT License, https://likeastore.com
- */
-
-(function (root, factory) {
-    if (typeof module !== 'undefined' && module.exports) {
-        // CommonJS
-        module.exports = factory(require('angular'));
-    } else if (typeof define === 'function' && define.amd) {
-        // AMD
-        define(['angular'], factory);
-    } else {
-        // Global Variables
-        factory(root.angular);
-    }
-}(this, function (angular) {
-    'use strict';
-
-    var m = angular.module('ngDialog', []);
-
-    var $el = angular.element;
-    var isDef = angular.isDefined;
-    var style = (document.body || document.documentElement).style;
-    var animationEndSupport = isDef(style.animation) || isDef(style.WebkitAnimation) || isDef(style.MozAnimation) || isDef(style.MsAnimation) || isDef(style.OAnimation);
-    var animationEndEvent = 'animationend webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend';
-    var focusableElementSelector = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]';
-    var forceBodyReload = false;
-    var scopes = {};
-    var openIdStack = [];
-    var keydownIsBound = false;
-
-    m.provider('ngDialog', function () {
-        var defaults = this.defaults = {
-            className: 'ngdialog-theme-default',
-            plain: false,
-            showClose: true,
-            closeByDocument: true,
-            closeByEscape: true,
-            closeByNavigation: false,
-            appendTo: false,
-            preCloseCallback: false,
-            overlay: true,
-            cache: true,
-            trapFocus: true,
-            preserveFocus: true,
-            ariaAuto: true,
-            ariaRole: null,
-            ariaLabelledById: null,
-            ariaLabelledBySelector: null,
-            ariaDescribedById: null,
-            ariaDescribedBySelector: null
-        };
-
-        this.setForceBodyReload = function (_useIt) {
-            forceBodyReload = _useIt || false;
-        };
-
-        this.setDefaults = function (newDefaults) {
-            angular.extend(defaults, newDefaults);
-        };
-
-        var globalID = 0, dialogsCount = 0, closeByDocumentHandler, defers = {};
-
-        this.$get = ['$document', '$templateCache', '$compile', '$q', '$http', '$rootScope', '$timeout', '$window', '$controller', '$injector',
-            function ($document, $templateCache, $compile, $q, $http, $rootScope, $timeout, $window, $controller, $injector) {
-                var $body = $document.find('body');
-                if (forceBodyReload) {
-                    $rootScope.$on('$locationChangeSuccess', function () {
-                        $body = $document.find('body');
-                    });
-                }
-
-                var privateMethods = {
-                    onDocumentKeydown: function (event) {
-                        if (event.keyCode === 27) {
-                            publicMethods.close('$escape');
-                        }
-                    },
-
-                    activate: function($dialog) {
-                        var options = $dialog.data('$ngDialogOptions');
-
-                        if (options.trapFocus) {
-                            $dialog.on('keydown', privateMethods.onTrapFocusKeydown);
-
-                            // Catch rogue changes (eg. after unfocusing everything by clicking a non-focusable element)
-                            $body.on('keydown', privateMethods.onTrapFocusKeydown);
-                        }
-                    },
-
-                    deactivate: function ($dialog) {
-                        $dialog.off('keydown', privateMethods.onTrapFocusKeydown);
-                        $body.off('keydown', privateMethods.onTrapFocusKeydown);
-                    },
-
-                    deactivateAll: function () {
-                        angular.forEach(function(el) {
-                            var $dialog = angular.element(el);
-                            privateMethods.deactivate($dialog);
-                        });
-                    },
-
-                    setBodyPadding: function (width) {
-                        var originalBodyPadding = parseInt(($body.css('padding-right') || 0), 10);
-                        $body.css('padding-right', (originalBodyPadding + width) + 'px');
-                        $body.data('ng-dialog-original-padding', originalBodyPadding);
-                    },
-
-                    resetBodyPadding: function () {
-                        var originalBodyPadding = $body.data('ng-dialog-original-padding');
-                        if (originalBodyPadding) {
-                            $body.css('padding-right', originalBodyPadding + 'px');
-                        } else {
-                            $body.css('padding-right', '');
-                        }
-                    },
-
-                    performCloseDialog: function ($dialog, value) {
-                        var id = $dialog.attr('id');
-                        var scope = scopes[id];
-
-                        if (!scope) {
-                            // Already closed
-                            return;
-                        }
-
-                        if (typeof $window.Hammer !== 'undefined') {
-                            var hammerTime = scope.hammerTime;
-                            hammerTime.off('tap', closeByDocumentHandler);
-                            hammerTime.destroy && hammerTime.destroy();
-                            delete scope.hammerTime;
-                        } else {
-                            $dialog.unbind('click');
-                        }
-
-                        if (dialogsCount === 1) {
-                            $body.unbind('keydown');
-                        }
-
-                        if (!$dialog.hasClass('ngdialog-closing')){
-                            dialogsCount -= 1;
-                        }
-
-                        var previousFocus = $dialog.data('$ngDialogPreviousFocus');
-                        if (previousFocus) {
-                            previousFocus.focus();
-                        }
-
-                        $rootScope.$broadcast('ngDialog.closing', $dialog);
-                        dialogsCount = dialogsCount < 0 ? 0 : dialogsCount;
-                        if (animationEndSupport) {
-                            scope.$destroy();
-                            $dialog.unbind(animationEndEvent).bind(animationEndEvent, function () {
-                                $dialog.remove();
-                                if (dialogsCount === 0) {
-                                    $body.removeClass('ngdialog-open');
-                                    privateMethods.resetBodyPadding();
-                                }
-                                $rootScope.$broadcast('ngDialog.closed', $dialog);
-                            }).addClass('ngdialog-closing');
-                        } else {
-                            scope.$destroy();
-                            $dialog.remove();
-                            if (dialogsCount === 0) {
-                                $body.removeClass('ngdialog-open');
-                                privateMethods.resetBodyPadding();
-                            }
-                            $rootScope.$broadcast('ngDialog.closed', $dialog);
-                        }
-                        if (defers[id]) {
-                            defers[id].resolve({
-                                id: id,
-                                value: value,
-                                $dialog: $dialog,
-                                remainingDialogs: dialogsCount
-                            });
-                            delete defers[id];
-                        }
-                        if (scopes[id]) {
-                            delete scopes[id];
-                        }
-                        openIdStack.splice(openIdStack.indexOf(id), 1);
-                        if (!openIdStack.length) {
-                            $body.unbind('keydown', privateMethods.onDocumentKeydown);
-                            keydownIsBound = false;
-                        }
-                    },
-
-                    closeDialog: function ($dialog, value) {
-                        var preCloseCallback = $dialog.data('$ngDialogPreCloseCallback');
-
-                        if (preCloseCallback && angular.isFunction(preCloseCallback)) {
-
-                            var preCloseCallbackResult = preCloseCallback.call($dialog, value);
-
-                            if (angular.isObject(preCloseCallbackResult)) {
-                                if (preCloseCallbackResult.closePromise) {
-                                    preCloseCallbackResult.closePromise.then(function () {
-                                        privateMethods.performCloseDialog($dialog, value);
-                                    });
-                                } else {
-                                    preCloseCallbackResult.then(function () {
-                                        privateMethods.performCloseDialog($dialog, value);
-                                    }, function () {
-                                        return;
-                                    });
-                                }
-                            } else if (preCloseCallbackResult !== false) {
-                                privateMethods.performCloseDialog($dialog, value);
-                            }
-                        } else {
-                            privateMethods.performCloseDialog($dialog, value);
-                        }
-                    },
-
-                    onTrapFocusKeydown: function(ev) {
-                        var el = angular.element(ev.currentTarget);
-                        var $dialog;
-
-                        if (el.hasClass('ngdialog')) {
-                            $dialog = el;
-                        } else {
-                            $dialog = privateMethods.getActiveDialog();
-
-                            if ($dialog === null) {
-                                return;
-                            }
-                        }
-
-                        var isTab = (ev.keyCode === 9);
-                        var backward = (ev.shiftKey === true);
-
-                        if (isTab) {
-                            privateMethods.handleTab($dialog, ev, backward);
-                        }
-                    },
-
-                    handleTab: function($dialog, ev, backward) {
-                        var focusableElements = privateMethods.getFocusableElements($dialog);
-
-                        if (focusableElements.length === 0) {
-                            if (document.activeElement) {
-                                document.activeElement.blur();
-                            }
-                            return;
-                        }
-
-                        var currentFocus = document.activeElement;
-                        var focusIndex = Array.prototype.indexOf.call(focusableElements, currentFocus);
-
-                        var isFocusIndexUnknown = (focusIndex === -1);
-                        var isFirstElementFocused = (focusIndex === 0);
-                        var isLastElementFocused = (focusIndex === focusableElements.length - 1);
-
-                        var cancelEvent = false;
-
-                        if (backward) {
-                            if (isFocusIndexUnknown || isFirstElementFocused) {
-                                focusableElements[focusableElements.length - 1].focus();
-                                cancelEvent = true;
-                            }
-                        } else {
-                            if (isFocusIndexUnknown || isLastElementFocused) {
-                                focusableElements[0].focus();
-                                cancelEvent = true;
-                            }
-                        }
-
-                        if (cancelEvent) {
-                            ev.preventDefault();
-                            ev.stopPropagation();
-                        }
-                    },
-
-                    autoFocus: function($dialog) {
-                        var dialogEl = $dialog[0];
-
-                        // Browser's (Chrome 40, Forefix 37, IE 11) don't appear to honor autofocus on the dialog, but we should
-                        var autoFocusEl = dialogEl.querySelector('*[autofocus]');
-                        if (autoFocusEl !== null) {
-                            autoFocusEl.focus();
-
-                            if (document.activeElement === autoFocusEl) {
-                                return;
-                            }
-
-                            // Autofocus element might was display: none, so let's continue
-                        }
-
-                        var focusableElements = privateMethods.getFocusableElements($dialog);
-
-                        if (focusableElements.length > 0) {
-                            focusableElements[0].focus();
-                            return;
-                        }
-
-                        // We need to focus something for the screen readers to notice the dialog
-                        var contentElements = privateMethods.filterVisibleElements(dialogEl.querySelectorAll('h1,h2,h3,h4,h5,h6,p,span'));
-
-                        if (contentElements.length > 0) {
-                            var contentElement = contentElements[0];
-                            $el(contentElement).attr('tabindex', '-1').css('outline', '0');
-                            contentElement.focus();
-                        }
-                    },
-
-                    getFocusableElements: function ($dialog) {
-                        var dialogEl = $dialog[0];
-
-                        var rawElements = dialogEl.querySelectorAll(focusableElementSelector);
-
-                        return privateMethods.filterVisibleElements(rawElements);
-                    },
-
-                    filterVisibleElements: function (els) {
-                        var visibleFocusableElements = [];
-
-                        for (var i = 0; i < els.length; i++) {
-                            var el = els[i];
-
-                            if (el.offsetWidth > 0 || el.offsetHeight > 0) {
-                                visibleFocusableElements.push(el);
-                            }
-                        }
-
-                        return visibleFocusableElements;
-                    },
-
-                    getActiveDialog: function () {
-                        var dialogs = document.querySelectorAll('.ngdialog');
-
-                        if (dialogs.length === 0) {
-                            return null;
-                        }
-
-                        // TODO: This might be incorrect if there are a mix of open dialogs with different 'appendTo' values
-                        return $el(dialogs[dialogs.length - 1]);
-                    },
-
-                    applyAriaAttributes: function ($dialog, options) {
-                        if (options.ariaAuto) {
-                            if (!options.ariaRole) {
-                                var detectedRole = (privateMethods.getFocusableElements($dialog).length > 0) ?
-                                    'dialog' :
-                                    'alertdialog';
-
-                                options.ariaRole = detectedRole;
-                            }
-
-                            if (!options.ariaLabelledBySelector) {
-                                options.ariaLabelledBySelector = 'h1,h2,h3,h4,h5,h6';
-                            }
-
-                            if (!options.ariaDescribedBySelector) {
-                                options.ariaDescribedBySelector = 'article,section,p';
-                            }
-                        }
-
-                        if (options.ariaRole) {
-                            $dialog.attr('role', options.ariaRole);
-                        }
-
-                        privateMethods.applyAriaAttribute(
-                            $dialog, 'aria-labelledby', options.ariaLabelledById, options.ariaLabelledBySelector);
-
-                        privateMethods.applyAriaAttribute(
-                            $dialog, 'aria-describedby', options.ariaDescribedById, options.ariaDescribedBySelector);
-                    },
-
-                    applyAriaAttribute: function($dialog, attr, id, selector) {
-                        if (id) {
-                            $dialog.attr(attr, id);
-                        }
-
-                        if (selector) {
-                            var dialogId = $dialog.attr('id');
-
-                            var firstMatch = $dialog[0].querySelector(selector);
-
-                            if (!firstMatch) {
-                                return;
-                            }
-
-                            var generatedId = dialogId + '-' + attr;
-
-                            $el(firstMatch).attr('id', generatedId);
-
-                            $dialog.attr(attr, generatedId);
-
-                            return generatedId;
-                        }
-                    }
-                };
-
-                var publicMethods = {
-
-                    /*
-                     * @param {Object} options:
-                     * - template {String} - id of ng-template, url for partial, plain string (if enabled)
-                     * - plain {Boolean} - enable plain string templates, default false
-                     * - scope {Object}
-                     * - controller {String}
-                     * - controllerAs {String}
-                     * - className {String} - dialog theme class
-                     * - showClose {Boolean} - show close button, default true
-                     * - closeByEscape {Boolean} - default true
-                     * - closeByDocument {Boolean} - default true
-                     * - preCloseCallback {String|Function} - user supplied function name/function called before closing dialog (if set)
-                     *
-                     * @return {Object} dialog
-                     */
-                    open: function (opts) {
-                        var options = angular.copy(defaults);
-                        var localID = ++globalID;
-                        var dialogID = 'ngdialog' + localID;
-                        openIdStack.push(dialogID);
-
-                        opts = opts || {};
-                        angular.extend(options, opts);
-
-                        var defer;
-                        defers[dialogID] = defer = $q.defer();
-
-                        var scope;
-                        scopes[dialogID] = scope = angular.isObject(options.scope) ? options.scope.$new() : $rootScope.$new();
-
-                        var $dialog, $dialogParent;
-
-                        var resolve = angular.extend({}, options.resolve);
-
-                        angular.forEach(resolve, function (value, key) {
-                            resolve[key] = angular.isString(value) ? $injector.get(value) : $injector.invoke(value, null, null, key);
-                        });
-
-                        $q.all({
-                            template: loadTemplate(options.template || options.templateUrl),
-                            locals: $q.all(resolve)
-                        }).then(function (setup) {
-                            var template = setup.template,
-                                locals = setup.locals;
-
-                            $templateCache.put(options.template || options.templateUrl, template);
-
-                            if (options.showClose) {
-                                template += '<div class="ngdialog-close"></div>';
-                            }
-
-                            $dialog = $el('<div id="ngdialog' + localID + '" class="ngdialog"></div>');
-                            $dialog.html((options.overlay ?
-                                '<div class="ngdialog-overlay"></div><div class="ngdialog-content" role="document">' + template + '</div>' :
-                                '<div class="ngdialog-content" role="document">' + template + '</div>'));
-
-                            $dialog.data('$ngDialogOptions', options);
-
-                            if (options.data && angular.isString(options.data)) {
-                                var firstLetter = options.data.replace(/^\s*/, '')[0];
-                                scope.ngDialogData = (firstLetter === '{' || firstLetter === '[') ? angular.fromJson(options.data) : options.data;
-                            } else if (options.data && angular.isObject(options.data)) {
-                                scope.ngDialogData = options.data;
-                            }
-
-                            if (options.controller && (angular.isString(options.controller) || angular.isArray(options.controller) || angular.isFunction(options.controller))) {
-
-                                var ctrl = options.controller;
-                                if (options.controllerAs && angular.isString(options.controllerAs)) {
-                                    ctrl += ' as ' + options.controllerAs;
-                                }
-
-                                var controllerInstance = $controller(ctrl, angular.extend(
-                                    locals,
-                                    {
-                                        $scope: scope,
-                                        $element: $dialog
-                                    }
-                                ));
-                                $dialog.data('$ngDialogControllerController', controllerInstance);
-                            }
-
-                            if (options.className) {
-                                $dialog.addClass(options.className);
-                            }
-
-                            if (options.appendTo && angular.isString(options.appendTo)) {
-                                $dialogParent = angular.element(document.querySelector(options.appendTo));
-                            } else {
-                                $dialogParent = $body;
-                            }
-
-                            privateMethods.applyAriaAttributes($dialog, options);
-
-                            if (options.preCloseCallback) {
-                                var preCloseCallback;
-
-                                if (angular.isFunction(options.preCloseCallback)) {
-                                    preCloseCallback = options.preCloseCallback;
-                                } else if (angular.isString(options.preCloseCallback)) {
-                                    if (scope) {
-                                        if (angular.isFunction(scope[options.preCloseCallback])) {
-                                            preCloseCallback = scope[options.preCloseCallback];
-                                        } else if (scope.$parent && angular.isFunction(scope.$parent[options.preCloseCallback])) {
-                                            preCloseCallback = scope.$parent[options.preCloseCallback];
-                                        } else if ($rootScope && angular.isFunction($rootScope[options.preCloseCallback])) {
-                                            preCloseCallback = $rootScope[options.preCloseCallback];
-                                        }
-                                    }
-                                }
-
-                                if (preCloseCallback) {
-                                    $dialog.data('$ngDialogPreCloseCallback', preCloseCallback);
-                                }
-                            }
-
-                            scope.closeThisDialog = function (value) {
-                                privateMethods.closeDialog($dialog, value);
-                            };
-
-                            $timeout(function () {
-                                var $activeDialogs = document.querySelectorAll('.ngdialog');
-                                privateMethods.deactivateAll($activeDialogs);
-
-                                $compile($dialog)(scope);
-                                var widthDiffs = $window.innerWidth - $body.prop('clientWidth');
-                                $body.addClass('ngdialog-open');
-                                var scrollBarWidth = widthDiffs - ($window.innerWidth - $body.prop('clientWidth'));
-                                if (scrollBarWidth > 0) {
-                                    privateMethods.setBodyPadding(scrollBarWidth);
-                                }
-                                $dialogParent.append($dialog);
-
-                                privateMethods.activate($dialog);
-
-                                if (options.trapFocus) {
-                                    privateMethods.autoFocus($dialog);
-                                }
-
-                                if (options.name) {
-                                    $rootScope.$broadcast('ngDialog.opened', {dialog: $dialog, name: options.name});
-                                } else {
-                                    $rootScope.$broadcast('ngDialog.opened', $dialog);
-                                }
-                            });
-
-                            if (!keydownIsBound) {
-                                $body.bind('keydown', privateMethods.onDocumentKeydown);
-                                keydownIsBound = true;
-                            }
-
-                            if (options.closeByNavigation) {
-                                $rootScope.$on('$locationChangeSuccess', function () {
-                                    privateMethods.closeDialog($dialog);
-                                });
-                            }
-
-                            if (options.preserveFocus) {
-                                $dialog.data('$ngDialogPreviousFocus', document.activeElement);
-                            }
-
-                            closeByDocumentHandler = function (event) {
-                                var isOverlay = options.closeByDocument ? $el(event.target).hasClass('ngdialog-overlay') : false;
-                                var isCloseBtn = $el(event.target).hasClass('ngdialog-close');
-
-                                if (isOverlay || isCloseBtn) {
-                                    publicMethods.close($dialog.attr('id'), isCloseBtn ? '$closeButton' : '$document');
-                                }
-                            };
-
-                            if (typeof $window.Hammer !== 'undefined') {
-                                var hammerTime = scope.hammerTime = $window.Hammer($dialog[0]);
-                                hammerTime.on('tap', closeByDocumentHandler);
-                            } else {
-                                $dialog.bind('click', closeByDocumentHandler);
-                            }
-
-                            dialogsCount += 1;
-
-                            return publicMethods;
-                        });
-
-                        return {
-                            id: dialogID,
-                            closePromise: defer.promise,
-                            close: function (value) {
-                                privateMethods.closeDialog($dialog, value);
-                            }
-                        };
-
-                        function loadTemplateUrl (tmpl, config) {
-                            return $http.get(tmpl, (config || {})).then(function(res) {
-                                return res.data || '';
-                            });
-                        }
-
-                        function loadTemplate (tmpl) {
-                            if (!tmpl) {
-                                return 'Empty template';
-                            }
-
-                            if (angular.isString(tmpl) && options.plain) {
-                                return tmpl;
-                            }
-
-                            if (typeof options.cache === 'boolean' && !options.cache) {
-                                return loadTemplateUrl(tmpl, {cache: false});
-                            }
-
-                            return $templateCache.get(tmpl) || loadTemplateUrl(tmpl, {cache: true});
-                        }
-                    },
-
-                    /*
-                     * @param {Object} options:
-                     * - template {String} - id of ng-template, url for partial, plain string (if enabled)
-                     * - plain {Boolean} - enable plain string templates, default false
-                     * - name {String}
-                     * - scope {Object}
-                     * - controller {String}
-                     * - controllerAs {String}
-                     * - className {String} - dialog theme class
-                     * - showClose {Boolean} - show close button, default true
-                     * - closeByEscape {Boolean} - default false
-                     * - closeByDocument {Boolean} - default false
-                     * - preCloseCallback {String|Function} - user supplied function name/function called before closing dialog (if set); not called on confirm
-                     *
-                     * @return {Object} dialog
-                     */
-                    openConfirm: function (opts) {
-                        var defer = $q.defer();
-
-                        var options = {
-                            closeByEscape: false,
-                            closeByDocument: false
-                        };
-                        angular.extend(options, opts);
-
-                        options.scope = angular.isObject(options.scope) ? options.scope.$new() : $rootScope.$new();
-                        options.scope.confirm = function (value) {
-                            defer.resolve(value);
-                            var $dialog = $el(document.getElementById(openResult.id));
-                            privateMethods.performCloseDialog($dialog, value);
-                        };
-
-                        var openResult = publicMethods.open(options);
-                        openResult.closePromise.then(function (data) {
-                            if (data) {
-                                return defer.reject(data.value);
-                            }
-                            return defer.reject();
-                        });
-
-                        return defer.promise;
-                    },
-
-                    isOpen: function(id) {
-                        var $dialog = $el(document.getElementById(id));
-                        return $dialog.length > 0;
-                    },
-
-                    /*
-                     * @param {String} id
-                     * @return {Object} dialog
-                     */
-                    close: function (id, value) {
-                        var $dialog = $el(document.getElementById(id));
-
-                        if ($dialog.length) {
-                            privateMethods.closeDialog($dialog, value);
-                        } else {
-                            if (id === '$escape') {
-                                var topDialogId = openIdStack[openIdStack.length - 1];
-                                $dialog = $el(document.getElementById(topDialogId));
-                                if ($dialog.data('$ngDialogOptions').closeByEscape) {
-                                    privateMethods.closeDialog($dialog, value);
-                                }
-                            }
-                        }
-
-                        return publicMethods;
-                    },
-
-                    closeAll: function (value) {
-                        var $all = document.querySelectorAll('.ngdialog');
-
-                        // Reverse order to ensure focus restoration works as expected
-                        for (var i = $all.length - 1; i >= 0; i--) {
-                            var dialog = $all[i];
-                            privateMethods.closeDialog($el(dialog), value);
-                        }
-                    },
-
-                    getDefaults: function () {
-                        return defaults;
-                    }
-                };
-
-                return publicMethods;
-            }];
-    });
-
-    m.directive('ngDialog', ['ngDialog', function (ngDialog) {
-        return {
-            restrict: 'A',
-            scope: {
-                ngDialogScope: '='
-            },
-            link: function (scope, elem, attrs) {
-                elem.on('click', function (e) {
-                    e.preventDefault();
-
-                    var ngDialogScope = angular.isDefined(scope.ngDialogScope) ? scope.ngDialogScope : 'noScope';
-                    angular.isDefined(attrs.ngDialogClosePrevious) && ngDialog.close(attrs.ngDialogClosePrevious);
-
-                    var defaults = ngDialog.getDefaults();
-
-                    ngDialog.open({
-                        template: attrs.ngDialog,
-                        className: attrs.ngDialogClass || defaults.className,
-                        controller: attrs.ngDialogController,
-                        controllerAs: attrs.ngDialogControllerAs,
-                        scope: ngDialogScope,
-                        data: attrs.ngDialogData,
-                        showClose: attrs.ngDialogShowClose === 'false' ? false : (attrs.ngDialogShowClose === 'true' ? true : defaults.showClose),
-                        closeByDocument: attrs.ngDialogCloseByDocument === 'false' ? false : (attrs.ngDialogCloseByDocument === 'true' ? true : defaults.closeByDocument),
-                        closeByEscape: attrs.ngDialogCloseByEscape === 'false' ? false : (attrs.ngDialogCloseByEscape === 'true' ? true : defaults.closeByEscape),
-                        preCloseCallback: attrs.ngDialogPreCloseCallback || defaults.preCloseCallback
-                    });
-                });
-            }
-        };
-    }]);
-
-    return m;
-}));
-
 /**
  * angular-ui-utils - Swiss-Army-Knife of AngularJS tools (with no external dependencies!)
  * @version v0.2.2 - 2015-02-18
@@ -46273,7 +45658,7 @@ angular.module('ui.utils',  [
 ]);
 
 /**
- * @license AngularJS v1.3.15
+ * @license AngularJS v1.3.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -46953,7 +46338,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 })(window, window.angular);
 
 /**
- * @license AngularJS v1.3.15
+ * @license AngularJS v1.3.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -55916,3 +55301,188 @@ angular.module('cfp.loadingBar', [])
     }];     //
   });       // wtf javascript. srsly
 })();       //
+
+/*!
+ * jQuery Browser Plugin 0.0.8
+ * https://github.com/gabceb/jquery-browser-plugin
+ *
+ * Original jquery-browser code Copyright 2005, 2015 jQuery Foundation, Inc. and other contributors
+ * http://jquery.org/license
+ *
+ * Modifications Copyright 2015 Gabriel Cebrian
+ * https://github.com/gabceb
+ *
+ * Released under the MIT license
+ *
+ * Date: 05-07-2015
+ */
+/*global window: false */
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['jquery'], function ($) {
+      return factory($);
+    });
+  } else if (typeof module === 'object' && typeof module.exports === 'object') {
+    // Node-like environment
+    module.exports = factory(require('jquery'));
+  } else {
+    // Browser globals
+    factory(window.jQuery);
+  }
+}(function(jQuery) {
+  "use strict";
+
+  function uaMatch( ua ) {
+    // If an UA is not provided, default to the current browser UA.
+    if ( ua === undefined ) {
+      ua = window.navigator.userAgent;
+    }
+    ua = ua.toLowerCase();
+
+    var match = /(edge)\/([\w.]+)/.exec( ua ) ||
+        /(opr)[\/]([\w.]+)/.exec( ua ) ||
+        /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+        /(version)(applewebkit)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)/.exec( ua ) ||
+        /(webkit)[ \/]([\w.]+).*(version)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)/.exec( ua ) ||
+        /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+        /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+        /(msie) ([\w.]+)/.exec( ua ) ||
+        ua.indexOf("trident") >= 0 && /(rv)(?::| )([\w.]+)/.exec( ua ) ||
+        ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+        [];
+
+    var platform_match = /(ipad)/.exec( ua ) ||
+        /(ipod)/.exec( ua ) ||
+        /(iphone)/.exec( ua ) ||
+        /(kindle)/.exec( ua ) ||
+        /(silk)/.exec( ua ) ||
+        /(android)/.exec( ua ) ||
+        /(windows phone)/.exec( ua ) ||
+        /(win)/.exec( ua ) ||
+        /(mac)/.exec( ua ) ||
+        /(linux)/.exec( ua ) ||
+        /(cros)/.exec( ua ) ||
+        /(playbook)/.exec( ua ) ||
+        /(bb)/.exec( ua ) ||
+        /(blackberry)/.exec( ua ) ||
+        [];
+
+    var browser = {},
+        matched = {
+          browser: match[ 5 ] || match[ 3 ] || match[ 1 ] || "",
+          version: match[ 2 ] || match[ 4 ] || "0",
+          versionNumber: match[ 4 ] || match[ 2 ] || "0",
+          platform: platform_match[ 0 ] || ""
+        };
+
+    if ( matched.browser ) {
+      browser[ matched.browser ] = true;
+      browser.version = matched.version;
+      browser.versionNumber = parseInt(matched.versionNumber, 10);
+    }
+
+    if ( matched.platform ) {
+      browser[ matched.platform ] = true;
+    }
+
+    // These are all considered mobile platforms, meaning they run a mobile browser
+    if ( browser.android || browser.bb || browser.blackberry || browser.ipad || browser.iphone ||
+      browser.ipod || browser.kindle || browser.playbook || browser.silk || browser[ "windows phone" ]) {
+      browser.mobile = true;
+    }
+
+    // These are all considered desktop platforms, meaning they run a desktop browser
+    if ( browser.cros || browser.mac || browser.linux || browser.win ) {
+      browser.desktop = true;
+    }
+
+    // Chrome, Opera 15+ and Safari are webkit based browsers
+    if ( browser.chrome || browser.opr || browser.safari ) {
+      browser.webkit = true;
+    }
+
+    // IE11 has a new token so we will assign it msie to avoid breaking changes
+    // IE12 disguises itself as Chrome, but adds a new Edge token.
+    if ( browser.rv || browser.edge ) {
+      var ie = "msie";
+
+      matched.browser = ie;
+      browser[ie] = true;
+    }
+
+    // Blackberry browsers are marked as Safari on BlackBerry
+    if ( browser.safari && browser.blackberry ) {
+      var blackberry = "blackberry";
+
+      matched.browser = blackberry;
+      browser[blackberry] = true;
+    }
+
+    // Playbook browsers are marked as Safari on Playbook
+    if ( browser.safari && browser.playbook ) {
+      var playbook = "playbook";
+
+      matched.browser = playbook;
+      browser[playbook] = true;
+    }
+
+    // BB10 is a newer OS version of BlackBerry
+    if ( browser.bb ) {
+      var bb = "blackberry";
+
+      matched.browser = bb;
+      browser[bb] = true;
+    }
+
+    // Opera 15+ are identified as opr
+    if ( browser.opr ) {
+      var opera = "opera";
+
+      matched.browser = opera;
+      browser[opera] = true;
+    }
+
+    // Stock Android browsers are marked as Safari on Android.
+    if ( browser.safari && browser.android ) {
+      var android = "android";
+
+      matched.browser = android;
+      browser[android] = true;
+    }
+
+    // Kindle browsers are marked as Safari on Kindle
+    if ( browser.safari && browser.kindle ) {
+      var kindle = "kindle";
+
+      matched.browser = kindle;
+      browser[kindle] = true;
+    }
+
+     // Kindle Silk browsers are marked as Safari on Kindle
+    if ( browser.safari && browser.silk ) {
+      var silk = "silk";
+
+      matched.browser = silk;
+      browser[silk] = true;
+    }
+
+    // Assign the name and platform variable
+    browser.name = matched.browser;
+    browser.platform = matched.platform;
+    return browser;
+  }
+
+  // Run the matching process, also assign the function to the returned object
+  // for manual, jQuery-free use if desired
+  window.jQBrowser = uaMatch( window.navigator.userAgent );
+  window.jQBrowser.uaMatch = uaMatch;
+
+  // Only assign to jQuery.browser if jQuery is loaded
+  if ( jQuery ) {
+    jQuery.browser = window.jQBrowser;
+  }
+
+  return window.jQBrowser;
+}));

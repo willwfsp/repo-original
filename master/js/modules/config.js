@@ -12,11 +12,11 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
   $locationProvider.html5Mode(false);
 
   // default route
-  $urlRouterProvider.otherwise('/app/search');
+  $urlRouterProvider.otherwise('/app/searchBills');
 
-  // 
+  //
   // Application Routes
-  // -----------------------------------   
+  // -----------------------------------
   $stateProvider
     .state('app', {
         url: '/app',
@@ -25,12 +25,50 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'AppController',
         resolve: helper.resolveFor('modernizr', 'icons')
     })
-    // 
+    .state('app.searchBills', {
+        url: '/searchBills',
+        title: 'Pesquisar Proposições',
+        templateUrl: helper.basepath('searchBills.html'),
+        resolve: helper.resolveFor('select'),
+        controller: 'SearchBillsController',
+        params: {
+            q: ""
+        }
+    })
+    .state('app.proposicao', {
+        url: '/proposicao',
+        title: 'Visualizar Projeto de Lei',
+        templateUrl: helper.basepath('proposicao.html')
+    })
+    .state('app.parlamentar', {
+        url: '/parlamentar',
+        title: 'Visualizar dados de parlamentares',
+        templateUrl: helper.basepath('parlamentar.html')
+    })
+    .state('app.calendar', {
+        url: '/calendar',
+        title: 'Calendários',
+        templateUrl: helper.basepath('calendar.html')
+    })
+    .state('page', {
+        url: '/page',
+        templateUrl: 'app/pages/page.html',
+        resolve: helper.resolveFor('modernizr', 'icons'),
+        controller: ["$rootScope", function($rootScope) {
+            $rootScope.app.layout.isBoxed = false;
+        }]
+    })
+    .state('login', {
+        url: '/login',
+        title: 'Login',
+        templateUrl: 'app/pages/login.html'
+    })
+    //
     // CUSTOM RESOLVES
     //   Add your own resolves properties
     //   following this object extend
     //   method
-    // ----------------------------------- 
+    // -----------------------------------
     // .state('app.someroute', {
     //   url: '/some_url',
     //   templateUrl: 'path_to_template.html',
@@ -71,7 +109,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         prefix : 'app/i18n/',
         suffix : '.json'
     });
-    $translateProvider.preferredLanguage('en');
+    $translateProvider.preferredLanguage('pt_BR');
     $translateProvider.useLocalStorage();
     $translateProvider.usePostCompiling(true);
 

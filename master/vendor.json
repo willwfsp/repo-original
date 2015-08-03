@@ -3,7 +3,7 @@
   "bower_components/fontawesome/css/font-awesome.min.css",
   "bower_components/fontawesome/fonts/*",
   "bower_components/simple-line-icons/css/simple-line-icons.css",
-  "bower_components/ngDialog/css/ngDialog.min.css",
-  "bower_components/ngDialog/css/ngDialog-theme-default.min.css",
-  "bower_components/simple-line-icons/fonts/*"
+  "bower_components/simple-line-icons/fonts/*",
+  "bower_components/bootstrap-select/bootstrap-select.js",
+  "bower_components/bootstrap-select/bootstrap-select.css"
 ]

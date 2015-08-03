@@ -1,4 +1,4 @@
-div(ng-controller="proposicaoController", data-ng-init="fetchData()")
+div(ng-controller="ProposicaoController", data-ng-init="fetchData()")
 	.page-header
 		h2 {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
 	.col-sm-12.col-md-6.well.bill-box-height
@@ -6,40 +6,40 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 			h3 Informações Gerais
 		.form-horizontal
 					.form-group
-						.col-sm-3 Regime: 
-						.col-sm-9 
+						.col-sm-3 Regime:
+						.col-sm-9
 							strong {{dados.SLP_REGIME_TRAMITACAO}}
 
 		.form-horizontal
 					.form-group
-						.col-sm-3 Autor(es): 
-						.col-sm-9 
+						.col-sm-3 Autor(es):
+						.col-sm-9
 							div(ng-repeat="autor in dados.SLP_AUTORES")
 								strong(ng-if="autor._id === undefined") {{autor.SLPa_NOME_FANTASIA}}
 								a(href="#/app/parlamentar?id={{autor._id}}", ng-if="autor._id != undefined") {{autor.SLPa_NOME_FANTASIA}}
 		.form-horizontal
 					.form-group
 						.col-sm-3 Temas:
-						.col-sm-9 
+						.col-sm-9
 							strong(ng-repeat="tema in dados.SLP_TEMA") {{tema}}
 								br
 
 		.form-horizontal
 					.form-group
 						.col-sm-3 Ementa:
-						.col-sm-9 
+						.col-sm-9
 							strong {{dados.SLP_EMENTA}}
 
 		.form-horizontal
 					.form-group
 						.col-sm-3 Data de Apresentação:
-						.col-sm-9 
+						.col-sm-9
 							strong {{dados.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}
 
 		.form-horizontal
 					.form-group
 						.col-sm-3 Última Ação:
-						.col-sm-9 
+						.col-sm-9
 							strong {{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}
 
 		.form-horizontal
@@ -51,7 +51,7 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 							a(href="{{doc.SLD_LINK}}", target="_blank")
 								img.media-object(src="app/img/document.png" height="50px")
 						.media-body
-							h4.media-heading{{doc.SLD_NOME}}
+							h4.media-heading {{doc.SLD_NOME}}
 							p Data: {{doc.SLD_DATA | date:"dd/MM/yyyy"}}
 
 
@@ -61,59 +61,59 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 		div(ng-if="dados.SLP_STATUS.CD.FASE != -1")
 			.page-header
 				h4 Câmara dos Deputados
-			
+
 			.form-horizontal
 					.form-group
 						.col-sm-4 Fase
-						.col-sm-8 
+						.col-sm-8
 							strong {{dados.SLP_STATUS.CD.FASE}}
 			.form-horizontal
 					.form-group
 						.col-sm-4 Órgão Responsável:
-						.col-sm-8 
+						.col-sm-8
 							strong {{dados.SLP_STATUS.CD.ORG_DESC}}
 
 			.form-horizontal
 					.form-group
 						.col-sm-4 Data:
-						.col-sm-8 
+						.col-sm-8
 							strong {{dados.SLP_STATUS.CD.DATA | date:'dd/MM/yyyy'}}
 
 			.form-horizontal
 					.form-group
 						.col-sm-4 Status:
-						.col-sm-8 
+						.col-sm-8
 							strong {{dados.SLP_STATUS.CD.DESC}}
-				
+
 		div(ng-if="dados.SLP_STATUS.SF.FASE != -1")
 			.page-header
 				h4 Senado Federal
-			
+
 			.form-horizontal
 					.form-group
 						.col-sm-4 Fase
-						.col-sm-8 
+						.col-sm-8
 							strong {{dados.SLP_STATUS.SF.FASE}}
 			.form-horizontal
 					.form-group
 						.col-sm-4 Órgão Responsável:
-						.col-sm-8 
+						.col-sm-8
 							strong {{dados.SLP_STATUS.SF.ORG_DESC}}
 
 			.form-horizontal
 					.form-group
 						.col-sm-4 Data:
-						.col-sm-8 
+						.col-sm-8
 							strong {{dados.SLP_STATUS.SF.DATA | date:'dd/MM/yyyy'}}
 
 			.form-horizontal
 					.form-group
 						.col-sm-4 Status:
-						.col-sm-8 
+						.col-sm-8
 							strong {{dados.SLP_STATUS.SF.DESC}}
 
 
-	.col-sm-12.col-md-6.well.bill-box-height(ng-controller="tramitacaoController", data-ng-init="fetchData()")
+	.col-sm-12.col-md-6.well.bill-box-height(ng-controller="TramitacaoController", data-ng-init="fetchData()")
 		.page-header
 			h3 Tramitações
 		.well.well-sm(ng-repeat="tramitacao in dados")
@@ -129,7 +129,7 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 					.col-sm-8 {{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO}}
 
 
-	.col-sm-12.col-md-6.well.bill-box-height(ng-controller="pollController", data-ng-init="fetchData()")
+	.col-sm-12.col-md-6.well.bill-box-height(ng-controller="PollController", data-ng-init="fetchData()")
 		.page-header
 			h3 Votações
 		p(ng-if="dados.length == 0") Não há votações para este projeto de lei.
@@ -143,5 +143,5 @@ div(ng-controller="proposicaoController", data-ng-init="fetchData()")
 					.col-sm-8 {{poll.SLV_OBJETO_VOTACAO}}
 				.form-group
 					.col-sm-4 Resultado:
-					.col-sm-8 
+					.col-sm-8
 						a(ng-click="viewPollDetails()") {{poll.SLV_RESULTADO}} - {{poll.id}}

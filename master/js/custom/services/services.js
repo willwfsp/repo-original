@@ -1,5 +1,5 @@
 myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
-    var databaseURL = 'http://sigalei-api.mybluemix.net/v1/';
+    var databaseURL = 'https://sigalei-api.mybluemix.net/v1/';
     var databaseToken = "admin@sigalei";
 
     var results = {};
@@ -16,7 +16,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
             'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-        }           
+        }
     };
 
     return {
@@ -29,23 +29,23 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                 'Content-Type': 'application/json'
             };
 
-            for(filter in filters){
+            for(var filter in filters){
                 headers[filter] = filters[filter];
-            };
+            }
 
             url = databaseURL + 'proposicoes?';
 
             if(termos){
                 url += 'q=' + termos + '&';
-            };
+            }
 
             url += 'access_token=' + databaseToken;
             $http.post(url, headers)
                 .success(function(data){
                     results = data;
                     query = termos || "";
-                    if(filters && filters.bookmark != ""){
-                        $rootScope.$broadcast('search more results: completed')
+                    if(filters && filters.bookmark !== ""){
+                        $rootScope.$broadcast('search more results: completed');
                     }
                     else{
                         $rootScope.$broadcast('search:completed');
@@ -55,7 +55,7 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                     $log.log('error');
                 });
         },
-        
+
         fetchDataRepresentative : function(IdRepresentative){
             var req = request_stub;
             req.url = databaseURL + 'parlamentares/' + IdRepresentative +'?access_token='+ databaseToken;
@@ -79,7 +79,8 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
                 .error(function(status, error){
                     $log.log('error');
                 });
-            return 
+
+            return;
         },
         fetch_data_proposicao : function(nome){
             var req = request_stub;

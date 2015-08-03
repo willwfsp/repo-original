@@ -1,4 +1,4 @@
-<div ng-controller="proposicaoController" data-ng-init="fetchData()">
+<div ng-controller="ProposicaoController" data-ng-init="fetchData()">
    <div class="page-header">
       <h2>{{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}</h2>
    </div>
@@ -156,7 +156,7 @@
          </div>
       </div>
    </div>
-   <div ng-controller="tramitacaoController" data-ng-init="fetchData()" class="col-sm-12 col-md-6 well bill-box-height">
+   <div ng-controller="TramitacaoController" data-ng-init="fetchData()" class="col-sm-12 col-md-6 well bill-box-height">
       <div class="page-header">
          <h3>Tramitações</h3>
       </div>
@@ -177,7 +177,7 @@
          </div>
       </div>
    </div>
-   <div ng-controller="pollController" data-ng-init="fetchData()" class="col-sm-12 col-md-6 well bill-box-height">
+   <div ng-controller="PollController" data-ng-init="fetchData()" class="col-sm-12 col-md-6 well bill-box-height">
       <div class="page-header">
          <h3>Votações</h3>
       </div>
@@ -194,7 +194,7 @@
             </div>
             <div class="form-group">
                <div class="col-sm-4">Resultado:</div>
-               <div class="col-sm-8"> <a ng-click="viewPollDetails()">{{poll.SLV_RESULTADO}} - {{poll.id}}</a>
+               <div class="col-sm-8"><a ng-click="viewPollDetails()">{{poll.SLV_RESULTADO}} - {{poll.id}}</a>
                </div>
             </div>
          </div>

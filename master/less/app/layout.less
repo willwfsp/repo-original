@@ -1,7 +1,7 @@
 /* ========================================================================
    Component: layout.less
  ========================================================================== */
- 
+
 //
 // Main layout
 // This file controls the presentation of all components
@@ -9,12 +9,12 @@
 //    > section
 //      > .content-wrapper
 //    > .aside
-// 
+//
 // If modified or removed make sure to check the variable
 // shared with other components
 // -------------------------------------------------------------
 
-@aside-wd:                                220px;
+@aside-wd:                                110px;
 @aside-wd-collapsed:                      70px;
 @aside-bg:                                #fff;
 
@@ -60,7 +60,7 @@ html, body {
     // visibility: hidden;
     position: absolute;
     width: @aside-wd;
-    
+
     top: 0; left: 0;
     bottom: 0;
     z-index: @z-index-main-section - 1; // Hides behind the main section
@@ -135,7 +135,7 @@ html, body {
     margin: -15px; // expand over wrapper padding
     @media @tablet {
       margin: -20px; // expand over wrapper padding
-    }    
+    }
   }
 
   > h3,
@@ -158,7 +158,7 @@ html, body {
   > button, > .btn {
     margin: 10px 10px 0 0;
   }
-  
+
   .container,
   .container-fluid {
     padding-left: 0;
@@ -190,10 +190,10 @@ html, body {
   }
 
   .wrapper {
-    
+
     > .aside {
       z-index: @z-index-main-section + 5;
-      
+
       .aside-inner {
         padding-top: @navbar-hg;
       }
@@ -205,7 +205,7 @@ html, body {
     }
 
     > section {
-      // with just a margin we can make the 
+      // with just a margin we can make the
       // right sidebar always visible
       &.has-sidebar-right {
         margin-right: @aside-wd + 20;
@@ -234,7 +234,7 @@ html, body {
       > footer {
         margin-left: @aside-wd;
       }
-      
+
       > .aside {
         margin-left: 0;
       }
@@ -255,7 +255,7 @@ html, body {
           margin-left: 0;
           .translate3d(-@aside-wd,0,0);
           .transition-transform(.3s ease);
-          
+
         }
     }
 
@@ -272,13 +272,13 @@ html, body {
     }
 
   }
-  
+
 }
 
 // Toggle and collapsed behavior overrides
 
 @media @upto-tablet {
-  
+
   .aside-collapsed .wrapper {
     > .aside {
       margin-left: -@aside-wd-collapsed;
@@ -291,13 +291,13 @@ html, body {
       > footer {
         margin-left: @aside-wd-collapsed;
       }
-      
+
       > .aside {
         margin-left: 0;
       }
     }
   }
-  
+
 
   .csstransforms3d  {
 
@@ -313,7 +313,7 @@ html, body {
           margin-left: 0;
           .translate3d(-@aside-wd-collapsed,0,0);
           .transition-transform(.3s ease);
-          
+
         }
     }
 
@@ -330,7 +330,7 @@ html, body {
     }
 
   }
-  
+
 }
 
 // Aside collapsed layout
@@ -370,7 +370,7 @@ html, body {
    -moz-transform: none;
    -opera-transform: none;
    -ms-transform: none;
-   transform: none;  
+   transform: none;
 }
 
 // Fixed layout
@@ -397,10 +397,10 @@ html, body {
     /* only applied to sidebar */
     > .aside {
       /* safari fix */
-      height: 1px; 
-      min-height: 100%;  
-      /* ios blanks space fix */ 
-      > .aside-inner {   
+      height: 1px;
+      min-height: 100%;
+      /* ios blanks space fix */
+      > .aside-inner {
         position: fixed;
         top: 0;
         bottom: 0;
@@ -452,6 +452,6 @@ html, body {
         width: @boxed-max-width;
       }
     }
-  }  
+  }
 
 } // boxed
