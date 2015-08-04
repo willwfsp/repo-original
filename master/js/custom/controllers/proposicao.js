@@ -1,7 +1,7 @@
 
 myApp.controller('ProposicaoController', ['$location', '$scope','$state', '$log',  '$http', 'DataFetcher',
     function($location,$scope, $state, $log, $http, DataFetcher){
-	$scope.dados = {};
+    $scope.dados = {};
     $scope.fetchData = function(){
         console.log($location.search().p);
         DataFetcher.fetch_data_proposicao($location.search().p);
@@ -55,7 +55,7 @@ myApp.controller('PollController', ['$location', '$scope','$state', '$log',  '$m
 }]);
 
 myApp.filter('positiveNumber', function() {
-  return function(items) {
+  return function(items, fields) {
         var result = {};
         angular.forEach(items, function(value, key) {
             if (value > 0) {

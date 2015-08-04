@@ -1,200 +1,204 @@
-<div ng-controller="ProposicaoController" data-ng-init="fetchData()">
-   <div class="page-header">
-      <h2>{{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}</h2>
-   </div>
-   <div class="col-sm-12 col-md-6 well bill-box-height">
-      <div class="page-header">
-         <h3>Informações Gerais</h3>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">Regime:</div>
-            <div class="col-sm-9">
-               <strong>{{dados.SLP_REGIME_TRAMITACAO}}</strong>
+<h3 data-ng-init="fetchData()">{{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}</h3>
+<div class="container-fluid">
+   <div class="row">
+      <div class="col-md-6">
+         <div style="overflow:scroll" class="panel widget bill-box-height">
+            <div class="panel-heading">
+               <h3>Informações Gerais</h3>
             </div>
-         </div>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">Autor(es):</div>
-            <div class="col-sm-9">
-               <div ng-repeat="autor in dados.SLP_AUTORES">
-                  <strong ng-if="autor._id === undefined">{{autor.SLPa_NOME_FANTASIA}}</strong><a href="#/app/parlamentar?id={{autor._id}}" ng-if="autor._id != undefined">{{autor.SLPa_NOME_FANTASIA}}</a>
-               </div>
-            </div>
-         </div>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">Temas:</div>
-            <div class="col-sm-9">
-               <strong ng-repeat="tema in dados.SLP_TEMA">{{tema}}
-                  <br/>
-               </strong>
-            </div>
-         </div>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">Ementa:</div>
-            <div class="col-sm-9">
-               <strong>{{dados.SLP_EMENTA}}</strong>
-            </div>
-         </div>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">Data de Apresentação:</div>
-            <div class="col-sm-9">
-               <strong>{{dados.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}</strong>
-            </div>
-         </div>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">Última Ação:</div>
-            <div class="col-sm-9">
-               <strong>{{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}</strong>
-            </div>
-         </div>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">Documentos:</div>
-            <div class="col-sm-9 doc-box-height">
-               <div ng-repeat="doc in dados.SLP_DOCUMENTOS" class="media">
-                  <div class="media-left">
-                     <a href="{{doc.SLD_LINK}}" target="_blank">
-                        <img src="app/img/document.png" height="50px" class="media-object" />
-                     </a>
-                  </div>
-                  <div class="media-body">
-                     <h4 class="media-heading">{{doc.SLD_NOME}}</h4>
-                     <p>Data: {{doc.SLD_DATA | date:"dd/MM/yyyy"}}</p>
+            <div class="panel-body">
+               <div class="form-horizontal">
+                  <div class="form-group">
+                     <div class="col-sm-4">Autor Principal:</div>
+                     <div class="col-sm-8">
+                        <strong ng-if="dados.SLP_AUTORES[0]._id === undefined">{{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}</strong><a href="#/app/parlamentar?id={{dados.SLP_AUTORES[0]._id}}" ng-if="dados.SLP_AUTORES[0]._id != undefined">{{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}</a>
+                        <span ng-show="dados.SLP_AUTORES.length &gt; 1 &amp;&amp; coAuthorsCollapsed"
+                        ng-click="coAuthorsCollapsed = !coAuthorsCollapsed">
+                           <em ng-show="coAuthorsCollapsed" alt="Mostrar co-autores" class="fa fa-plus-circle sigalei-color"></em>
+                        </span>
+                        <span ng-show="dados.SLP_AUTORES.length &gt; 1 &amp;&amp; !coAuthorsCollapsed" ng-click="coAuthorsCollapsed = !coAuthorsCollapsed">
+                           <em ng-show="!coAuthorsCollapsed" alt="Esconder co-autores" class="fa fa-minus-circle sigalei-color"></em>
+                        </span>
+                     </div>
                   </div>
                </div>
+               <div ng-show="!coAuthorsCollapsed" class="form-horizontal">
+                  <div class="form-group">
+                     <div class="col-sm-4">Coautores:</div>
+                     <div class="col-sm-8">
+                        <div ng-show="!$first" ng-repeat="coauthor in dados.SLP_AUTORES">
+                           <strong ng-if="coauthor._id === undefined">{{coauthor.SLPa_NOME_FANTASIA}}</strong><a href="#/app/parlamentar?id={{coauthor._id}}" ng-if="coauthor._id != undefined">{{coauthor.SLPa_NOME_FANTASIA}}     </a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-horizontal">
+                  <div class="form-group">
+                     <div class="col-sm-4">Tema:</div>
+                     <div class="col-sm-8">
+                        <strong>{{dados.SLP_SL_TEMA || "-"}}</strong>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-horizontal">
+                  <div class="form-group">
+                     <div class="col-sm-4">Subtema:</div>
+                     <div class="col-sm-8">
+                        <strong>{{dados.SLP_SL_SUBTEMA}}</strong>
+                     </div>
+                  </div>
+               </div>
+               <div ng-if="dados.SLP_REGIME_TRAMITACAO !== undefined" class="form-horizontal">
+                  <div class="form-group">
+                     <div class="col-sm-4">Regime de Tramitação:</div>
+                     <div class="col-sm-8">
+                        <strong>{{dados.SLP_REGIME_TRAMITACAO}}</strong>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-horizontal">
+                  <div class="form-group">
+                     <div class="col-sm-4">Ementa:</div>
+                     <div class="col-sm-8">
+                        <strong>{{dados.SLP_EMENTA}}</strong>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-horizontal">
+                  <div class="form-group">
+                     <div class="col-sm-4">Documentos:</div>
+                     <div class="col-sm-8">
+                        <div ng-repeat="doc in dados.SLP_DOCUMENTOS">
+                           <a href="{{doc.SLD_LINK}}">
+                              <em class="icon-doc sigalei-color"></em>
+                              <strong>{{doc.SLD_TIPO}}</strong>
+                           </a>
+                           <span ng-if="doc.SLD_DATA !== undefined">dia {{doc.SLD_DATA | date:'dd/MM/yyyy'}}</span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-md-6">
+         <div class="panel widget bill-box-height">
+            <div class="panel-heading">
+               <h3>Status Geral</h3>
+            </div>
+            <div class="panel-body">
+               <div class="form-horizontal">
+                  <div class="form-group">
+                     <div class="col-sm-4">Data de Apresentação:</div>
+                     <div class="col-sm-8">
+                        <strong>{{dados.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}</strong>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-horizontal">
+                  <div class="form-group">
+                     <div class="col-sm-4">Última Ação:</div>
+                     <div class="col-sm-8">
+                        <strong>{{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}</strong>
+                     </div>
+                  </div>
+               </div>
+               <div ng-repeat="(house, data) in dados.SLP_STATUS">
+                  <h4>{{houseFullName(house)}}</h4>
+                  <div ng-show="data.ORG_DESC !== undefined" class="form-horizontal">
+                     <div class="form-group">
+                        <div class="col-sm-4">Órgão Responsável:</div>
+                        <div class="col-sm-8">
+                           <strong>{{data.ORG_DESC}}</strong>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-horizontal">
+                     <div class="form-group">
+                        <div class="col-sm-4">Fase</div>
+                        <div class="col-sm-8">
+                           <strong>{{data.FASE}}</strong>
+                        </div>
+                     </div>
+                  </div>
+                  <div ng-show="data.DATA !== undefined" class="form-horizontal">
+                     <div class="form-group">
+                        <div class="col-sm-4">Última Ação:</div>
+                        <div class="col-sm-8">
+                           <strong>{{data.DATA | date:'dd/MM/yyyy'}}</strong>
+                        </div>
+                     </div>
+                  </div>
+                  <div ng-show="data.DESC !== undefined" class="form-horizontal">
+                     <div class="form-group">
+                        <div class="col-sm-4">Status:</div>
+                        <div class="col-sm-8">
+                           <strong>{{data.DESC}}</strong>
+                        </div>
+                     </div>
+                  </div>
+               </div>
             </div>
          </div>
       </div>
    </div>
-   <div class="col-sm-12 col-md-6 well bill-box-height">
-      <div class="page-header">
-         <h3>Status Geral</h3>
-      </div>
-      <div ng-if="dados.SLP_STATUS.CD.FASE != -1">
-         <div class="page-header">
-            <h4>Câmara dos Deputados</h4>
-         </div>
-         <div class="form-horizontal">
-            <div class="form-group">
-               <div class="col-sm-4">Fase</div>
-               <div class="col-sm-8">
-                  <strong>{{dados.SLP_STATUS.CD.FASE}}</strong>
-               </div>
+   <div class="row">
+      <div class="col-md-6">
+         <div ng-controller="TramitacaoController" data-ng-init="fetchData()" style="overflow:scroll" class="panel widget bill-box-height">
+            <div class="panel-heading">
+               <h3>Tramitações</h3>
             </div>
-         </div>
-         <div class="form-horizontal">
-            <div class="form-group">
-               <div class="col-sm-4">Órgão Responsável:</div>
-               <div class="col-sm-8">
-                  <strong>{{dados.SLP_STATUS.CD.ORG_DESC}}</strong>
-               </div>
-            </div>
-         </div>
-         <div class="form-horizontal">
-            <div class="form-group">
-               <div class="col-sm-4">Data:</div>
-               <div class="col-sm-8">
-                  <strong>{{dados.SLP_STATUS.CD.DATA | date:'dd/MM/yyyy'}}</strong>
-               </div>
-            </div>
-         </div>
-         <div class="form-horizontal">
-            <div class="form-group">
-               <div class="col-sm-4">Status:</div>
-               <div class="col-sm-8">
-                  <strong>{{dados.SLP_STATUS.CD.DESC}}</strong>
+            <div class="panel-body">
+               <div ng-repeat="tramitacao in dados">
+                  <ul ng-class="timelineAlt ? 'timeline-alt' : 'timeline'" ng-init="timelineAlt=true">
+                     <li ng-if="$index == 0 || dados[$index].doc.SLT_DATA_TRAMITACAO.substring(0,4) != dados[$index-1].doc.SLT_DATA_TRAMITACAO.substring(0,4)" data-datetime="{{tramitacao.doc.SLT_DATA_TRAMITACAO.substring(0,10) | date: 'yyyy'}}" class="timeline-separator"></li>
+                     <!-- START timeline item-->
+                     <li>
+                        <div class="timeline-panel">
+                           <div class="pull-left timeline-custom-date text-center">{{tramitacao.doc.SLT_DATA_TRAMITACAO.substring(0,10) | date: 'MMM dd'}}</div>
+                           <div class="timeline-custom-badge"></div>
+                           <div ng-class="timelineAlt ? 'right' : 'left'" class="popover">
+                              <h4 ng-if="tramitacao.doc.SLT_ORGAO_ORIGEM_DESC !== undefined" class="popover-title">
+                                 <span class="pull-right">{{tramitacao.doc.SLT_CASA_TRAMITACAO}}</span>{{tramitacao.doc.SLT_ORGAO_ORIGEM_DESC}}</h4>
+                              <div class="arrow"></div>
+                              <div class="popover-content">
+                                 <p>{{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO || "Sem descrição"}}</p>
+                              </div>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
                </div>
             </div>
          </div>
       </div>
-      <div ng-if="dados.SLP_STATUS.SF.FASE != -1">
-         <div class="page-header">
-            <h4>Senado Federal</h4>
-         </div>
-         <div class="form-horizontal">
-            <div class="form-group">
-               <div class="col-sm-4">Fase</div>
-               <div class="col-sm-8">
-                  <strong>{{dados.SLP_STATUS.SF.FASE}}</strong>
-               </div>
+      <div class="col-md-6">
+         <div ng-controller="PollController" data-ng-init="fetchData()" class="panel widget bill-box-height">
+            <div class="panel-heading">
+               <h3>Votações</h3>
             </div>
-         </div>
-         <div class="form-horizontal">
-            <div class="form-group">
-               <div class="col-sm-4">Órgão Responsável:</div>
-               <div class="col-sm-8">
-                  <strong>{{dados.SLP_STATUS.SF.ORG_DESC}}</strong>
-               </div>
-            </div>
-         </div>
-         <div class="form-horizontal">
-            <div class="form-group">
-               <div class="col-sm-4">Data:</div>
-               <div class="col-sm-8">
-                  <strong>{{dados.SLP_STATUS.SF.DATA | date:'dd/MM/yyyy'}}</strong>
-               </div>
-            </div>
-         </div>
-         <div class="form-horizontal">
-            <div class="form-group">
-               <div class="col-sm-4">Status:</div>
-               <div class="col-sm-8">
-                  <strong>{{dados.SLP_STATUS.SF.DESC}}</strong>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div ng-controller="TramitacaoController" data-ng-init="fetchData()" class="col-sm-12 col-md-6 well bill-box-height">
-      <div class="page-header">
-         <h3>Tramitações</h3>
-      </div>
-      <div ng-repeat="tramitacao in dados" class="well well-sm">
-         <div class="form-horizontal">
-            <div class="form-group">
-               <div class="col-sm-4">Data:</div>
-               <div class="col-sm-8">{{tramitacao.doc.SLT_DATA_TRAMITACAO | date:'dd/MM/yyyy'}}</div>
-            </div>
-            <div class="form-group">
-               <div class="col-sm-4">Origem:</div>
-               <div class="col-sm-8">{{tramitacao.doc.SLT_ORGAO_ORIGEM_DESC}}</div>
-            </div>
-            <div class="form-group">
-               <div class="col-sm-4">Descrição:</div>
-               <div class="col-sm-8">{{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO}}</div>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div ng-controller="PollController" data-ng-init="fetchData()" class="col-sm-12 col-md-6 well bill-box-height">
-      <div class="page-header">
-         <h3>Votações</h3>
-      </div>
-      <p ng-if="dados.length == 0">Não há votações para este projeto de lei.</p>
-      <div ng-repeat="poll in dados" class="well well-sm">
-         <div class="form-horizontal">
-            <div class="form-group">
-               <div class="col-sm-4">Data:</div>
-               <div class="col-sm-8">{{formattedDate(poll.SLV_DATA_HORA) | date:"dd/MM/yyyy 'às' h:mma"}}</div>
-            </div>
-            <div class="form-group">
-               <div class="col-sm-4">Origem:</div>
-               <div class="col-sm-8">{{poll.SLV_OBJETO_VOTACAO}}</div>
-            </div>
-            <div class="form-group">
-               <div class="col-sm-4">Resultado:</div>
-               <div class="col-sm-8"><a ng-click="viewPollDetails()">{{poll.SLV_RESULTADO}} - {{poll.id}}</a>
+            <div class="panel-body">
+               <p ng-if="dados.length == 0">Não há votações para este projeto de lei.</p>
+               <div ng-repeat="poll in dados" class="panel-panel-default">
+                  <div class="form-horizontal">
+                     <div class="form-group">
+                        <div class="col-sm-4">Data:</div>
+                        <div class="col-sm-8">{{formattedDate(poll.SLV_DATA_HORA) | date:"dd/MM/yyyy 'às' h:mma"}}</div>
+                     </div>
+                  </div>
+                  <div class="form-horizontal">
+                     <div class="form-group">
+                        <div class="col-sm-4">Origem:</div>
+                        <div class="col-sm-8">{{poll.SLV_OBJETO_VOTACAO}}</div>
+                     </div>
+                  </div>
+                  <div class="form-horizontal">
+                     <div class="form-group">
+                        <div class="col-sm-4">Resultado:</div>
+                        <div class="col-sm-8"><a ng-click="viewPollDetails()">{{poll.SLV_RESULTADO}} - {{poll.id}}</a>
+                        </div>
+                     </div>
+                  </div>
                </div>
             </div>
          </div>

@@ -43,6 +43,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
     .state('app.proposicao', {
         url: '/proposicao',
         title: 'Visualizar Projeto de Lei',
+        controller: 'ProposicaoController',
         templateUrl: helper.basepath('proposicao.html')
     })
     .state('app.parlamentar', {
