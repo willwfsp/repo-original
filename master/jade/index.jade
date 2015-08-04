@@ -18,7 +18,6 @@ html(lang="pt-br", data-ng-app="sigaLeiApp")
     // Themes
     link(rel='stylesheet', ng-href='{{app.layout.theme}}', data-ng-if="app.layout.theme")
 
-    base(href="/")
   body(data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.layout.isCollapsed, 'layout-boxed' : app.layout.isBoxed, 'layout-fs': app.useFullLayout, 'hidden-footer': app.hiddenFooter, 'layout-h': app.layout.horizontal, 'aside-float': app.layout.isFloat}")
 
     .wrapper(data-ui-view="", data-autoscroll='false')

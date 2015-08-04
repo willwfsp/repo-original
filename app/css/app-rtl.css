@@ -5449,7 +5449,7 @@ fieldset[disabled] .btn-pink.active {
 
 /**
  * Custom form elements
- *    - Checkbox 
+ *    - Checkbox
  *    - Radios
  *    - Switch
  *    - Rounded inputs
@@ -5733,7 +5733,7 @@ label + .form-control + .parsley-errors-list + .form-control-feedback {
 }
 
 .input-md {
-  width: 260px;
+  width: 100%;
 }
 
 /* ========================================================================
@@ -6502,6 +6502,199 @@ body .ng-table-pager:after {
 #uigrid-demo {
   width: 100%;
   min-height: 380px;
+}
+
+/* ========================================================================
+   Component: spinner.less
+ ========================================================================== */
+
+body .whirl {
+  position: relative;
+}
+
+body .whirl:before {
+  content: attr(data-spinner-text);
+  display: block;
+  background-color: #f0f0f0;
+  opacity: 0.7;
+}
+
+body .whirl.solid {
+  opacity: 1;
+}
+
+body .whirl:after {
+  border-top-color: #b5b5b5;
+}
+
+body .whirl.blade:after {
+  border-bottom-color: #b5b5b5;
+}
+
+body .whirl.double-up:after {
+  border-left-color: #b5b5b5;
+  border-top-color: #b5b5b5;
+  border-right-color: #b5b5b5;
+  border-bottom-color: #b5b5b5;
+}
+
+body .whirl.duo:after {
+  border-left-color: #b5b5b5;
+  border-right-color: #b5b5b5;
+  border-top-color: #7266ba;
+  border-bottom-color: #7266ba;
+}
+
+body .whirl.helicopter:after {
+  background-color: #b5b5b5;
+}
+
+body .whirl.ringed:after {
+  border-left-color: #23b7e5;
+  border-top-color: #7266ba;
+  border-right-color: #7266ba;
+  border-bottom-color: #7266ba;
+}
+
+body .whirl.traditional:after {
+  border-left-color: #23b7e5;
+  border-top-color: #23b7e5;
+  border-right-color: #7266ba;
+  border-bottom-color: #fad732;
+}
+
+body .whirl.line:after {
+  box-shadow: inset 10px 0px 0px rgba(181, 181, 181, 0.5);
+}
+
+.no-cssanimations body .whirl:before {
+  opacity: .9;
+}
+
+.no-cssanimations body .whirl:after {
+  content: "Loading...";
+  width: 40px;
+  height: 40px;
+  margin: -20px -20px 0 0;
+  line-height: 40px;
+  color: #000;
+  opacity: 1;
+  border: 0;
+  box-shadow: 0 0 0 #000;
+  background-color: transparent;
+  text-align: center;
+}
+
+body .ball-pulse > div,
+body .ball-grid-pulse > div,
+body .square-spin > div,
+body .ball-pulse-rise > div,
+body .ball-rotate > div,
+body .ball-rotate > div:before,
+body .ball-rotate > div:after,
+body .cube-transition > div,
+body .ball-zig-zag > div,
+body .ball-zig-zag-deflect > div,
+body .ball-triangle-path > div,
+body .ball-scale > div,
+body .line-scale > div,
+body .line-scale-party > div,
+body .ball-scale-multiple > div,
+body .ball-pulse-sync > div,
+body .ball-beat > div,
+body .line-scale-pulse-out > div,
+body .line-scale-pulse-out-rapid > div,
+body .ball-spin-fade-loader > div,
+body .line-spin-fade-loader > div,
+body .triangle-skew-spin > div,
+body .ball-grid-beat > div,
+body .semi-circle-spin > div {
+  background-color: #b5b5b5;
+}
+
+body .ball-clip-rotate-multiple {
+  width: 1px;
+}
+
+body .ball-clip-rotate-multiple > div {
+  border-color: #b5b5b5 transparent #b5b5b5 transparent;
+}
+
+body .ball-clip-rotate-multiple > div:last-child {
+  border-color: transparent #b5b5b5 transparent #b5b5b5;
+}
+
+body .ball-clip-rotate > div {
+  border-color: #b5b5b5;
+  border-bottom-color: transparent;
+}
+
+body .ball-clip-rotate-pulse > div:first-child {
+  background-color: #b5b5b5;
+  top: 5px;
+  right: -8px;
+}
+
+body .ball-clip-rotate-pulse > div:last-child {
+  border-color: #b5b5b5 transparent #b5b5b5 transparent;
+}
+
+body .square-spin > div,
+body .ball-scale-ripple > div,
+body .ball-scale-ripple-multiple > div {
+  border-color: #b5b5b5;
+}
+
+body .pacman > div:first-of-type {
+  border-top-color: #b5b5b5;
+  border-right-color: #b5b5b5;
+  border-bottom-color: #b5b5b5;
+}
+
+body .pacman > div:nth-child(2) {
+  border-top-color: #b5b5b5;
+  border-right-color: #b5b5b5;
+  border-bottom-color: #b5b5b5;
+}
+
+body .pacman > div:nth-child(3),
+body .pacman > div:nth-child(4),
+body .pacman > div:nth-child(5),
+body .pacman > div:nth-child(6) {
+  background-color: #b5b5b5;
+}
+
+body .sk-spinner-rotating-plane.sk-spinner,
+body .sk-spinner-double-bounce .sk-double-bounce1,
+body .sk-spinner-double-bounce .sk-double-bounce2,
+body .sk-spinner-wave div,
+body .sk-spinner-wandering-cubes .sk-cube1,
+body .sk-spinner-wandering-cubes .sk-cube2,
+body .sk-spinner-chasing-dots .sk-dot1,
+body .sk-spinner-chasing-dots .sk-dot2,
+body .sk-spinner-three-bounce div,
+body .sk-spinner-circle .sk-circle:before,
+body .sk-spinner-cube-grid .sk-cube,
+body .sk-spinner-fading-circle .sk-circle:before,
+body .sk-spinner-pulse.sk-spinner,
+body .sk-spinner-wordpress.sk-spinner {
+  background-color: #b5b5b5;
+}
+
+body .sk-spinner-wordpress .sk-inner-circle {
+  background-color: #fff;
+}
+
+/* just for loaders.css demo */
+
+.loader-demo {
+  height: 150px;
+  padding-top: 50px;
+  text-align: center;
+}
+
+.loader-demo > div {
+  display: inline-block;
 }
 
 /* ========================================================================

@@ -12,7 +12,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
   $locationProvider.html5Mode(false);
 
   // default route
-  $urlRouterProvider.otherwise('/app/searchBills');
+  $urlRouterProvider.otherwise('/app/dashboard');
 
   //
   // Application Routes
@@ -23,13 +23,18 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         abstract: true,
         templateUrl: helper.basepath('app.html'),
         controller: 'AppController',
-        resolve: helper.resolveFor('modernizr', 'icons')
+        resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit')
+    })
+    .state('app.dashBoard', {
+        url: '/dashboard',
+        title: 'Principal',
+        templateUrl: helper.basepath('dashboard.html')
     })
     .state('app.searchBills', {
         url: '/searchBills',
         title: 'Pesquisar Proposições',
         templateUrl: helper.basepath('searchBills.html'),
-        resolve: helper.resolveFor('select'),
+        resolve: helper.resolveFor('select', 'ui.select'),
         controller: 'SearchBillsController',
         params: {
             q: ""
@@ -115,7 +120,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
 }]).config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeBar = true;
-    cfpLoadingBarProvider.includeSpinner = false;
+    cfpLoadingBarProvider.includeSpinner = true;
     cfpLoadingBarProvider.latencyThreshold = 500;
     cfpLoadingBarProvider.parentSelector = '.wrapper > section';
 }]).config(['$tooltipProvider', function ($tooltipProvider) {

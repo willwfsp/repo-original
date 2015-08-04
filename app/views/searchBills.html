@@ -1,111 +1,62 @@
-<div data-ng-init="init()">
-   <div class="col-lg-3">
+<div ng-init="init()">
+   <!-- START Filters-->
+   <div class="col-lg-12">
       <div class="panel">
          <div class="panel-heading">
-            <h3>Filtros</h3>
+            <a ng-click="isCollapsed = !isCollapsed">
+               <span ng-show="isCollapsed">
+                  <em class="icon-plus"></em>&nbsp;Filtros</span>
+               <span ng-show="!isCollapsed">
+                  <em class="icon-close"></em>&nbsp;Filtros</span>
+            </a>
          </div>
-         <div class="panel-body">
-            <!--filtro por casas legislativas-->
-            <div class="form-group mb-sm">
-               <label class="control-label mb">Casas Legislativas</label>
-               <br/>
-               <label class="checkbox-inline c-checkbox">
-                  <input type="checkbox" ng-model="checkedHouses.CN" ng-click="changeFilterHouses()" />Congresso Nacional
-                  <span class="pull-left fa fa-check"></span>
-               </label>
-               <br/>
-               <label class="checkbox-inline c-checkbox">
-                  <input type="checkbox" ng-model="checkedHouses.SP" ng-click="changeFilterHouses()" />São Paulo
-                  <span class="pull-left fa fa-check"></span>
-               </label>
-               <br/>
-               <label class="checkbox-inline c-checkbox">
-                  <input type="checkbox" ng-model="checkedHouses.MG" ng-click="changeFilterHouses()" />Minas Gerais
-                  <span class="pull-left fa fa-check"></span>
-               </label>
-               <br/>
+         <div collapse="isCollapsed" class="panel-body">
+            <div class="form-group">
+               <div class="col-md-2 col-sm-2">
+                  <ui-select multiple="" ng-model="checkedHouses.list" on-select="changeFilterHouses()" on-remove="changeFilterHouses()">
+                     <ui-select-match placeholder="Casas">{{$item}}</ui-select-match>
+                     <ui-select-choices repeat="house in availableHouses">{{house}}</ui-select-choices>
+                  </ui-select>
+               </div>
+               <div class="col-md-2 col-sm-2">
+                  <ui-select multiple="" ng-model="statusBill.list" on-select="changeFilterStatus()" on-remove="changeFilterStatus()">
+                     <ui-select-match placeholder="Situação">{{$item}}</ui-select-match>
+                     <ui-select-choices repeat="status in statusBillAvailable">{{status}}</ui-select-choices>
+                  </ui-select>
+               </div>
+               <div class="col-md-2 col-sm-2">
+                  <ui-select multiple="" ng-model="typeBill.list" on-select="changeFilterBillTypes()" on-remove="changeFilterBillTypes()">
+                     <ui-select-match placeholder="Tipo">{{$item}}</ui-select-match>
+                     <ui-select-choices repeat="type in billTypesAvailable">{{type}}</ui-select-choices>
+                  </ui-select>
+               </div>
+               <div class="col-md-3 col-sm-3">
+                  <select ng-model="themeSelected" ng-options="item.subtema group by item.tema for item in themesAndSubthemes" ng-change="changeFilterTheme()" class="form-control">
+                     <option value="">Tema</option>
+                  </select>
+               </div>
+               <div class="col-md-2 col-sm-2">
+                  <input type="number" min="1980" max="2015" ng-model="year" ng-change="changeFilterYear()" placeholder="Ano" class="form-control input-md" />
+               </div>
+               <div ng-click="cleanFilters()" class="col-md-1 col-sm-1 btn btn-md btn-default dropdown-menu-right pull-right">Limpar</div>
             </div>
-            <div class="form-group mb-sm">
-               <label class="control-label mb">Situação</label>
-               <br/>
-               <label class="checkbox-inline c-checkbox">
-                  <input type="checkbox" ng-model="statusBill.tramitando" ng-click="changeStatus()" />Tramitando
-                  <span class="pull-left fa fa-check"></span>
-               </label>
-               <br/>
-               <label class="checkbox-inline c-checkbox">
-                  <input type="checkbox" ng-model="statusBill.arquivado" ng-click="changeStatus()" />Arquivado
-                  <span class="pull-left fa fa-check"></span>
-               </label>
-               <br/>
-               <label class="checkbox-inline c-checkbox">
-                  <input type="checkbox" ng-model="statusBill.lei" ng-click="changeStatus()" />Transformado em Lei
-                  <span class="pull-left fa fa-check"></span>
-               </label>
-               <br/>
-            </div>
-            <div class="form-group mb-sm">
-               <label class="control-label mb">Tipo de Proposição</label>
-               <br/>
-               <label class="checkbox-inline c-checkbox">
-                  <input type="checkbox" ng-model="billTypes.PL" ng-click="changeFilterBillTypes()" />Projeto de Lei Ordinário
-                  <span class="pull-left fa fa-check"></span>
-               </label>
-               <br/>
-               <label class="checkbox-inline c-checkbox">
-                  <input type="checkbox" ng-model="billTypes.PLComp" ng-click="changeFilterBillTypes()" />Projeto de Lei Complementar
-                  <span class="pull-left fa fa-check"></span>
-               </label>
-               <br/>
-               <label class="checkbox-inline c-checkbox">
-                  <input type="checkbox" ng-model="billTypes.MPV" ng-click="changeFilterBillTypes()" />Medida Provisoria
-                  <span class="pull-left fa fa-check"></span>
-               </label>
-               <br/>
-               <label class="checkbox-inline c-checkbox">
-                  <input type="checkbox" ng-model="billTypes.PLN" ng-click="changeFilterBillTypes()" />Projeto de Lei Nacional
-                  <span class="pull-left fa fa-check"></span>
-               </label>
-               <br/>
-               <label class="checkbox-inline c-checkbox">
-                  <input type="checkbox" ng-model="billTypes.PEC" ng-click="changeFilterBillTypes()" />Emenda Constitucional
-                  <span class="pull-left fa fa-check"></span>
-               </label>
-               <br/>
-            </div>
-            <div class="form-group mb-xl">
-               <label class="control-label mb">Temas</label>
-               <select ng-model="themeSelected" ng-options="item.subtema group by item.tema for item in themesAndSubthemes" ng-change="changeFilterTheme()" class="form-control"></select>
-            </div>
-            <div class="form-group mb-xl">
-               <label class="control-label mb">Ano</label>
-               <br/>
-               <p class="input-group">
-                  <input type="number" min="1980" max="2015" ng-model="year" ng-change="changeFilterYear()" class="form-control" />
-               </p>
-            </div>
-            <hr/>
-            <div ng-click="cleanFilters()" class="btn btn-md btn-default dropdown-menu-right pull-right">Limpar Filtros</div>
          </div>
       </div>
    </div>
-   <!--END filters-->
-   <div class="col-lg-9 col-md-12 col-sm-12">
+   <!--END Filters-->
+   <div class="col-lg-12">
       <!-- START panel-->
       <div class="panel">
-         <div class="panel-heading">
-            <paneltool tool-refresh="standard"></paneltool>
-            <h3 ng-if="fetching">Buscando</h3>
-            <h3 ng-if="!fetching">Resultados da busca
-               <small ng-if="query != &quot;&quot; ">por "{{query}}"</small>
-            </h3>
-            <p ng-if="!fetching">{{total_results}} projetos de lei encontrados</p>
-            <label class="control-label mb">Ordernar por:
-               <select ng-model="orderedBy" class="form-control">
+         <div class="panel-heading clearfix">
+            <label class="pull-right col-md-2 col-sm-2">Ordernar por:
+               <select ng-model="orderedBy" ng-change="changeOrder()" class="form-control">
                   <option value="1">Data</option>
                   <option value="2">Relevância</option>
                </select>
             </label>
+            <h2>Resultados</h2>
+            <small ng-if="query != &quot;&quot; ">por "{{query}}"</small>
+            <p ng-if="!fetching">{{total_results}} projetos de lei encontrados</p>
          </div>
          <!-- START table-responsive-->
          <div class="table-responsive">
@@ -119,7 +70,8 @@
                               <a ng-href="#/app/proposicao?p={{bill.fields.SLP_NOME}}">
                                  <h4 class="media-box-heading">{{bill.fields.SLP_NOME}}</h4>
                               </a>
-                              <p class="media-box-heading">{{bill.fields.SLP_STATUS_DESC}}</p>
+                              <medium>{{ (bill.fields.SLP_STATUS_DESC | capitalize:true) || "-"}}</medium>
+                              <br/>
                               <small ng-if="bill.fields.SLR_NOME != undefined" class="text-muted">Outros Nomes: {{bill.fields.SLR_NOME}}</small>
                               <br ng-if="bill.fields.SLR_NOME != undefined" />
                               <small ng-if="bill.fields.SLR_NOME != undefined" class="text-muted">Outros Nomes: {{bill.fields.SLR_NOME}}</small>
@@ -130,9 +82,9 @@
                                  <strong ng-if="getMainAuthor(bill.fields.SLP_AUTOR).id != undefined"><a ng-href="#/app/parlamentar?id={{getMainAuthor(bill.fields.SLP_AUTOR).id}}">{{getMainAuthor(bill.fields.SLP_AUTOR).name}}</a>
                                  </strong>
                                  <!--get other authors-->
-                                 <strong ng-if="getMainAuthor(bill.fields.SLP_AUTOR).length != undefined">e<a ng-click="showOtherAuthors = !showOtherAuthors">{{getMainAuthor(bill.fields.SLP_AUTOR).length}} outros</a>
+                                 <strong ng-if="getMainAuthor(bill.fields.SLP_AUTOR).length != undefined">e&nbsp;<a ng-click="showOtherAuthors = !showOtherAuthors">{{getMainAuthor(bill.fields.SLP_AUTOR).length}} outros</a>
                                     <div collapse="!showOtherAuthors">
-                                       <strong ng-repeat="author in bill.fields.SLP_AUTOR" ng-show="! $last">
+                                       <strong ng-repeat="author in bill.fields.SLP_AUTOR | orderBy" ng-show="! $last">
                                           <strong ng-if="parseAuthor(author).id === undefined">{{parseAuthor(author).name}}</strong>
                                           <strong ng-if="parseAuthor(author).id != undefined"><a ng-href="#/app/parlamentar?id={{parseAuthor(author).id}}">{{parseAuthor(author).name}}</a>
                                           </strong>
@@ -151,7 +103,10 @@
                      </td>
                   </tr>
                   <tr ng-if="fetching">
-                     <td>
+                     <td align="center">
+                        <div class="ball-clip-rotate">
+                           <div></div>
+                        </div>
                         <p>Carregando...</p>
                      </td>
                   </tr>

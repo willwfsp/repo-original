@@ -1,10 +1,10 @@
 /* ========================================================================
    Component: form-elements.less
  ========================================================================== */
- 
+
 /**
  * Custom form elements
- *    - Checkbox 
+ *    - Checkbox
  *    - Radios
  *    - Switch
  *    - Rounded inputs
@@ -12,7 +12,7 @@
 
 //
 // CHECKBOX AND RADIOS
-// 
+//
 
 @ui-fg-color: @brand-primary;
 @ui-bg-color: #ddd;
@@ -28,7 +28,7 @@
     position: absolute;
     margin-left: 0 !important;
   }
-  
+
   // the element that replaces the input
   span {
     position: relative;
@@ -105,7 +105,7 @@
   /* override for radio */
   input[type=radio]:checked + span{
     background-color: #fff;
-    &:before{ 
+    &:before{
       color: @ui-fg-color;
     }
   }
@@ -137,7 +137,7 @@
       margin-top: -(@sz/2);
       margin-left: -(@sz/2);
       border-radius: 500px;
-      
+
     }
   }
 
@@ -155,7 +155,7 @@
   /* override for radio */
   input[type=radio]:checked + span{
     background-color: #fff;
-    &:before{ 
+    &:before{
       background-color: @ui-fg-color;
     }
   }
@@ -238,8 +238,8 @@
    border-radius: 400px;
    box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
    -webkit-transition: all .2s;
-  } 
-  
+  }
+
   &.switch-lg { .switch-variant(@switch-lg-wd, @switch-lg-hg); }
   &.switch-sm { .switch-variant(@switch-sm-wd, @switch-sm-hg); }
 }
@@ -263,7 +263,7 @@
 
   & span:after {
    height: @hg - 2; width: @hg - 2;
-  }  
+  }
 }
 
 // form feedback variants
@@ -293,5 +293,5 @@
 }
 
 .input-md {
-  width: 260px;
+  width: 100%;
 }

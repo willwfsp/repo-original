@@ -80,7 +80,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
   $locationProvider.html5Mode(false);
 
   // default route
-  $urlRouterProvider.otherwise('/app/searchBills');
+  $urlRouterProvider.otherwise('/app/dashboard');
 
   //
   // Application Routes
@@ -91,13 +91,18 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         abstract: true,
         templateUrl: helper.basepath('app.html'),
         controller: 'AppController',
-        resolve: helper.resolveFor('modernizr', 'icons')
+        resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit')
+    })
+    .state('app.dashBoard', {
+        url: '/dashboard',
+        title: 'Principal',
+        templateUrl: helper.basepath('dashboard.html')
     })
     .state('app.searchBills', {
         url: '/searchBills',
         title: 'Pesquisar Proposições',
         templateUrl: helper.basepath('searchBills.html'),
-        resolve: helper.resolveFor('select'),
+        resolve: helper.resolveFor('select', 'ui.select'),
         controller: 'SearchBillsController',
         params: {
             q: ""
@@ -183,7 +188,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
 }]).config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeBar = true;
-    cfpLoadingBarProvider.includeSpinner = false;
+    cfpLoadingBarProvider.includeSpinner = true;
     cfpLoadingBarProvider.latencyThreshold = 500;
     cfpLoadingBarProvider.parentSelector = '.wrapper > section';
 }]).config(['$tooltipProvider', function ($tooltipProvider) {
@@ -224,15 +229,18 @@ App
   .constant('APP_REQUIRES', {
     // jQuery based and standalone scripts
     scripts: {
-      'modernizr':          ['vendor/modernizr/modernizr.js'],
-      'icons':              ['vendor/fontawesome/css/font-awesome.min.css',
-                             'vendor/simple-line-icons/css/simple-line-icons.css'],
-      'select':             ['vendor/bootstrap-select/bootstrap-select.css',
-                             'vendor/bootstrap-select/bootstrap-select.js']
+      'modernizr':            ['vendor/modernizr/modernizr.js'],
+      'icons':                ['vendor/fontawesome/css/font-awesome.min.css',
+                               'vendor/simple-line-icons/css/simple-line-icons.css'],
+      'select':               ['vendor/bootstrap-select/bootstrap-select.css',
+                               'vendor/bootstrap-select/bootstrap-select.js'],
+      'loaders.css':          ['vendor/loaders.css/loaders.css'],
+      'spinkit':              ['vendor/spinkit/css/spinkit.css']
     },
     // Angular based script (use the right module name)
     modules: [
-      // { name: 'toaster', files: ['vendor/angularjs-toaster/toaster.js','vendor/angularjs-toaster/toaster.css'] }
+      {name: 'ui.select',                 files: ['vendor/angular-ui-select/dist/select.js',
+                                                  'vendor/angular-ui-select/dist/select.css']}
     ]
 
   })
@@ -1261,6 +1269,8 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
     '$scope', '$log', '$state', '$modal', 'DataFetcher',
     function($http, $stateParams, $location, $scope, $log, $state, $modal, DataFetcher) {
 
+
+
     $scope.toDate = function(date){
       return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
     };
@@ -1301,35 +1311,25 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
             });
     };
 
+    $scope.isCollapsed = false
     $scope.loadThemes();
-
     $scope.showOtherAuthors = false;
     $scope.themesAndSubthemes = [];
     $scope.themeSelected = "";
     $scope.subthemeSelected = "";
     $scope.orderedBy = 1;
-    //filter variables
-    $scope.checkedHouses = {
-        "CN": false,
-        "SP": false,
-        "MG": false
-    };
 
-    $scope.statusBill = {
-        "tramitando": false,
-        "arquivado": false,
-        "lei": false
-    };
-
-    $scope.billTypes = {
-        "PL": false,
-        "PLComp": false,
-        "PLN": false,
-        "MPV": false,
-        "PEC": false
-    };
-    $scope.year = "";
     $scope.fetching = false;
+    $scope.$watch('fetching', function(){
+        if($scope.fetching === true){
+            if($scope.bookmark == ""){
+                $scope.query = "";
+                $scope.bills = [];
+                $scope.total_results = 0;
+                $scope.bookmark = "";
+            }
+        }
+    }, true);
     //search variables
     $scope.query = "";
     $scope.bills = [];
@@ -1343,18 +1343,73 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
         "tipos": [],
         "status":[],
         "subtema": "",
-        "ano": ""
+        "ano": "",
+        "ordem":""
     };
-    // functions to change filter parameters and fetch data again
-    $scope.changeFilterYear = function(){
 
-        if( ($scope.year >= 1980 && $scope.year <= 2015) || $scope.year === ""){
-            $scope.filters.ano = $scope.year.toString();
-            $scope.filters.bookmark="";
-            $scope.fetching = true;
-            DataFetcher.fetchDataBills($scope.query, $scope.filters);
+    // House Filter
+    $scope.availableHouses = ['CN','SP','MG'];
+    $scope.checkedHouses = {}
+    $scope.checkedHouses.list = [];
+
+    $scope.changeFilterHouses = function(){
+        $scope.filters.casas = [];
+        var arrayLength = $scope.checkedHouses.list.length;
+        for (var i = 0; i < arrayLength; i++) {
+            var key = $scope.checkedHouses.list[i];
+            if(key == "CN"){
+                $scope.filters.casas.push(key);
+                $scope.filters.casas.push("CD");
+                $scope.filters.casas.push("SF");
+            }
+            else{
+                $scope.filters.casas.push(key);
+            }
         }
+        $scope.filters.bookmark="";
+        $scope.fetching = true;
+        DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
+
+    // Status Filter
+    $scope.statusBillAvailable =["tramitando", "arquivado", "lei"]
+    $scope.statusBill = {}
+    $scope.statusBill.list = []
+
+    $scope.changeFilterStatus = function(){
+        $scope.filters.status = [];
+        var arrayLength = $scope.statusBill.list.length;
+
+        for (var i = 0; i < arrayLength; i++) {
+            var key = $scope.statusBill.list[i];
+            $scope.filters.status.push(key);
+        }
+
+        $scope.filters.bookmark="";
+        $scope.fetching = true;
+        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+    };
+
+    //Type Filter
+    $scope.billTypesAvailable = ["PL", "PLComp", "PLN", "MPV", "PEC"]
+    $scope.typeBill = {}
+    $scope.typeBill.list = []
+
+    $scope.changeFilterBillTypes = function(){
+        $scope.filters.tipos = [];
+        var arrayLength = $scope.typeBill.list.length;
+
+        for (var i = 0; i < arrayLength; i++) {
+            var key = $scope.typeBill.list[i];
+            $scope.filters.tipos.push(key);
+        }
+
+        $scope.filters.bookmark="";
+        $scope.fetching = true;
+        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+    };
+
+    // Theme Filter
     $scope.changeFilterTheme = function(){
 
         $scope.filters.subtema = $scope.themeSelected.subtema;
@@ -1364,65 +1419,43 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
 
     };
 
-    $scope.changeFilterHouses = function(){
-        $scope.filters.casas = [];
-        for(var key in $scope.checkedHouses){
-            if($scope.checkedHouses[key]){
-                if(key == "CN"){
-                    $scope.filters.casas.push(key);
-                    $scope.filters.casas.push("CD");
-                    $scope.filters.casas.push("SF");
-                }
-                else{
-                    $scope.filters.casas.push(key);
-                }
-            }
-        }
-        $scope.filters.bookmark="";
-        $scope.fetching = true;
-        DataFetcher.fetchDataBills($scope.query, $scope.filters);
-    };
+    //Year Filter
+    $scope.year = "";
 
-    $scope.changeFilterBillTypes = function(){
-        $scope.filters.tipos = [];
-        for(var key in $scope.billTypes){
-            if($scope.billTypes[key]){
-                $scope.filters.tipos.push(key);
-            }
-        }
-        $scope.filters.bookmark="";
-        $scope.fetching = true;
-        DataFetcher.fetchDataBills($scope.query, $scope.filters);
-    };
+    $scope.changeFilterYear = function(){
 
-    $scope.changeStatus = function(){
-        $scope.filters.status = [];
-        for(var key in $scope.statusBill){
-            if($scope.statusBill[key]){
-                $scope.filters.status.push(key);
-            }
+        if( ($scope.year >= 1980 && $scope.year <= 2015) || $scope.year === ""){
+            $scope.filters.ano = $scope.year.toString();
+            $scope.filters.bookmark="";
+            $scope.fetching = true;
+            DataFetcher.fetchDataBills($scope.query, $scope.filters);
         }
+    };
+    // Change Order
+    $scope.changeOrder = function(){
+
+        $scope.filters.ordem = $scope.orderedBy;
         $scope.filters.bookmark="";
         $scope.fetching = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
+
     };
 
     $scope.cleanFilters = function(){
         //clean DOM variables
-        for(var key in $scope.checkedHouses){
-            $scope.checkedHouses[key] = false;
-        }
+        $scope.checkedHouses.list = []
+        $scope.statusBill.list = []
+        $scope.typeBill.list = []
+        $scope.themeSelected = "";
 
-        for(var key1 in $scope.billTypes){
-            $scope.billTypes[key1] = false;
-        }
         $scope.year = "";
         //clean filter
         $scope.filters.casas = [];
         $scope.filters.tipos = [];
+        $scope.filters.status = [];
         $scope.filters.ano = "";
         $scope.bookmark = "";
-        $scope.themeSelected = "";
+
         //fetch most recent data
         $scope.fetching = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
@@ -1465,8 +1498,21 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
 
 }]);
 
-myApp.controller('PopOverController', ['$scope', function($scope){
-}]);
+myApp.filter('capitalize', function() {
+    return function(input, all) {
+        var inputAux = "";
+        if(input.constructor === Array){
+            input.forEach(function(name){
+                inputAux = inputAux + ' - ' + name;
+            });
+            inputAux = inputAux.substring(3);
+        }else{
+            inputAux = input;
+        }
+
+      return (!!inputAux) ? inputAux.replace(/([^\W_]+[^\s-]*) */g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
+    }
+  });
 
 myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
     var databaseURL = 'https://sigalei-api.mybluemix.net/v1/';

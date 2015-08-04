@@ -30,15 +30,18 @@ App
   .constant('APP_REQUIRES', {
     // jQuery based and standalone scripts
     scripts: {
-      'modernizr':          ['vendor/modernizr/modernizr.js'],
-      'icons':              ['vendor/fontawesome/css/font-awesome.min.css',
-                             'vendor/simple-line-icons/css/simple-line-icons.css'],
-      'select':             ['vendor/bootstrap-select/bootstrap-select.css',
-                             'vendor/bootstrap-select/bootstrap-select.js']
+      'modernizr':            ['vendor/modernizr/modernizr.js'],
+      'icons':                ['vendor/fontawesome/css/font-awesome.min.css',
+                               'vendor/simple-line-icons/css/simple-line-icons.css'],
+      'select':               ['vendor/bootstrap-select/bootstrap-select.css',
+                               'vendor/bootstrap-select/bootstrap-select.js'],
+      'loaders.css':          ['vendor/loaders.css/loaders.css'],
+      'spinkit':              ['vendor/spinkit/css/spinkit.css']
     },
     // Angular based script (use the right module name)
     modules: [
-      // { name: 'toaster', files: ['vendor/angularjs-toaster/toaster.js','vendor/angularjs-toaster/toaster.css'] }
+      {name: 'ui.select',                 files: ['vendor/angular-ui-select/dist/select.js',
+                                                  'vendor/angular-ui-select/dist/select.css']}
     ]
 
   })
