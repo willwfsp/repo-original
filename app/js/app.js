@@ -1391,7 +1391,7 @@ myApp.filter('positiveNumber', function() {
  =========================================================*/
 
 myApp.controller('RepresentativeDataController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
-    function($location, $scope, $rootScope, $log, $http, DataFetcher){
+    function($location, $scope, $rootScope, $log, $http, DataFetcher, ngTableParams){
     $scope.dados = {};
     $scope.fetchData = function(){
         DataFetcher.fetchDataRepresentative($location.search().id);
@@ -1399,6 +1399,7 @@ myApp.controller('RepresentativeDataController',['$location','$scope','$rootScop
     $scope.$on('fetch:completed', function(event) {
         $scope.dados = DataFetcher.getResults();
     });
+
 }]);
 
 myApp.controller('ChartJSController', ["$scope", "$location", "colors", "DataFetcher",
@@ -1444,8 +1445,8 @@ myApp.controller('ChartJSController', ["$scope", "$location", "colors", "DataFet
 
 }]);
 
-myApp.controller('RepresentativeTermController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
-    function($location, $scope, $rootScope, $log, $http, DataFetcher){
+myApp.controller('RepresentativeTermController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher', 'ngTableParams',
+    function($location, $scope, $rootScope, $log, $http, DataFetcher,ngTableParams){
     $scope.terms = {};
     $scope.fetchTermsData = function(){
         DataFetcher.fetchDataTermsRepresentative($location.search().id);
@@ -1454,6 +1455,7 @@ myApp.controller('RepresentativeTermController',['$location','$scope','$rootScop
         $scope.terms = DataFetcher.getResults();
     });
     $scope.fetchTermsData();
+
 }]);
 
 myApp.controller('RepresentativeBillsController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
@@ -1470,8 +1472,8 @@ myApp.controller('RepresentativeBillsController',['$location','$scope','$rootSco
     $scope.fetchRepresentativesBillData();
 }]);
 
-myApp.controller('RepresentativeCommitteesController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
-    function($location, $scope, $rootScope, $log, $http, DataFetcher){
+myApp.controller('RepresentativeCommitteesController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',  'ngTableParams',
+    function($location, $scope, $rootScope, $log, $http, DataFetcher, ngTableParams){
     $scope.committeesRepresentative = {};
     $scope.fetchRepresentativesBillData = function(){
         DataFetcher.fetchRepresentativesCommittees($location.search().id);
@@ -1479,10 +1481,10 @@ myApp.controller('RepresentativeCommitteesController',['$location','$scope','$ro
 
     $scope.$on('fetch representativeCommittees:completed', function(event) {
         $scope.committeesRepresentative = DataFetcher.getResults();
-        console.log($scope.committeesRepresentative);
     });
 
     $scope.fetchRepresentativesBillData();
+
 }]);
 
 
@@ -1516,6 +1518,13 @@ myApp.filter('ageFilter', function() {
            return calculateAge(birthdate);
      };
 });
+
+myApp.filter('statusDesc', function() {
+    return function(input, attribute) {
+        return input[attribute].DESC;
+    }
+});
+
 
 myApp.filter('orderObjectBy', function(){
  return function(input, attribute) {

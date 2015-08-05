@@ -1,6 +1,6 @@
-<h3>Pesquisa</h3>
-<div ng-init="init()">
-   <!-- START Filters-->
+<h3 ng-init="init()">Pesquisa</h3>
+<!-- START Filters-->
+<div class="row">
    <div class="col-lg-12">
       <div class="panel">
          <div class="panel-heading">
@@ -45,6 +45,8 @@
       </div>
    </div>
    <!--END Filters-->
+</div>
+<div class="row">
    <div class="col-lg-12">
       <!-- START panel-->
       <div class="panel">
@@ -75,7 +77,6 @@
                               <br/>
                               <small ng-if="bill.fields.SLR_NOME != undefined" class="text-muted">Outros Nomes: {{bill.fields.SLR_NOME}}</small>
                               <br ng-if="bill.fields.SLR_NOME != undefined" />
-                              <small ng-if="bill.fields.SLR_NOME != undefined" class="text-muted">Outros Nomes: {{bill.fields.SLR_NOME}}</small>
                               <small class="text-muted">Autor:
                                  <!--one author and doesn't have id-->
                                  <strong ng-if="parseAuthor(bill.fields.SLP_AUTOR).id === undefined">{{parseAuthor(bill.fields.SLP_AUTOR).name}}</strong>

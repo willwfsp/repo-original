@@ -1,7 +1,7 @@
-h3 Pesquisa
+h3(ng-init="init()") Pesquisa
 
-div(ng-init="init()")
-  // START Filters
+// START Filters
+.row
   .col-lg-12
     .panel
       .panel-heading
@@ -43,7 +43,7 @@ div(ng-init="init()")
             | Limpar
 
   //END Filters
-
+.row
   .col-lg-12
     // START panel
     .panel
@@ -73,7 +73,6 @@ div(ng-init="init()")
                       br
                       small.text-muted(ng-if="bill.fields.SLR_NOME != undefined") Outros Nomes: {{bill.fields.SLR_NOME}}
                       br(ng-if="bill.fields.SLR_NOME != undefined")
-                      small.text-muted(ng-if="bill.fields.SLR_NOME != undefined") Outros Nomes: {{bill.fields.SLR_NOME}}
                       small.text-muted Autor:
                         //one author and doesn't have id
                         strong(ng-if="parseAuthor(bill.fields.SLP_AUTOR).id === undefined") {{parseAuthor(bill.fields.SLP_AUTOR).name}}

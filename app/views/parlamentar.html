@@ -5,71 +5,90 @@
          <div class="col-lg-6">
             <div class="panel widget">
                <div class="panel-body">
-                  <div class="row">
-                     <div class="col-md-6">
-                        <div>
+                  <div class="form-horizontal">
+                     <h3>Dados Gerais</h3>
+                     <div class="form-group">
+                        <div class="col-md-3">
                            <img ng-src="http://sigalei-api.mybluemix.net/v1/parlamentares/{{dados._id}}/foto?access_token=admin%40sigalei" class="thumb128 b" />
                         </div>
-                     </div>
-                     <div class="col-md-6">
-                        <table ng-table="ng-table">
-                           <tr>
-                              <td>Nome:</td>
-                              <td>{{dados.SLPa_NOME_CIVIL}}</td>
-                           </tr>
-                           <tr>
-                              <td>Data Nasc.:&nbsp;</td>
-                              <td>{{dados.SLPa_DATA_NASC}}</td>
-                           </tr>
-                           <tr>
-                              <td>Idade:</td>
-                              <td>{{dados.SLPa_DATA_NASC| ageFilter}}</td>
-                           </tr>
-                           <tr>
-                              <td>Partido:</td>
-                              <td>{{dados.SLPa_PARTIDO}}</td>
-                           </tr>
-                           <tr>
-                              <td>Profissão:</td>
-                              <td>{{dados.SLPa_PROFISSAO}}</td>
-                           </tr>
-                           <tr>
-                              <td>Email:</td>
-                              <td>{{dados.SLPa_EMAIL | emailFilter}}</td>
-                           </tr>
-                        </table>
+                        <div class="col-md-9">
+                           <table>
+                              <tr>
+                                 <td class="text-bold">Nome:</td>
+                                 <td>&nbsp;&nbsp;{{dados.SLPa_NOME_CIVIL}}</td>
+                              </tr>
+                              <tr>
+                                 <td class="text-bold">Data Nasc.:</td>
+                                 <td>&nbsp;&nbsp;{{dados.SLPa_DATA_NASC | date:'dd/MM/yyyy'}}</td>
+                              </tr>
+                              <tr>
+                                 <td class="text-bold">Idade:</td>
+                                 <td>&nbsp;&nbsp;{{dados.SLPa_DATA_NASC| ageFilter}}</td>
+                              </tr>
+                              <tr>
+                                 <td class="text-bold">Partido:</td>
+                                 <td>&nbsp;&nbsp;{{dados.SLPa_PARTIDO}}</td>
+                              </tr>
+                              <tr>
+                                 <td class="text-bold">Profissão:</td>
+                                 <td>&nbsp;&nbsp;{{dados.SLPa_PROFISSAO}}</td>
+                              </tr>
+                              <tr>
+                                 <td class="text-bold">Email:</td>
+                                 <td>&nbsp;&nbsp;{{dados.SLPa_EMAIL | emailFilter}}</td>
+                              </tr>
+                           </table>
+                        </div>
                      </div>
                   </div>
                </div>
             </div>
             <div ng-controller="RepresentativeTermController" class="panel widget">
                <div class="panel-heading">
-                  <label>Mandatos</label>
+                  <h3>Mandatos</h3>
                </div>
                <div class="panel-body">
-                  <table ng-table="ng-table" style="border: 1px solid #000;" class="table-bordered text-center">
-                     <tr ng-repeat="item in terms">
-                        <td data-title="Assembleia">{{item.doc.SLM_ASSEMBLEIA.SLAs_NOME}}</td>
-                        <td data-title="Cargo">{{item.doc.SLM_CARGO}}</td>
-                        <td data-title="Legislatura">{{item.doc.SLM_LEGISLATURA}}</td>
-                        <td data-title="Partido">{{item.doc.SLPa_PARTIDO}}</td>
-                        <td data-title="UF">{{item.doc.SLM_UF_REP}}</td>
-                        <td data-title="Status">{{item.doc.SLM_STATUS}}</td>
+                  <table class="table">
+                     <thead>
+                        <tr class="text-center">
+                           <td>Assembleia</td>
+                           <td>Cargo</td>
+                           <td>Legislatura</td>
+                           <td>Partido</td>
+                           <td>UF</td>
+                           <td>Situação</td>
+                        </tr>
+                     </thead>
+                     <tr ng-repeat="item in terms" class="text-center">
+                        <td data-title="'Assembleia'">{{item.doc.SLM_ASSEMBLEIA.SLAs_NOME}}</td>
+                        <td data-title="'Cargo'">{{item.doc.SLM_CARGO}}</td>
+                        <td data-title="'Legislatura'">{{item.doc.SLM_LEGISLATURA}}</td>
+                        <td data-title="'Partido'">{{item.doc.SLM_PARLAMENTAR.SLPa_PARTIDO}}</td>
+                        <td data-title="'UF'">{{item.doc.SLM_UF_REP}}</td>
+                        <td data-title="'Situação'">{{item.doc.SLM_STATUS}}</td>
                      </tr>
                   </table>
                </div>
             </div>
             <div ng-controller="RepresentativeCommitteesController" class="panel widget">
                <div class="panel-heading">
-                  <label>Comissões que participa</label>
+                  <h3>Comissões que participa</h3>
                </div>
                <div class="panel-body">
-                  <table ng-table="ng-table" style="border: 1px solid #000;" class="table-bordered text-center">
-                     <tr ng-repeat="item in committeesRepresentative">
-                        <td>{{item.doc.SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA}}</td>
-                        <td>{{item.doc.SLMc_COMISSAO.SLC_NOME}}</td>
-                        <td>{{item.doc.SLMc_CARGO}}</td>
-                        <td>{{item.doc.SLMc_STATUS}}</td>
+                  <table class="table">
+                     <thead>
+                        <tr class="text-center">
+                           <td>Assembleia</td>
+                           <td>Comissão</td>
+                           <td>Cargo</td>
+                           <td>Situação</td>
+                        </tr>
+                     </thead>
+                     <tr ng-repeat="item in committeesRepresentative | orderBy:'-doc.SLMc_STATUS'" class="text-center">
+                        <td data-title="'Assembleia'">{{item.doc.SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA}}</td>
+                        <td data-title="'Comissão'">{{item.doc.SLMc_COMISSAO.SLC_NOME}}</td>
+                        <td data-title="'Cargo'">{{item.doc.SLMc_CARGO}}</td>
+                        <td data-title="'Situação'">{{item.doc.SLMc_STATUS}}</td>
                      </tr>
                   </table>
                </div>
@@ -80,7 +99,7 @@
                <div class="panel-heading">
                   <div class="row">
                      <div class="col-md-6">
-                        <label>Temas de Atuação</label>
+                        <h3>Área de Atuação</h3>
                      </div>
                      <div class="col-md-6">
                         <a ng-click="isSubtitleCollapsed = !isSubtitleCollapsed">
@@ -98,7 +117,7 @@
                         <canvas doughnutchart="" options="pieOptions" data="pieData" height="160" responsive="true"></canvas>
                      </div>
                      <div class="col-md-offset-1 col-md-6">
-                        <table ng-table="ng-table" ng-show="isSubtitleCollapsed">
+                        <table ng-show="isSubtitleCollapsed">
                            <tr ng-repeat="item in themeData | orderObjectBy:'value'">
                               <td>{{item.key}}</td>
                               <td>{{item.value}}</td>
@@ -110,14 +129,28 @@
             </div>
             <div ng-controller="RepresentativeBillsController" class="panel widget">
                <div class="panel-heading">
-                  <label>Proposições de sua Autoria</label>
+                  <h3>Proposições de sua Autoria</h3>
                </div>
                <div class="panel-body">
-                  <table ng-table="ng-table" style="border: 1px solid #000;" class="table-bordered text-center">
-                     <tr ng-repeat="item in billsRepresentative">
-                        <td>{{item.doc.SLP_NOME}}</td>
-                     </tr>
-                  </table>
+                  <div class="table-responsive">
+                     <table class="table">
+                        <thead>
+                           <tr class="text-center">
+                              <td>Proposição</td>
+                              <td>Data de Apresentação</td>
+                              <td>Tema</td>
+                              <td>Situação</td>
+                           </tr>
+                        </thead>
+                        <tr ng-repeat="item in billsRepresentative | orderBy:'-doc.SLP_DATA_APRESENTACAO'" class="text-center">
+                           <td><a ng-href="#/app/proposicao?p={{item.doc.SLP_NOME}}">{{item.doc.SLP_NOME}}</a>
+                           </td>
+                           <td>{{item.doc.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}</td>
+                           <td>{{item.doc.SLP_SL_SUBTEMA}}</td>
+                           <td>{{item.doc.SLP_STATUS | statusDesc:item.doc.SLP_CASA_SIGLA}}</td>
+                        </tr>
+                     </table>
+                  </div>
                </div>
             </div>
          </div>
