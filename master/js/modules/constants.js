@@ -36,12 +36,15 @@ App
       'select':               ['vendor/bootstrap-select/bootstrap-select.css',
                                'vendor/bootstrap-select/bootstrap-select.js'],
       'loaders.css':          ['vendor/loaders.css/loaders.css'],
-      'spinkit':              ['vendor/spinkit/css/spinkit.css']
+      'spinkit':              ['vendor/spinkit/css/spinkit.css'],
+      'chartjs':              ['vendor/Chart.js/Chart.js'],
     },
     // Angular based script (use the right module name)
     modules: [
       {name: 'ui.select',                 files: ['vendor/angular-ui-select/dist/select.js',
-                                                  'vendor/angular-ui-select/dist/select.css']}
+                                                  'vendor/angular-ui-select/dist/select.css']},
+      {name: 'ngTable',                   files: ['vendor/ng-table/dist/ng-table.min.js',
+                                                  'vendor/ng-table/dist/ng-table.min.css']}
     ]
 
   })

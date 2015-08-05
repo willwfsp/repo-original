@@ -117,7 +117,9 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
     .state('app.parlamentar', {
         url: '/parlamentar',
         title: 'Visualizar dados de parlamentares',
-        templateUrl: helper.basepath('parlamentar.html')
+        templateUrl: helper.basepath('parlamentar.html'),
+        resolve: helper.resolveFor('chartjs', 'ngTable'),
+        controller: 'RepresentativeDataController'
     })
     .state('app.calendar', {
         url: '/calendar',
@@ -189,7 +191,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
 }]).config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeBar = true;
-    cfpLoadingBarProvider.includeSpinner = true;
+    cfpLoadingBarProvider.includeSpinner = false;
     cfpLoadingBarProvider.latencyThreshold = 500;
     cfpLoadingBarProvider.parentSelector = '.wrapper > section';
 }]).config(['$tooltipProvider', function ($tooltipProvider) {
@@ -236,12 +238,15 @@ App
       'select':               ['vendor/bootstrap-select/bootstrap-select.css',
                                'vendor/bootstrap-select/bootstrap-select.js'],
       'loaders.css':          ['vendor/loaders.css/loaders.css'],
-      'spinkit':              ['vendor/spinkit/css/spinkit.css']
+      'spinkit':              ['vendor/spinkit/css/spinkit.css'],
+      'chartjs':              ['vendor/Chart.js/Chart.js'],
     },
     // Angular based script (use the right module name)
     modules: [
       {name: 'ui.select',                 files: ['vendor/angular-ui-select/dist/select.js',
-                                                  'vendor/angular-ui-select/dist/select.css']}
+                                                  'vendor/angular-ui-select/dist/select.css']},
+      {name: 'ngTable',                   files: ['vendor/ng-table/dist/ng-table.min.js',
+                                                  'vendor/ng-table/dist/ng-table.min.css']}
     ]
 
   })
@@ -512,6 +517,108 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$state', '$http', 
     }
 
 }]);
+
+/**=========================================================
+ * Module: chart.js
+ * Wrapper directive for chartJS.
+ * Based on https://gist.github.com/AndreasHeiberg/9837868
+ =========================================================*/
+
+var ChartJS = function (type) {
+    return {
+        restrict: "A",
+        scope: {
+            data: "=",
+            options: "=",
+            id: "@",
+            width: "=",
+            height: "=",
+            resize: "=",
+            chart: "@",
+            segments: "@",
+            responsive: "=",
+            tooltip: "=",
+            legend: "="
+        },
+        link: function ($scope, $elem) {
+            var ctx = $elem[0].getContext("2d");
+            var autosize = false;
+
+            $scope.size = function () {
+                if ($scope.width <= 0) {
+                    $elem.width($elem.parent().width());
+                    ctx.canvas.width = $elem.width();
+                } else {
+                    ctx.canvas.width = $scope.width || ctx.canvas.width;
+                    autosize = true;
+                }
+
+                if($scope.height <= 0){
+                    $elem.height($elem.parent().height());
+                    ctx.canvas.height = ctx.canvas.width / 2;
+                } else {
+                    ctx.canvas.height = $scope.height || ctx.canvas.height;
+                    autosize = true;
+                }
+            };
+
+            $scope.$watch("data", function (newVal, oldVal) {
+                if(chartCreated)
+                    chartCreated.destroy();
+
+                // if data not defined, exit
+                if (!newVal) {
+                    return;
+                }
+                if ($scope.chart) { type = $scope.chart; }
+
+                if(autosize){
+                    $scope.size();
+                    chart = new Chart(ctx);
+                }
+
+                if($scope.responsive || $scope.resize)
+                    $scope.options.responsive = true;
+
+                if($scope.responsive !== undefined)
+                    $scope.options.responsive = $scope.responsive;
+
+                chartCreated = chart[type]($scope.data, $scope.options);
+                chartCreated.update();
+                if($scope.legend)
+                    angular.element($elem[0]).parent().after( chartCreated.generateLegend() );
+            }, true);
+
+            $scope.$watch("tooltip", function (newVal, oldVal) {
+                if (chartCreated)
+                    chartCreated.draw();
+                if(newVal===undefined || !chartCreated.segments)
+                    return;
+                if(!isFinite(newVal) || newVal >= chartCreated.segments.length || newVal < 0)
+                    return;
+                var activeSegment = chartCreated.segments[newVal];
+                activeSegment.save();
+                activeSegment.fillColor = activeSegment.highlightColor;
+                chartCreated.showTooltip([activeSegment]);
+                activeSegment.restore();
+            }, true);
+
+            $scope.size();
+            var chart = new Chart(ctx);
+            var chartCreated;
+        }
+    };
+};
+
+/* Aliases for various chart types */
+App.directive("chartjs",       function () { return ChartJS(); });
+App.directive("linechart",     function () { return ChartJS("Line"); });
+App.directive("barchart",      function () { return ChartJS("Bar"); });
+App.directive("radarchart",    function () { return ChartJS("Radar"); });
+App.directive("polarchart",    function () { return ChartJS("PolarArea"); });
+App.directive("piechart",      function () { return ChartJS("Pie"); });
+App.directive("doughnutchart", function () { return ChartJS("Doughnut"); });
+App.directive("donutchart",    function () { return ChartJS("Doughnut"); });
 
 /**=========================================================
  * Module: navbar-search.js
@@ -874,12 +981,27 @@ App.service('browser', function(){
  * Module: colors.js
  * Services to retrieve global colors
  =========================================================*/
- 
+
+function pickRandomProperty(obj) {
+    var result;
+    var count = 0;
+    for (var prop in obj)
+        if (Math.random() < 1/++count)
+           result = prop;
+    return result;
+}
+
 App.factory('colors', ['APP_COLORS', function(colors) {
-  
+
   return {
     byName: function(name) {
-      return (colors[name] || '#fff');
+        if(name == "random"){
+            var randomColor = pickRandomProperty(colors)
+            return colors[randomColor]
+        }else{
+            return (colors[name] || '#fff');
+        }
+
     }
   };
 
@@ -1194,16 +1316,7 @@ myApp.controller('SenadoDataController', ['$scope','$rootScope', '$log', '$http'
     });
 }]);
 
-myApp.controller('RepresentativeDataController', ['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
-    function($location, $scope, $rootScope, $log, $http, DataFetcher){
-    $scope.dados = {};
-    $scope.fetchData = function(){
-        DataFetcher.fetchDataRepresentative($location.search().id);
-    };
-    $scope.$on('fetch:completed', function(event) {
-        $scope.dados = DataFetcher.getResults();
-    });
-}]);
+
 
 
 myApp.controller('ProposicaoController', ['$location', '$scope','$state', '$log',  '$http', 'DataFetcher',
@@ -1273,6 +1386,156 @@ myApp.filter('positiveNumber', function() {
     };
 });
 /**=========================================================
+ * Module: representative.js
+ * Representative details
+ =========================================================*/
+
+myApp.controller('RepresentativeDataController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
+    function($location, $scope, $rootScope, $log, $http, DataFetcher){
+    $scope.dados = {};
+    $scope.fetchData = function(){
+        DataFetcher.fetchDataRepresentative($location.search().id);
+    };
+    $scope.$on('fetch:completed', function(event) {
+        $scope.dados = DataFetcher.getResults();
+    });
+}]);
+
+myApp.controller('ChartJSController', ["$scope", "$location", "colors", "DataFetcher",
+  function($scope, $location, colors,DataFetcher) {
+
+// Pie chart
+// -----------------------------------
+
+  $scope.pieData =[];
+  $scope.themeData = [];
+
+  $scope.pieOptions = {
+      segmentShowStroke : true,
+      segmentStrokeColor : '#fff',
+      segmentStrokeWidth : 2,
+      percentageInnerCutout : 0, // Setting this to zero convert a doughnut into a Pie
+      animationSteps : 100,
+      animationEasing : 'easeOutBounce',
+      animateRotate : true,
+      animateScale : false
+  };
+
+  $scope.fetchThemeData = function(){
+        DataFetcher.fetchDataRepresentativeTheme($location.search().id);
+  };
+  $scope.$on('fetch representativeTheme:completed', function(event) {
+      var themes = (DataFetcher.getResults());
+      $scope.themeData = themes;
+      themes.forEach(function(item){
+        var colorAux = colors.byName('random');
+        var aux = {
+          value: item.value,
+          color: colorAux,
+          highlight: colorAux,
+          label: item.key
+        };
+        $scope.pieData.push(aux);
+      });
+
+  });
+
+  $scope.fetchThemeData();
+
+}]);
+
+myApp.controller('RepresentativeTermController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
+    function($location, $scope, $rootScope, $log, $http, DataFetcher){
+    $scope.terms = {};
+    $scope.fetchTermsData = function(){
+        DataFetcher.fetchDataTermsRepresentative($location.search().id);
+    };
+    $scope.$on('fetch representativeTerm:completed', function(event) {
+        $scope.terms = DataFetcher.getResults();
+    });
+    $scope.fetchTermsData();
+}]);
+
+myApp.controller('RepresentativeBillsController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
+    function($location, $scope, $rootScope, $log, $http, DataFetcher){
+    $scope.billsRepresentative = {};
+    $scope.fetchRepresentativesBillData = function(){
+        DataFetcher.fetchRepresentativesBillData($location.search().id);
+    };
+
+    $scope.$on('fetch representativeBills:completed', function(event) {
+        $scope.billsRepresentative = DataFetcher.getResults();
+    });
+
+    $scope.fetchRepresentativesBillData();
+}]);
+
+myApp.controller('RepresentativeCommitteesController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
+    function($location, $scope, $rootScope, $log, $http, DataFetcher){
+    $scope.committeesRepresentative = {};
+    $scope.fetchRepresentativesBillData = function(){
+        DataFetcher.fetchRepresentativesCommittees($location.search().id);
+    };
+
+    $scope.$on('fetch representativeCommittees:completed', function(event) {
+        $scope.committeesRepresentative = DataFetcher.getResults();
+        console.log($scope.committeesRepresentative);
+    });
+
+    $scope.fetchRepresentativesBillData();
+}]);
+
+
+
+myApp.filter('emailFilter', function() {
+    return function(input, all) {
+        var inputAux = "";
+        if(input){
+          if(input.constructor === Array){
+              input.forEach(function(name){
+                  inputAux = inputAux + ' , ' + name;
+              });
+              return inputAux.substring(3);
+          }else{
+              return input;
+          }
+        }
+    };
+  }
+);
+
+myApp.filter('ageFilter', function() {
+     function calculateAge(birthdayString) { // birthday is a date
+         birthday = new Date(birthdayString);
+         var ageDifMs = Date.now() - birthday.getTime();
+         var ageDate = new Date(ageDifMs); // miliseconds from epoch
+         return Math.abs(ageDate.getUTCFullYear() - 1970);
+     }
+
+     return function(birthdate) {
+           return calculateAge(birthdate);
+     };
+});
+
+myApp.filter('orderObjectBy', function(){
+ return function(input, attribute) {
+    if (!angular.isObject(input)) return input;
+
+    var array = [];
+    for(var objectKey in input) {
+        array.push(input[objectKey]);
+    }
+
+    array.sort(function(a, b){
+        a = parseInt(a[attribute]);
+        b = parseInt(b[attribute]);
+        return b - a;
+    });
+    return array;
+ }
+});
+
+/**=========================================================
  * Module: search.js
  * Searches logic (bills, representatives and comissions)
  =========================================================*/
@@ -1332,7 +1595,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
             });
     };
 
-    $scope.isCollapsed = false
+    $scope.isCollapsed = false;
     $scope.loadThemes();
     $scope.showOtherAuthors = false;
     $scope.themesAndSubthemes = [];
@@ -1343,7 +1606,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
     $scope.fetching = false;
     $scope.$watch('fetching', function(){
         if($scope.fetching === true){
-            if($scope.bookmark == ""){
+            if($scope.bookmark === ""){
                 $scope.query = "";
                 $scope.bills = [];
                 $scope.total_results = 0;
@@ -1370,7 +1633,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
 
     // House Filter
     $scope.availableHouses = ['CN','SP','MG'];
-    $scope.checkedHouses = {}
+    $scope.checkedHouses = {};
     $scope.checkedHouses.list = [];
 
     $scope.changeFilterHouses = function(){
@@ -1393,9 +1656,9 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
     };
 
     // Status Filter
-    $scope.statusBillAvailable =["tramitando", "arquivado", "lei"]
-    $scope.statusBill = {}
-    $scope.statusBill.list = []
+    $scope.statusBillAvailable =["tramitando", "arquivado", "lei"];
+    $scope.statusBill = {};
+    $scope.statusBill.list = [];
 
     $scope.changeFilterStatus = function(){
         $scope.filters.status = [];
@@ -1412,9 +1675,9 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
     };
 
     //Type Filter
-    $scope.billTypesAvailable = ["PL", "PLComp", "PLN", "MPV", "PEC"]
-    $scope.typeBill = {}
-    $scope.typeBill.list = []
+    $scope.billTypesAvailable = ["PL", "PLComp", "PLN", "MPV", "PEC"];
+    $scope.typeBill = {};
+    $scope.typeBill.list = [];
 
     $scope.changeFilterBillTypes = function(){
         $scope.filters.tipos = [];
@@ -1464,9 +1727,9 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
 
     $scope.cleanFilters = function(){
         //clean DOM variables
-        $scope.checkedHouses.list = []
-        $scope.statusBill.list = []
-        $scope.typeBill.list = []
+        $scope.checkedHouses.list = [];
+        $scope.statusBill.list = [];
+        $scope.typeBill.list = [];
         $scope.themeSelected = "";
 
         $scope.year = "";
@@ -1532,8 +1795,9 @@ myApp.filter('capitalize', function() {
         }
 
       return (!!inputAux) ? inputAux.replace(/([^\W_]+[^\s-]*) */g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
-    }
-  });
+    };
+  }
+);
 
 myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $http, $log, $rootScope){
     var databaseURL = 'https://sigalei-api.mybluemix.net/v1/';
@@ -1611,7 +1875,59 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
             var promise = $http.get(req.url)
                 .success(function(data){
                     results = data;
-                    $rootScope.$broadcast('fetch:completed');
+                    $rootScope.$broadcast('fetch photo:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+
+            return;
+        },
+        fetchDataRepresentativeTheme : function(IdRepresentative){
+            var url = databaseURL + 'parlamentares/' + IdRepresentative +'/temas?access_token='+ databaseToken;
+            var promise = $http.get(url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch representativeTheme:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+
+            return;
+        },
+        fetchDataTermsRepresentative : function(IdRepresentative){
+            var url = databaseURL + 'parlamentares/' + IdRepresentative +'/mandatos?access_token='+ databaseToken;
+            var promise = $http.get(url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch representativeTerm:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+
+            return;
+        },
+        fetchRepresentativesBillData : function(IdRepresentative){
+            var url = databaseURL + 'parlamentares/' + IdRepresentative +'/proposicoes?access_token='+ databaseToken;
+            var promise = $http.get(url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch representativeBills:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+
+            return;
+        },
+        fetchRepresentativesCommittees : function(IdRepresentative){
+            var url = databaseURL + 'parlamentares/' + IdRepresentative +'/comissoes?access_token='+ databaseToken;
+            var promise = $http.get(url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch representativeCommittees:completed');
                 })
                 .error(function(status, error){
                     $log.log('error');

@@ -49,7 +49,9 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
     .state('app.parlamentar', {
         url: '/parlamentar',
         title: 'Visualizar dados de parlamentares',
-        templateUrl: helper.basepath('parlamentar.html')
+        templateUrl: helper.basepath('parlamentar.html'),
+        resolve: helper.resolveFor('chartjs', 'ngTable'),
+        controller: 'RepresentativeDataController'
     })
     .state('app.calendar', {
         url: '/calendar',
@@ -121,7 +123,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
 }]).config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeBar = true;
-    cfpLoadingBarProvider.includeSpinner = true;
+    cfpLoadingBarProvider.includeSpinner = false;
     cfpLoadingBarProvider.latencyThreshold = 500;
     cfpLoadingBarProvider.parentSelector = '.wrapper > section';
 }]).config(['$tooltipProvider', function ($tooltipProvider) {

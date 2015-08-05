@@ -1,3 +1,5 @@
+h3 Pesquisa
+
 div(ng-init="init()")
   // START Filters
   .col-lg-12
@@ -46,9 +48,9 @@ div(ng-init="init()")
     // START panel
     .panel
       .panel-heading.clearfix
-        label.pull-right.col-md-2.col-sm-2 Ordernar por:
+        label.pull-right.col-md-3.col-sm-3 Ordernar por:
           select.form-control(ng-model="orderedBy", ng-change="changeOrder()")
-            option(value="1") Data
+            option(value="1") Data de Atualização
             option(value="2") Relevância
         h2 Resultados
         small(ng-if="query != \"\" ") por "{{query}}"

@@ -1,50 +1,124 @@
-<div ng-controller="RepresentativeDataController" data-ng-init="fetchData()" class="well media">
-   <div class="media-left">
-      <img ng-src="http://sigalei-api.mybluemix.net/v1/parlamentares/{{dados._id}}/foto?access_token=admin%40sigalei" />
-   </div>
-   <div class="media-body">
-      <div class="media-heading">
-         <h4>{{dados.SLPa_NOME_FANTASIA}}</h4>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">Nome:</div>
-            <div class="col-sm-9">
-               <strong>{{dados.SLPa_NOME_CIVIL}}</strong>
+<h3 data-ng-init="fetchData()">{{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIVIL}}</h3>
+<div class="row">
+   <div class="col-lg-12">
+      <div class="row">
+         <div class="col-lg-6">
+            <div class="panel widget">
+               <div class="panel-body">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <div>
+                           <img ng-src="http://sigalei-api.mybluemix.net/v1/parlamentares/{{dados._id}}/foto?access_token=admin%40sigalei" class="thumb128 b" />
+                        </div>
+                     </div>
+                     <div class="col-md-6">
+                        <table ng-table="ng-table">
+                           <tr>
+                              <td>Nome:</td>
+                              <td>{{dados.SLPa_NOME_CIVIL}}</td>
+                           </tr>
+                           <tr>
+                              <td>Data Nasc.:&nbsp;</td>
+                              <td>{{dados.SLPa_DATA_NASC}}</td>
+                           </tr>
+                           <tr>
+                              <td>Idade:</td>
+                              <td>{{dados.SLPa_DATA_NASC| ageFilter}}</td>
+                           </tr>
+                           <tr>
+                              <td>Partido:</td>
+                              <td>{{dados.SLPa_PARTIDO}}</td>
+                           </tr>
+                           <tr>
+                              <td>Profissão:</td>
+                              <td>{{dados.SLPa_PROFISSAO}}</td>
+                           </tr>
+                           <tr>
+                              <td>Email:</td>
+                              <td>{{dados.SLPa_EMAIL | emailFilter}}</td>
+                           </tr>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div ng-controller="RepresentativeTermController" class="panel widget">
+               <div class="panel-heading">
+                  <label>Mandatos</label>
+               </div>
+               <div class="panel-body">
+                  <table ng-table="ng-table" style="border: 1px solid #000;" class="table-bordered text-center">
+                     <tr ng-repeat="item in terms">
+                        <td data-title="Assembleia">{{item.doc.SLM_ASSEMBLEIA.SLAs_NOME}}</td>
+                        <td data-title="Cargo">{{item.doc.SLM_CARGO}}</td>
+                        <td data-title="Legislatura">{{item.doc.SLM_LEGISLATURA}}</td>
+                        <td data-title="Partido">{{item.doc.SLPa_PARTIDO}}</td>
+                        <td data-title="UF">{{item.doc.SLM_UF_REP}}</td>
+                        <td data-title="Status">{{item.doc.SLM_STATUS}}</td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+            <div ng-controller="RepresentativeCommitteesController" class="panel widget">
+               <div class="panel-heading">
+                  <label>Comissões que participa</label>
+               </div>
+               <div class="panel-body">
+                  <table ng-table="ng-table" style="border: 1px solid #000;" class="table-bordered text-center">
+                     <tr ng-repeat="item in committeesRepresentative">
+                        <td>{{item.doc.SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA}}</td>
+                        <td>{{item.doc.SLMc_COMISSAO.SLC_NOME}}</td>
+                        <td>{{item.doc.SLMc_CARGO}}</td>
+                        <td>{{item.doc.SLMc_STATUS}}</td>
+                     </tr>
+                  </table>
+               </div>
             </div>
          </div>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">Partido:</div>
-            <div class="col-sm-9">
-               <strong>{{dados.SLPa_PARTIDO}}
-                  <strong ng-if="dados.SLPa_PARTIDO_DESC != undefined">- {{dados.SLPa_PARTIDO_DESC}}</strong>
-               </strong>
+         <div class="col-lg-6">
+            <div ng-controller="ChartJSController" class="panel widget">
+               <div class="panel-heading">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <label>Temas de Atuação</label>
+                     </div>
+                     <div class="col-md-6">
+                        <a ng-click="isSubtitleCollapsed = !isSubtitleCollapsed">
+                           <span ng-show="isSubtitleCollapsed">
+                              <em class="icon-close"></em>&nbsp;Legenda</span>
+                           <span ng-show="!isSubtitleCollapsed">
+                              <em class="icon-plus"></em>&nbsp;Legenda</span>
+                        </a>
+                     </div>
+                  </div>
+               </div>
+               <div class="panel-body">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <canvas doughnutchart="" options="pieOptions" data="pieData" height="160" responsive="true"></canvas>
+                     </div>
+                     <div class="col-md-offset-1 col-md-6">
+                        <table ng-table="ng-table" ng-show="isSubtitleCollapsed">
+                           <tr ng-repeat="item in themeData | orderObjectBy:'value'">
+                              <td>{{item.key}}</td>
+                              <td>{{item.value}}</td>
+                           </tr>
+                        </table>
+                     </div>
+                  </div>
+               </div>
             </div>
-         </div>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">Data de Nascimento:</div>
-            <div class="col-sm-9">
-               <strong>{{dados.SLPa_DATA_NASC | date:"dd/MM/yyyy"}}</strong>
-            </div>
-         </div>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">UF:</div>
-            <div class="col-sm-9">
-               <strong>{{dados.SLPa_UF_REP}}</strong>
-            </div>
-         </div>
-      </div>
-      <div class="form-horizontal">
-         <div class="form-group">
-            <div class="col-sm-3">E-mail:</div>
-            <div class="col-sm-9">
-               <strong>{{dados.SLPa_EMAIL}}</strong>
+            <div ng-controller="RepresentativeBillsController" class="panel widget">
+               <div class="panel-heading">
+                  <label>Proposições de sua Autoria</label>
+               </div>
+               <div class="panel-body">
+                  <table ng-table="ng-table" style="border: 1px solid #000;" class="table-bordered text-center">
+                     <tr ng-repeat="item in billsRepresentative">
+                        <td>{{item.doc.SLP_NOME}}</td>
+                     </tr>
+                  </table>
+               </div>
             </div>
          </div>
       </div>

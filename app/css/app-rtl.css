@@ -872,13 +872,8 @@ body {
 }
 
 .layout-h .wrapper > section {
-  max-width: 1140px;
   margin-right: auto;
   margin-left: auto;
-}
-
-.layout-h .wrapper > section > .content-wrapper > h3 {
-  display: none;
 }
 
 .layout-h .wrapper > section {
@@ -7916,7 +7911,7 @@ body .sk-spinner-wordpress .sk-inner-circle {
   min-width: 100%;
 }
 
-/** 
+/**
  * Displays hidden content on hover. Add this class to the parent element.
  * Markup
  *   <div class="hover-visible">

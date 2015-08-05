@@ -9,5 +9,8 @@
   "bower_components/angular-ui-select/dist/select.js",
   "bower_components/angular-ui-select/dist/select.css",
   "bower_components/loaders.css/loaders.css",
-  "bower_components/spinkit/css/spinkit.css"
+  "bower_components/spinkit/css/spinkit.css",
+  "bower_components/Chart.js/Chart.js",
+  "bower_components/ng-table/dist/ng-table.min.js",
+  "bower_components/ng-table/dist/ng-table.min.css"
 ]

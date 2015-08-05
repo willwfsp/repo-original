@@ -74,7 +74,59 @@ myApp.factory('DataFetcher', ['$q','$http', '$log', '$rootScope', function($q, $
             var promise = $http.get(req.url)
                 .success(function(data){
                     results = data;
-                    $rootScope.$broadcast('fetch:completed');
+                    $rootScope.$broadcast('fetch photo:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+
+            return;
+        },
+        fetchDataRepresentativeTheme : function(IdRepresentative){
+            var url = databaseURL + 'parlamentares/' + IdRepresentative +'/temas?access_token='+ databaseToken;
+            var promise = $http.get(url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch representativeTheme:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+
+            return;
+        },
+        fetchDataTermsRepresentative : function(IdRepresentative){
+            var url = databaseURL + 'parlamentares/' + IdRepresentative +'/mandatos?access_token='+ databaseToken;
+            var promise = $http.get(url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch representativeTerm:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+
+            return;
+        },
+        fetchRepresentativesBillData : function(IdRepresentative){
+            var url = databaseURL + 'parlamentares/' + IdRepresentative +'/proposicoes?access_token='+ databaseToken;
+            var promise = $http.get(url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch representativeBills:completed');
+                })
+                .error(function(status, error){
+                    $log.log('error');
+                });
+
+            return;
+        },
+        fetchRepresentativesCommittees : function(IdRepresentative){
+            var url = databaseURL + 'parlamentares/' + IdRepresentative +'/comissoes?access_token='+ databaseToken;
+            var promise = $http.get(url)
+                .success(function(data){
+                    results = data;
+                    $rootScope.$broadcast('fetch representativeCommittees:completed');
                 })
                 .error(function(status, error){
                     $log.log('error');

@@ -58,7 +58,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
             });
     };
 
-    $scope.isCollapsed = false
+    $scope.isCollapsed = false;
     $scope.loadThemes();
     $scope.showOtherAuthors = false;
     $scope.themesAndSubthemes = [];
@@ -69,7 +69,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
     $scope.fetching = false;
     $scope.$watch('fetching', function(){
         if($scope.fetching === true){
-            if($scope.bookmark == ""){
+            if($scope.bookmark === ""){
                 $scope.query = "";
                 $scope.bills = [];
                 $scope.total_results = 0;
@@ -96,7 +96,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
 
     // House Filter
     $scope.availableHouses = ['CN','SP','MG'];
-    $scope.checkedHouses = {}
+    $scope.checkedHouses = {};
     $scope.checkedHouses.list = [];
 
     $scope.changeFilterHouses = function(){
@@ -119,9 +119,9 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
     };
 
     // Status Filter
-    $scope.statusBillAvailable =["tramitando", "arquivado", "lei"]
-    $scope.statusBill = {}
-    $scope.statusBill.list = []
+    $scope.statusBillAvailable =["tramitando", "arquivado", "lei"];
+    $scope.statusBill = {};
+    $scope.statusBill.list = [];
 
     $scope.changeFilterStatus = function(){
         $scope.filters.status = [];
@@ -138,9 +138,9 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
     };
 
     //Type Filter
-    $scope.billTypesAvailable = ["PL", "PLComp", "PLN", "MPV", "PEC"]
-    $scope.typeBill = {}
-    $scope.typeBill.list = []
+    $scope.billTypesAvailable = ["PL", "PLComp", "PLN", "MPV", "PEC"];
+    $scope.typeBill = {};
+    $scope.typeBill.list = [];
 
     $scope.changeFilterBillTypes = function(){
         $scope.filters.tipos = [];
@@ -190,9 +190,9 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
 
     $scope.cleanFilters = function(){
         //clean DOM variables
-        $scope.checkedHouses.list = []
-        $scope.statusBill.list = []
-        $scope.typeBill.list = []
+        $scope.checkedHouses.list = [];
+        $scope.statusBill.list = [];
+        $scope.typeBill.list = [];
         $scope.themeSelected = "";
 
         $scope.year = "";
@@ -258,5 +258,6 @@ myApp.filter('capitalize', function() {
         }
 
       return (!!inputAux) ? inputAux.replace(/([^\W_]+[^\s-]*) */g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
-    }
-  });
+    };
+  }
+);

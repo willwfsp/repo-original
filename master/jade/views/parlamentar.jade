@@ -1,36 +1,88 @@
-div.well.media(ng-controller="RepresentativeDataController", data-ng-init="fetchData()")
-	.media-left
-		img(ng-src="http://sigalei-api.mybluemix.net/v1/parlamentares/{{dados._id}}/foto?access_token=admin%40sigalei")
-	.media-body
-		.media-heading
-			h4 {{dados.SLPa_NOME_FANTASIA}}
-		.form-horizontal
-			.form-group
-				.col-sm-3 Nome: 
-				.col-sm-9 
-					strong {{dados.SLPa_NOME_CIVIL}}
+h3(data-ng-init="fetchData()") {{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIVIL}}
+.row
+  .col-lg-12
+    .row
+      .col-lg-6
+        .panel.widget
+          .panel-body
+            .row
+              .col-md-6
+                div
+                  img.thumb128.b(ng-src="http://sigalei-api.mybluemix.net/v1/parlamentares/{{dados._id}}/foto?access_token=admin%40sigalei")
+              .col-md-6
+                table(ng-table)
+                  tr
+                    td Nome:
+                    td {{dados.SLPa_NOME_CIVIL}}
+                  tr
+                    td Data Nasc.:&nbsp;
+                    td {{dados.SLPa_DATA_NASC}}
+                  tr
+                    td Idade:
+                    td {{dados.SLPa_DATA_NASC| ageFilter}}
+                  tr
+                    td Partido:
+                    td {{dados.SLPa_PARTIDO}}
+                  tr
+                    td Profissão:
+                    td {{dados.SLPa_PROFISSAO}}
+                  tr
+                    td Email:
+                    td {{dados.SLPa_EMAIL | emailFilter}}
+        .panel.widget(ng-controller='RepresentativeTermController')
+          .panel-heading
+            label Mandatos
+          .panel-body
+            table.table-bordered.text-center(ng-table style='border: 1px solid #000;')
+              tr(ng-repeat="item in terms")
+                td(data-title="Assembleia") {{item.doc.SLM_ASSEMBLEIA.SLAs_NOME}}
+                td(data-title="Cargo") {{item.doc.SLM_CARGO}}
+                td(data-title="Legislatura") {{item.doc.SLM_LEGISLATURA}}
+                td(data-title="Partido") {{item.doc.SLPa_PARTIDO}}
+                td(data-title="UF") {{item.doc.SLM_UF_REP}}
+                td(data-title="Status") {{item.doc.SLM_STATUS}}
+        .panel.widget(ng-controller='RepresentativeCommitteesController')
+          .panel-heading
+            label Comissões que participa
+          .panel-body
+            table.table-bordered.text-center(ng-table style='border: 1px solid #000;')
+              tr(ng-repeat="item in committeesRepresentative")
+                td {{item.doc.SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA}}
+                td {{item.doc.SLMc_COMISSAO.SLC_NOME}}
+                td {{item.doc.SLMc_CARGO}}
+                td {{item.doc.SLMc_STATUS}}
+      .col-lg-6
+        .panel.widget(ng-controller='ChartJSController')
+          .panel-heading
+            .row
+              .col-md-6
+                label Temas de Atuação
+              .col-md-6
+                a(ng-click="isSubtitleCollapsed = !isSubtitleCollapsed")
+                  span(ng-show="isSubtitleCollapsed")
+                    em.icon-close
+                    |   &nbsp;Legenda
+                  span(ng-show="!isSubtitleCollapsed")
+                    em.icon-plus
+                    |   &nbsp;Legenda
+          .panel-body
+            .row
+              .col-md-4
+                canvas(doughnutchart='', options='pieOptions', data='pieData', height='160', responsive='true')
+              .col-md-offset-1.col-md-6
+                table(ng-table ng-show="isSubtitleCollapsed")
+                  tr(ng-repeat="item in themeData | orderObjectBy:'value'")
+                    td {{item.key}}
+                    td {{item.value}}
 
-		.form-horizontal
-			.form-group
-				.col-sm-3 Partido: 
-				.col-sm-9 
-					strong {{dados.SLPa_PARTIDO}}
-						strong(ng-if="dados.SLPa_PARTIDO_DESC != undefined") - {{dados.SLPa_PARTIDO_DESC}}
+        .panel.widget(ng-controller='RepresentativeBillsController')
+          .panel-heading
+            label Proposições de sua Autoria
+          .panel-body
+            table.table-bordered.text-center(ng-table style='border: 1px solid #000;')
+              tr(ng-repeat="item in billsRepresentative")
+                td {{item.doc.SLP_NOME}}
 
-		.form-horizontal
-			.form-group
-				.col-sm-3 Data de Nascimento: 
-				.col-sm-9 
-					strong {{dados.SLPa_DATA_NASC | date:"dd/MM/yyyy"}}
 
-		.form-horizontal
-			.form-group
-				.col-sm-3 UF: 
-				.col-sm-9 
-					strong {{dados.SLPa_UF_REP}}
 
-		.form-horizontal
-			.form-group
-				.col-sm-3 E-mail: 
-				.col-sm-9 
-					strong {{dados.SLPa_EMAIL}}
+
