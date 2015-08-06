@@ -37,12 +37,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         resolve: helper.resolveFor('select', 'ui.select'),
         controller: 'SearchBillsController'
     })
-    .state('app.proposicao', {
-        url: '/proposicao/{billName}',
+    .state('app.bill', {
+        url: '/bill/:billName',
         title: 'Visualizar Projeto de Lei',
-        templateUrl: helper.basepath('proposicao.html'),
+        templateUrl: helper.basepath('bill.html'),
         resolve: helper.resolveFor('ngTable'),
-        controller: 'ProposicaoController'
+        controller: 'BillController'
     })
     .state('app.proposicao.pollDetails', {
         url: '/pollDetails/{pollID}',

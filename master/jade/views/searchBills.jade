@@ -66,7 +66,7 @@ h3(ng-init="init()") Pesquisa
                 .media-box
                     small.text-muted.pull-right Última atualização: {{toDate(bill.fields.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
                     .media-box-body
-                      a(ui-sref="app.proposicao({ billName: '{{bill.fields.SLP_NOME}}' })")
+                      a(ui-sref="app.bill({ billName: '{{bill.fields.SLP_NOME}}' })")
                         h4.media-box-heading {{bill.fields.SLP_NOME}}
                           small.text-muted(ng-if="bill.fields.SLR_NOME != undefined")  ( ou {{bill.fields.SLR_NOME}} )
                       medium

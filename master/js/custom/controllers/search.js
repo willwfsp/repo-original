@@ -3,17 +3,18 @@
  * Searches logic (bills, representatives and comissions)
  =========================================================*/
 
-myApp.controller('SearchBarController', ['$location', '$log', '$scope','$state',  'DataFetcher', function($location, $log, $scope, $state, DataFetcher){
+myApp.controller('SearchBarController',
+  ['$location', '$log', '$scope','$state',  'DataFetcher',
+    function($location, $log, $scope, $state, DataFetcher){
 
     $scope.searchQ = function(){
-        $log.log($state.current.name)
         $state.go('app.searchBills', {q: $scope.query});
     };
 
 }]);
 
-myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
-  '$scope', '$log', '$state', '$modal', 'DataFetcher',
+myApp.controller('SearchBillsController',
+  ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal', 'DataFetcher',
     function($http, $stateParams, $location, $scope, $log, $state, $modal, DataFetcher) {
 
     $scope.isCollapsed = false;
@@ -85,7 +86,6 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
         "ordem":""
     };
 
-
     // House Filter
     $scope.availableHouses = ['CN','SP','MG'];
     $scope.checkedHouses = {};
@@ -107,7 +107,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
         }
         $scope.filters.bookmark="";
         $scope.fetchingStart = true;
-        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
     };
 
     // Status Filter
@@ -126,7 +126,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
 
         $scope.filters.bookmark="";
         $scope.fetchingStart = true;
-        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
     };
 
     //Type Filter
@@ -145,7 +145,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
 
         $scope.filters.bookmark="";
         $scope.fetchingStart = true;
-        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
     };
 
     // Theme Filter
@@ -154,7 +154,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
         $scope.filters.subtema = $scope.themeSelected.subtema;
         $scope.filters.bookmark="";
         $scope.fetchingStart = true;
-        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
 
     };
 
@@ -167,7 +167,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
             $scope.filters.ano = $scope.year.toString();
             $scope.filters.bookmark="";
             $scope.fetchingStart = true;
-            DataFetcher.fetchDataBills($scope.query, $scope.filters);
+            DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
         }
     };
     // Change Order
@@ -176,7 +176,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
         $scope.filters.ordem = $scope.orderedBy;
         $scope.filters.bookmark="";
         $scope.fetchingStart = true;
-        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
 
     };
 
@@ -198,20 +198,20 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
 
         //fetch most recent data
         $scope.fetchingStart = true;
-        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
     };
 
     $scope.init = function(){
         $scope.fetchingStart = true;
         $scope.loadThemes();
-        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
     };
 
     $scope.moreResults = function(){
 
         $scope.filters.bookmark = $scope.bookmark;
         $scope.fetchingMore = true;
-        DataFetcher.fetchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
     };
 
     // Listeners

@@ -71,13 +71,13 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
 
       //TRAMIT VIEW START
       .col-md-12
-        .panel.widget(ng-controller="TramitacaoController", data-ng-init="fetchData()")
+        .panel.widget
           .panel-heading
             h3 Tramitações
           .panel-body
-            div(ng-repeat="tramitacao in dados")
+            div(ng-repeat="tramitacao in tracksBill")
               ul(ng-class="timelineAlt ? 'timeline-alt' : 'timeline'", ng-init="timelineAlt=true")
-                li.timeline-separator(ng-if="$index == 0 || dados[$index].doc.SLT_DATA_TRAMITACAO.substring(0,4) != dados[$index-1].doc.SLT_DATA_TRAMITACAO.substring(0,4)" data-datetime="{{tramitacao.doc.SLT_DATA_TRAMITACAO.substring(0,10) | date: 'yyyy'}}")
+                li.timeline-separator(ng-if="$index == 0 || tracksBill[$index].doc.SLT_DATA_TRAMITACAO.substring(0,4) != tracksBill[$index-1].doc.SLT_DATA_TRAMITACAO.substring(0,4)" data-datetime="{{tramitacao.doc.SLT_DATA_TRAMITACAO.substring(0,10) | date: 'yyyy'}}")
                 // START timeline item
                 li
                   .timeline-panel
@@ -144,12 +144,12 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
 
       //POLL VIEW START
       .col-md-12
-        .panel.widget(ng-controller="PollController", data-ng-init="fetchData()")
+        .panel.widget
           .panel-heading
             h3 Votações
           .panel-body
-            p(ng-if="dados.length == 0") Não há votações para este projeto de lei.
-            .panel.widget(ng-repeat="poll in dados" ng-init="resultado = poll.SLV_RESULTADO")
+            p(ng-if="billVotingList.length == 0") Não há votações para este projeto de lei.
+            .panel.widget(ng-repeat="poll in billVotingList" ng-init="resultado = poll.SLV_RESULTADO")
               .form-horizontal
                 .form-group
                   .col-sm-3 Data:

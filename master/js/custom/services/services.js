@@ -13,19 +13,10 @@ myApp.factory('DataFetcher',
     var baseUrl = "https://sigalei-api.mybluemix.net/v1/";
     var databaseToken = "admin@sigalei";
 
-    var request_stub = {
-        dataType: "json",
-        headers: {
-            'Access-Control-Allow-Origin' : '*',
-            'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-    };
     // "Private" Variables
     var _billSearchResults = {};
 
-    service.fetchDataBills = function(termos, filters){
+    service.fetchSearchDataBills = function(termos, filters){
         var query = "";
         var headers = {};
         var path = "proposicoes";
@@ -44,6 +35,26 @@ myApp.factory('DataFetcher',
             $log.error(reason);
         });
     };
+    service.fetchBill = function(nome){
+
+        var promiseBillDetails = $http.get(baseUrl + "proposicoes/" + nome +
+            '?access_token=' + databaseToken);
+        var promiseBillTrack = $http.get(baseUrl + "proposicoes/" + nome + "/tramitacao" +
+            '?access_token=' + databaseToken);
+        var promiseBillVotingList = $http.get(baseUrl + "proposicoes/" + nome + "/votacao" +
+            '?access_token=' + databaseToken);
+
+        var defer = $q.defer();
+
+        $q.all([promiseBillDetails, promiseBillTrack, promiseBillVotingList])
+          .then(function(results) {
+            defer.resolve(results);
+
+        });
+
+        return defer.promise;
+    };
+
 
     service.getBillSearchResults = function(){
         return _billSearchResults;
