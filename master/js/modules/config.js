@@ -38,10 +38,23 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'SearchBillsController'
     })
     .state('app.proposicao', {
-        url: '/proposicao',
+        url: '/proposicao/{billName}',
         title: 'Visualizar Projeto de Lei',
-        controller: 'ProposicaoController',
-        templateUrl: helper.basepath('proposicao.html')
+        templateUrl: helper.basepath('proposicao.html'),
+        resolve: helper.resolveFor('ngTable'),
+        controller: 'ProposicaoController'
+    })
+    .state('app.proposicao.pollDetails', {
+        url: '/pollDetails/{pollID}',
+        title: 'Visualizar detalhes da votação',
+        onEnter: ['$stateParams', '$state', '$modal', '$resource', function($stateParams, $state, $modal, $resource) {
+          $modal.open({
+            templateUrl: helper.basepath('pollDetails.html'),
+            controller: 'PollDetailsController'
+          }).result.finally(function() {
+              $state.go('^');
+          });
+        }]
     })
     .state('app.representative', {
         url: '/representative',

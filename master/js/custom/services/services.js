@@ -12,6 +12,7 @@ myApp.factory('DataFetcher',
 
     var baseUrl = "https://sigalei-api.mybluemix.net/v1/";
     var databaseToken = "admin@sigalei";
+
     var request_stub = {
         dataType: "json",
         headers: {
@@ -22,7 +23,6 @@ myApp.factory('DataFetcher',
         }
     };
     // "Private" Variables
-
     var _billSearchResults = {};
 
     service.fetchDataBills = function(termos, filters){
