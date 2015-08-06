@@ -64,7 +64,9 @@ h3(data-ng-init="fetchData()") {{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIV
                   td Situação
               tr.text-center(ng-repeat="item in committeesRepresentative | orderBy:'-doc.SLMc_STATUS'")
                 td(data-title="'Assembleia'") {{item.doc.SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA}}
-                td(data-title="'Comissão'") {{item.doc.SLMc_COMISSAO.SLC_NOME}}
+                td(data-title="'Comissão'")
+                  a(ui-sref="app.committee({ house:item.doc.SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA, committee: item.doc.SLMc_COMISSAO.SLC_COD_REF })")
+                    | {{item.doc.SLMc_COMISSAO.SLC_NOME}}
                 td(data-title="'Cargo'") {{item.doc.SLMc_CARGO}}
                 td(data-title="'Situação'") {{item.doc.SLMc_STATUS}}
       .col-lg-6
@@ -106,7 +108,7 @@ h3(data-ng-init="fetchData()") {{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIV
                 tr.text-center(ng-repeat="item in billsRepresentative | orderBy:'-doc.SLP_DATA_APRESENTACAO'")
                   td
                     a(ng-href="#/app/proposicao?p={{item.doc.SLP_NOME}}")
-                      {{item.doc.SLP_NOME}}
+                      | {{item.doc.SLP_NOME}}
                   td {{item.doc.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}
                   td {{item.doc.SLP_SL_SUBTEMA}}
                   td {{item.doc.SLP_STATUS | statusDesc:item.doc.SLP_CASA_SIGLA}}

@@ -53,7 +53,7 @@ h3(ng-init="init()") Pesquisa
             option(value="1") Data de Atualização
             option(value="2") Relevância
         h2 Resultados
-        small(ng-if="query != \"\" ") por "{{query}}"
+          small(ng-if="query != \"\" ") por "{{query}}"
         p(ng-if="!fetching") {{total_results}} projetos de lei encontrados
 
 
@@ -68,11 +68,12 @@ h3(ng-init="init()") Pesquisa
                     .media-box-body
                       a(ng-href="#/app/proposicao?p={{bill.fields.SLP_NOME}}")
                         h4.media-box-heading {{bill.fields.SLP_NOME}}
+                          small.text-muted(ng-if="bill.fields.SLR_NOME != undefined")  ( ou {{bill.fields.SLR_NOME}} )
                       medium
                         | {{ (bill.fields.SLP_STATUS_DESC  | capitalize:true) || "-"}}
-                      br
-                      small.text-muted(ng-if="bill.fields.SLR_NOME != undefined") Outros Nomes: {{bill.fields.SLR_NOME}}
+
                       br(ng-if="bill.fields.SLR_NOME != undefined")
+                      br
                       small.text-muted Autor:
                         //one author and doesn't have id
                         strong(ng-if="parseAuthor(bill.fields.SLP_AUTOR).id === undefined") {{parseAuthor(bill.fields.SLP_AUTOR).name}}
@@ -97,7 +98,7 @@ h3(ng-init="init()") Pesquisa
                       small.text-muted SubTema: {{bill.fields.SLP_SL_SUBTEMA}}
                       p {{bill.fields.SLP_EMENTA}}
 
-            tr(ng-if="fetching")
+            tr(ng-if="fetchingStart || fetchingMore")
               td(align="center")
                 .ball-clip-rotate
                   div

@@ -13,10 +13,10 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
               .col-sm-4 Autor Principal:
               .col-sm-8
                 strong(ng-if="dados.SLP_AUTORES[0]._id === undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
-                a(href="#/app/parlamentar?id={{dados.SLP_AUTORES[0]._id}}", ng-if="dados.SLP_AUTORES[0]._id != undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
-                span(ng-show="dados.SLP_AUTORES.length > 1 && coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")  
+                a(href="#/app/representative?id={{dados.SLP_AUTORES[0]._id}}", ng-if="dados.SLP_AUTORES[0]._id != undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
+                span(ng-show="dados.SLP_AUTORES.length > 1 && coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")
                   em.fa.fa-plus-circle.sigalei-color(ng-show="coAuthorsCollapsed" alt="Mostrar co-autores")
-                span(ng-show="dados.SLP_AUTORES.length > 1 && !coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")  
+                span(ng-show="dados.SLP_AUTORES.length > 1 && !coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")
                   em.fa.fa-minus-circle.sigalei-color(ng-show="!coAuthorsCollapsed" alt="Esconder co-autores")
 
           .form-horizontal(ng-show="!coAuthorsCollapsed")
@@ -25,7 +25,7 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
               .col-sm-8
                 div(ng-show="!$first" ng-repeat="coauthor in dados.SLP_AUTORES")
                   strong(ng-if="coauthor._id === undefined") {{coauthor.SLPa_NOME_FANTASIA}}
-                  a(href="#/app/parlamentar?id={{coauthor._id}}", ng-if="coauthor._id != undefined") {{coauthor.SLPa_NOME_FANTASIA}}     
+                  a(href="#/app/representative?id={{coauthor._id}}", ng-if="coauthor._id != undefined") {{coauthor.SLPa_NOME_FANTASIA}}
 
           .form-horizontal
             .form-group
@@ -54,13 +54,13 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
           .form-horizontal
             .form-group
               .col-sm-4 Documentos:
-              .col-sm-8 
+              .col-sm-8
                 div(ng-repeat="doc in dados.SLP_DOCUMENTOS")
                   a(href="{{doc.SLD_LINK}}")
-                    em.icon-doc.sigalei-color 
-                    strong {{doc.SLD_TIPO}} 
+                    em.icon-doc.sigalei-color
+                    strong {{doc.SLD_TIPO}}
                   span(ng-if="doc.SLD_DATA !== undefined")    dia {{doc.SLD_DATA | date:'dd/MM/yyyy'}}
-              
+
     .col-md-6
       .panel.widget.bill-box-height
         .panel-heading
@@ -80,7 +80,7 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
                     strong {{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}
 
           div(ng-repeat="(house, data) in dados.SLP_STATUS")
-            
+
             h4 {{houseFullName(house)}}
 
             .form-horizontal(ng-show="data.ORG_DESC !== undefined")
@@ -121,10 +121,10 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
                   .pull-left.timeline-custom-date.text-center {{tramitacao.doc.SLT_DATA_TRAMITACAO.substring(0,10) | date: 'MMM dd'}}
                   .timeline-custom-badge
                   .popover(ng-class="timelineAlt ? 'right' : 'left'")
-                    
-                    h4.popover-title(ng-if="tramitacao.doc.SLT_ORGAO_ORIGEM_DESC !== undefined") 
+
+                    h4.popover-title(ng-if="tramitacao.doc.SLT_ORGAO_ORIGEM_DESC !== undefined")
                       span.pull-right {{tramitacao.doc.SLT_CASA_TRAMITACAO}}
-                      {{tramitacao.doc.SLT_ORGAO_ORIGEM_DESC}}
+                      | {{tramitacao.doc.SLT_ORGAO_ORIGEM_DESC}}
                     .arrow
                     .popover-content
                       p {{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO || "Sem descrição"}}

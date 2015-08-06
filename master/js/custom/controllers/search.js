@@ -3,20 +3,38 @@
  * Searches logic (bills, representatives and comissions)
  =========================================================*/
 
-myApp.controller('SearchBarController', ['$location', '$scope','$state',  'DataFetcher', function($location, $scope, $state, DataFetcher){
+myApp.controller('SearchBarController', ['$location', '$log', '$scope','$state',  'DataFetcher', function($location, $log, $scope, $state, DataFetcher){
 
     $scope.searchQ = function(){
-        DataFetcher.fetchDataBills($scope.query);
+        $log.log($state.current.name)
         $state.go('app.searchBills', {q: $scope.query});
     };
 
 }]);
 
 myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
-    '$scope', '$log', '$state', '$modal', 'DataFetcher',
+  '$scope', '$log', '$state', '$modal', 'DataFetcher',
     function($http, $stateParams, $location, $scope, $log, $state, $modal, DataFetcher) {
 
+    $scope.isCollapsed = false;
+    $scope.showOtherAuthors = false;
+    $scope.themesAndSubthemes = [];
+    $scope.themeSelected = "";
+    $scope.subthemeSelected = "";
+    $scope.orderedBy = 1;
+    $scope.fetchingStart = true
+    $scope.fetchingMore = false
+    var _urlParam = $location.search();
+    //search variables
+    if('q' in _urlParam){
+        $scope.query = _urlParam.q;
+    }else{
+        $scope.query = "";
+    }
 
+    $scope.bills = [];
+    $scope.total_results = 0;
+    $scope.bookmark = "";
 
     $scope.toDate = function(date){
       return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
@@ -46,7 +64,6 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
         return "Error";
     };
 
-
     $scope.loadThemes = function(){
         var themesJson = 'server/onthology.json';
         $http.get(themesJson)
@@ -57,32 +74,6 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
                 console.log("error loading themes");
             });
     };
-
-    $scope.isCollapsed = false;
-    $scope.loadThemes();
-    $scope.showOtherAuthors = false;
-    $scope.themesAndSubthemes = [];
-    $scope.themeSelected = "";
-    $scope.subthemeSelected = "";
-    $scope.orderedBy = 1;
-
-    $scope.fetching = false;
-    $scope.$watch('fetching', function(){
-        if($scope.fetching === true){
-            if($scope.bookmark === ""){
-                $scope.query = "";
-                $scope.bills = [];
-                $scope.total_results = 0;
-                $scope.bookmark = "";
-            }
-        }
-    }, true);
-    //search variables
-    $scope.query = "";
-    $scope.bills = [];
-    $scope.total_results = 0;
-    $scope.bookmark = "";
-
     //filter body
     $scope.filters = {
         "bookmark": "",
@@ -93,6 +84,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
         "ano": "",
         "ordem":""
     };
+
 
     // House Filter
     $scope.availableHouses = ['CN','SP','MG'];
@@ -114,7 +106,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
             }
         }
         $scope.filters.bookmark="";
-        $scope.fetching = true;
+        $scope.fetchingStart = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
 
@@ -133,7 +125,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
         }
 
         $scope.filters.bookmark="";
-        $scope.fetching = true;
+        $scope.fetchingStart = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
 
@@ -152,7 +144,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
         }
 
         $scope.filters.bookmark="";
-        $scope.fetching = true;
+        $scope.fetchingStart = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
 
@@ -161,7 +153,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
 
         $scope.filters.subtema = $scope.themeSelected.subtema;
         $scope.filters.bookmark="";
-        $scope.fetching = true;
+        $scope.fetchingStart = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
 
     };
@@ -174,7 +166,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
         if( ($scope.year >= 1980 && $scope.year <= 2015) || $scope.year === ""){
             $scope.filters.ano = $scope.year.toString();
             $scope.filters.bookmark="";
-            $scope.fetching = true;
+            $scope.fetchingStart = true;
             DataFetcher.fetchDataBills($scope.query, $scope.filters);
         }
     };
@@ -183,7 +175,7 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
 
         $scope.filters.ordem = $scope.orderedBy;
         $scope.filters.bookmark="";
-        $scope.fetching = true;
+        $scope.fetchingStart = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
 
     };
@@ -201,47 +193,48 @@ myApp.controller('SearchBillsController', ['$http', '$stateParams', '$location',
         $scope.filters.tipos = [];
         $scope.filters.status = [];
         $scope.filters.ano = "";
+        $scope.filters.subtema = ""
         $scope.bookmark = "";
 
         //fetch most recent data
-        $scope.fetching = true;
+        $scope.fetchingStart = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
 
     $scope.init = function(){
-        $scope.fetching = true;
-        DataFetcher.fetchDataBills($stateParams.q);
+        $scope.fetchingStart = true;
+        $scope.loadThemes();
+        DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
 
     $scope.moreResults = function(){
 
-        if($scope.fetching === true){
-            return;
-        }
         $scope.filters.bookmark = $scope.bookmark;
-        $scope.fetching = true;
+        $scope.fetchingMore = true;
         DataFetcher.fetchDataBills($scope.query, $scope.filters);
     };
 
-    $scope.$on('search:completed', function(event) {
+    // Listeners
+    $scope.$on('fetch billSearchResults:completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
-        $scope.total_results = DataFetcher.getResults().total_rows;
-        $scope.bills = DataFetcher.getResults().rows;
-        $scope.query = DataFetcher.getQuery();
-        $scope.bookmark = DataFetcher.getResults().bookmark;
-        $scope.fetching = false;
+        var aux = DataFetcher.getBillSearchResults();
+
+        if ($scope.fetchingStart){
+            $scope.total_results = aux.total_rows;
+            $scope.bookmark = aux.bookmark;
+            $scope.bills = aux.rows;
+            $scope.fetchingStart = false;
+        }
+        if($scope.fetchingMore){
+            for(i = 0; i < aux.rows.length; i++){
+                $scope.bills.push(aux.rows[i]);
+            }
+            $scope.fetchingMore = false;
+        }
+
+
     });
 
-    $scope.$on('search more results: completed', function(event) {
-        // you could inspect the data to see if what you care about changed, or just update your own scope
-        for(i = 0; i < DataFetcher.getResults().rows.length; i++){
-            $scope.bills.push(DataFetcher.getResults().rows[i]);
-        }
-        $scope.bookmark = DataFetcher.getResults().bookmark;
-        $scope.query = DataFetcher.getQuery();
-        $scope.fetching = false;
-        //console.log($scope.bills.length);
-    });
 
 }]);
 

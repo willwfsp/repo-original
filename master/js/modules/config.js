@@ -27,18 +27,15 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
     })
     .state('app.dashBoard', {
         url: '/dashboard',
-        title: 'Principal',
+        title: 'Página Principal',
         templateUrl: helper.basepath('dashboard.html')
     })
     .state('app.searchBills', {
-        url: '/searchBills',
+        url: '/searchBills?q',
         title: 'Pesquisar Proposições',
         templateUrl: helper.basepath('searchBills.html'),
         resolve: helper.resolveFor('select', 'ui.select'),
-        controller: 'SearchBillsController',
-        params: {
-            q: ""
-        }
+        controller: 'SearchBillsController'
     })
     .state('app.proposicao', {
         url: '/proposicao',
@@ -46,12 +43,18 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'ProposicaoController',
         templateUrl: helper.basepath('proposicao.html')
     })
-    .state('app.parlamentar', {
-        url: '/parlamentar',
-        title: 'Visualizar dados de parlamentares',
-        templateUrl: helper.basepath('parlamentar.html'),
+    .state('app.representative', {
+        url: '/representative',
+        title: 'Parlamentar',
+        templateUrl: helper.basepath('representative.html'),
         resolve: helper.resolveFor('chartjs', 'ngTable'),
         controller: 'RepresentativeDataController'
+    })
+    .state('app.committee', {
+        url: '/committees/:house/:committeeID',
+        title: 'Comissão',
+        templateUrl: helper.basepath('committee.html'),
+        controller: 'CommitteesController'
     })
     .state('app.calendar', {
         url: '/calendar',
@@ -66,27 +69,16 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
             $rootScope.app.layout.isBoxed = false;
         }]
     })
+    .state('page.404', {
+        url: '/404',
+        title: "Não encontrada",
+        templateUrl: 'app/pages/404.html'
+    })
     .state('login', {
         url: '/login',
         title: 'Login',
         templateUrl: 'app/pages/login.html'
     })
-    //
-    // CUSTOM RESOLVES
-    //   Add your own resolves properties
-    //   following this object extend
-    //   method
-    // -----------------------------------
-    // .state('app.someroute', {
-    //   url: '/some_url',
-    //   templateUrl: 'path_to_template.html',
-    //   controller: 'someController',
-    //   resolve: angular.extend(
-    //     helper.resolveFor(), {
-    //     // YOUR RESOLVES GO HERE
-    //     }
-    //   )
-    // })
     ;
 
 

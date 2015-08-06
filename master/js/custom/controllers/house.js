@@ -1,3 +1,7 @@
+/**=========================================================
+ * Module: house.js
+ * Legislative Houses controller
+ =========================================================*/
 
 myApp.controller('CongressoDataController', ['$scope','$rootScope', '$log', '$http', 'DataFetcher', function($scope, $rootScope, $log, $http, DataFetcher){
 	$scope.dados = {};

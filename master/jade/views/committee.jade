@@ -1,0 +1,18 @@
+h3 {{committeesDetails.SLC_NOME}}
+.row
+  .col-lg-12
+    .row
+      .col-lg-6
+        .panel.widget
+            .panel-heading
+                h3 Dados Gerais
+            .panel-body
+              {{committeesDetails}}
+      .col-lg-6
+        .panel.widget(ng-controller="CommitteesMembersController")
+            .panel-heading
+              h3 Membros
+            .panel-body
+              table.table
+                tr(ng-repeat="item in committeesMembers.rows")
+                  td {{item.key[3]}}
