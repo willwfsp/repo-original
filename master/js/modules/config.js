@@ -34,7 +34,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         url: '/searchBills?q',
         title: 'Pesquisar Proposições',
         templateUrl: helper.basepath('searchBills.html'),
-        resolve: helper.resolveFor('select', 'ui.select'),
+        resolve: helper.resolveFor('ui.select'),
         controller: 'SearchBillsController'
     })
     .state('app.bill', {

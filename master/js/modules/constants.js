@@ -33,8 +33,6 @@ App
       'modernizr':            ['vendor/modernizr/modernizr.js'],
       'icons':                ['vendor/fontawesome/css/font-awesome.min.css',
                                'vendor/simple-line-icons/css/simple-line-icons.css'],
-      'select':               ['vendor/bootstrap-select/bootstrap-select.css',
-                               'vendor/bootstrap-select/bootstrap-select.js'],
       'loaders.css':          ['vendor/loaders.css/loaders.css'],
       'spinkit':              ['vendor/spinkit/css/spinkit.css'],
       'chartjs':              ['vendor/Chart.js/Chart.js'],
