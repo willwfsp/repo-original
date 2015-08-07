@@ -57,7 +57,7 @@ myApp.factory('DataFetcher',
     };
 
     service.fetchDataPollDetails = function(id){
-
+        var result;
         return $http.get(baseUrl + "proposicoes/votacao/" + id +
             '?access_token=' + databaseToken).then(function(result) {
 
@@ -95,9 +95,17 @@ myApp.factory('DataFetcher',
         return defer.promise;
     }
 
-    service.getBillSearchResults = function(){
-        return _billSearchResults;
-    }
+    service.fetchDataHouseDetails = function(houseId){
+        var result;
+        return $http.get(baseUrl + "assembleias/" + houseId +
+            '?access_token=' + databaseToken).then(function(result) {
+
+            return result.data;
+        },
+        function(reason){
+            $log.error(reason);
+        });
+    };
 
     service.fetchCommitteeDetails = function(house, committeeID){
 
@@ -117,6 +125,11 @@ myApp.factory('DataFetcher',
 
         return defer.promise;
     };
+
+    service.getBillSearchResults = function(){
+        return _billSearchResults;
+    }
+
 
     return service;
 
