@@ -5,6 +5,11 @@
     "translate": "sidebar.heading.HEADER"
   },
   {
+    "text": "Relatórios",
+    "sref": "app.report",
+    "icon": "fa fa-file-o"
+  },
+  {
     "text": "Calendários",
     "sref": "app.calendar",
     "icon": "fa fa-file-o"

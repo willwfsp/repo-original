@@ -1,24 +1,30 @@
-h3 Casa Legislativa
+h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
 
 .row
   .col-lg-12
     .panel
       .panel-heading
         label Detalhes
-      .panel-boding
+      .panel-body
         p {{houseDetails.SLAs_DESC}}
 .row
   .col-lg-12
     .panel
       .panel-heading
         label Mesa Diretora
+      .panel-body
+        p {{houseDetails.SLAs_MESA_DIRETORA}}
 
 .row
   .col-lg-6
     .panel
       .panel-heading
         label Eventos
+      .panel-body
+        p {{houseEvents}}
   .col-lg-6
     .panel
       .panel-heading
         label Comissoes
+      .panel-body
+        p {{houseCommittees}}

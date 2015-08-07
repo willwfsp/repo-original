@@ -3,7 +3,7 @@
   .panel.panel-dark.panel-flat
     .panel-heading.text-center
       a(href="#")
-        img.block-center.img-rounded(src='app/img/logo.png', alt='Image')
+        img.block-center.img-rounded.wd-sm(src='app/img/logo.png', alt='Image')
     .panel-body
       p.text-center.pv LOGIN
       form.form-validate(role='form', ng-submit="login()", name='loginForm', novalidate='').mb-lg
@@ -21,20 +21,22 @@
             label
               input(type='checkbox', value='', name="account_remember", ng-model="account.remember")
               span.fa.fa-check
-              |  Remember Me
+              |  Lembrar
           .pull-right
-            a.text-muted(ui-sref="page.recover") Forgot your password?
+            a.text-muted(ui-sref="page.recover") Esqueceu o password?
 
         button.btn.btn-block.btn-primary.mt-lg(type='submit') Entrar
 
       .alert.alert-danger.text-center(ng-show='authMsg') {{authMsg}}
-      p.pt-lg.text-center Need to Signup?
-      a(ui-sref="page.register").btn.btn-block.btn-default Register Now
+      p.pt-lg.text-center Ainda não tem a conta?
+      a(ui-sref="page.register").btn.btn-block.btn-default Registre Agora!
   // END panel
   .p-lg.text-center
     span &copy;
     span(ng-bind="app.year")
     span  -
     span(ng-bind="app.name")
+    span -
+    span Openlex
     br
     span(ng-bind="app.description")

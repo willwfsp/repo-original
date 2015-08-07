@@ -97,14 +97,26 @@ myApp.factory('DataFetcher',
 
     service.fetchDataHouseDetails = function(houseId){
         var result;
-        return $http.get(baseUrl + "assembleias/" + houseId +
-            '?access_token=' + databaseToken).then(function(result) {
 
-            return result.data;
-        },
-        function(reason){
-            $log.error(reason);
+        var promiseHouseDetails = $http.get(baseUrl + "assembleias/" + houseId +
+            '?access_token=' + databaseToken);
+        var promiseHouseEvents = $http.get(baseUrl + "eventos/" + houseId +
+            '?access_token=' + databaseToken);
+        var promiseHouseCommittees = $http.get(baseUrl + "comissoes" +
+            '?access_token=' + databaseToken +
+            "&sigla=" + houseId);
+
+        var defer = $q.defer();
+
+        $q.all([promiseHouseDetails,
+                 promiseHouseEvents,
+                 promiseHouseCommittees])
+          .then(function(results) {
+            defer.resolve(results);
         });
+
+        return defer.promise;
+
     };
 
     service.fetchCommitteeDetails = function(house, committeeID){
