@@ -42,9 +42,9 @@ myApp.controller('SearchBillsController',
     };
 
     $scope.parseAuthor = function(authorString){
-        var author = "";
+        var author = {};
             try{
-                author = authorString.split(",");
+                author = authorString.split(",#");
             }
             catch(err){
                 return authorString;
@@ -53,17 +53,25 @@ myApp.controller('SearchBillsController',
     };
 
     $scope.getMainAuthor = function(data){
+        //if only one author
         if (typeof(data) == "string"){
             return $scope.parseAuthor(data);
         }
-        //if array, return first author
-        if (data instanceof Array){
-            authors = $scope.parseAuthor(data[data.length - 1]);
-            authors.length = data.length - 1;
-            return authors;
+        //if array, return last author in array, who is the main author
+        else if (data instanceof Array){
+            return $scope.parseAuthor(data[data.length - 1]);
         }
-        return "Error";
+        else{
+            return "";
+        }
     };
+
+    $scope.hasCoauthors = function(billMainAuthor){
+        if(billMainAuthor instanceof Array){
+            return true;
+        }
+        return false;
+    }
 
     $scope.loadThemes = function(){
         var themesJson = 'server/onthology.json';
