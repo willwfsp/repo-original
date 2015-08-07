@@ -18,19 +18,19 @@ h3(ng-init="init()") Pesquisa
           .col-md-2.col-sm-2
             ui-select(multiple='', ng-model='checkedHouses.list', on-select='changeFilterHouses()',
               on-remove='changeFilterHouses()')
-              ui-select-match(placeholder='Casas') {{$item}}
-              ui-select-choices(repeat='house in availableHouses') {{house}}
+              ui-select-match(placeholder='Casas') {{$item.houseName}}
+              ui-select-choices(repeat='house.initials as house in availableHouses') {{house.houseName}}
           .col-md-2.col-sm-2
             ui-select(multiple='', ng-model='statusBill.list', on-select='changeFilterStatus()',
               on-remove='changeFilterStatus()')
-              ui-select-match(placeholder='Situação') {{$item}}
-              ui-select-choices(repeat='status in statusBillAvailable') {{status}}
+              ui-select-match(placeholder='Situação') {{$item | capitalize}}
+              ui-select-choices(repeat='status in statusBillAvailable') {{status | capitalize}}
 
           .col-md-2.col-sm-2
             ui-select(multiple='', ng-model='typeBill.list', on-select='changeFilterBillTypes()',
               on-remove='changeFilterBillTypes()')
-              ui-select-match(placeholder='Tipo') {{$item}}
-              ui-select-choices(repeat='type in billTypesAvailable') {{type}}
+              ui-select-match(placeholder='Tipo') {{$item.billTypeName}}
+              ui-select-choices(repeat='type.initials as type in billTypesAvailable') {{type.billTypeName}}
 
           .col-md-3.col-sm-3
             select.form-control(ng-model="themeSelected", ng-options="item.subtema group by item.tema for item in themesAndSubthemes", ng-change="changeFilterTheme()")

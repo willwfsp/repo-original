@@ -95,7 +95,12 @@ myApp.controller('SearchBillsController',
     };
 
     // House Filter
-    $scope.availableHouses = ['CN','SP','MG'];
+    $scope.availableHouses =[
+                                {'houseName': 'Congresso Nacional', 'initials': 'CN'},
+                                {'houseName': 'São Paulo',          'initials': 'SP'},
+                                {'houseName': 'Minas Gerais',       'initials': 'MG'}
+                            ];
+
     $scope.checkedHouses = {};
     $scope.checkedHouses.list = [];
 
@@ -114,6 +119,7 @@ myApp.controller('SearchBillsController',
             }
         }
         $scope.filters.bookmark="";
+        $scope.bills = [];
         $scope.fetchingStart = true;
         DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
     };
@@ -133,12 +139,19 @@ myApp.controller('SearchBillsController',
         }
 
         $scope.filters.bookmark="";
+        $scope.bills = [];
         $scope.fetchingStart = true;
         DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
     };
 
     //Type Filter
-    $scope.billTypesAvailable = ["PL", "PLComp", "PLN", "MPV", "PEC"];
+    $scope.billTypesAvailable = [
+                                    {'billTypeName': 'PL',                          'initials': 'PL'},
+                                    {'billTypeName': 'PL Complementar',             'initials': 'PLComp'},
+                                    {'billTypeName': 'PLN',                         'initials': 'PLN'},
+                                    {'billTypeName': 'Medida Provisória',           'initials': 'MPV'},
+                                    {'billTypeName': 'PEC',                         'initials': 'PEC'}
+                                ];
     $scope.typeBill = {};
     $scope.typeBill.list = [];
 
@@ -152,6 +165,7 @@ myApp.controller('SearchBillsController',
         }
 
         $scope.filters.bookmark="";
+        $scope.bills = [];
         $scope.fetchingStart = true;
         DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
     };
@@ -161,6 +175,7 @@ myApp.controller('SearchBillsController',
 
         $scope.filters.subtema = $scope.themeSelected.subtema;
         $scope.filters.bookmark="";
+        $scope.bills = [];
         $scope.fetchingStart = true;
         DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
 
@@ -174,6 +189,7 @@ myApp.controller('SearchBillsController',
         if( ($scope.year >= 1980 && $scope.year <= 2015) || $scope.year === ""){
             $scope.filters.ano = $scope.year.toString();
             $scope.filters.bookmark="";
+            $scope.bills = [];
             $scope.fetchingStart = true;
             DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
         }
@@ -183,6 +199,7 @@ myApp.controller('SearchBillsController',
 
         $scope.filters.ordem = $scope.orderedBy;
         $scope.filters.bookmark="";
+        $scope.bills = [];
         $scope.fetchingStart = true;
         DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
 
@@ -205,6 +222,7 @@ myApp.controller('SearchBillsController',
         $scope.bookmark = "";
 
         //fetch most recent data
+        $scope.bills = [];
         $scope.fetchingStart = true;
         DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
     };
