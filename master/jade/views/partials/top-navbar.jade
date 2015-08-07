@@ -29,7 +29,7 @@ nav.navbar.topnavbar(role='navigation')
           // START Dropdown menu
           ul.dropdown-menu(class="animated fadeInUp")
             li(ng-repeat="subitem in item.submenu")
-              a(ng-href="{{$state.href(subitem.sref)}}", title="{{subitem.text}}")
+              a(ui-sref="app.house({ house: '{{subitem.code}}' })" title="{{subitem.text}}")
                 span {{(subitem.translate | translate) || subitem.text}}
         li
           a(href='#')

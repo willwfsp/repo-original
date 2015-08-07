@@ -3,104 +3,46 @@
  * Representative details
  =========================================================*/
 
-myApp.controller('RepresentativeDataController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
-    function($location, $scope, $rootScope, $log, $http, DataFetcher, ngTableParams){
+myApp.controller('RepresentativeDataController',
+  ['$scope','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', "colors",
+    function($scope, $rootScope, $stateParams, $log, $http, DataFetcher, colors){
     $scope.dados = {};
-    $scope.fetchData = function(){
-        DataFetcher.fetchDataRepresentative($location.search().id);
+    $scope.dados._id = $stateParams.id;
+    $scope.pieData =[];
+    $scope.themeData = [];
+
+    $scope.pieOptions = {
+        segmentShowStroke : true,
+        segmentStrokeColor : '#fff',
+        segmentStrokeWidth : 2,
+        percentageInnerCutout : 0, // Setting this to zero convert a doughnut into a Pie
+        animationSteps : 100,
+        animationEasing : 'easeOutBounce',
+        animateRotate : true,
+        animateScale : false
     };
-    $scope.$on('fetch:completed', function(event) {
-        $scope.dados = DataFetcher.getResults();
+
+    DataFetcher.fetchDataRepresentative($stateParams.id).then(function(data) {
+        console.log(data)
+        $scope.dados = data[0].data;
+        $scope.themeData = data[1].data;
+        $scope.terms = data[2].data;
+        $scope.billsRepresentative = data[3].data;
+        $scope.committeesRepresentative = data[4].data;
+
+        $scope.themeData.forEach(function(item){
+            var colorAux = colors.byName('random');
+            var aux = {
+                value: item.value,
+                color: colorAux,
+                highlight: colorAux,
+                label: item.key
+            };
+            $scope.pieData.push(aux);
+        });
     });
 
 }]);
-
-myApp.controller('ChartJSController', ["$scope", "$location", "colors", "DataFetcher",
-  function($scope, $location, colors,DataFetcher) {
-
-// Pie chart
-// -----------------------------------
-
-  $scope.pieData =[];
-  $scope.themeData = [];
-
-  $scope.pieOptions = {
-      segmentShowStroke : true,
-      segmentStrokeColor : '#fff',
-      segmentStrokeWidth : 2,
-      percentageInnerCutout : 0, // Setting this to zero convert a doughnut into a Pie
-      animationSteps : 100,
-      animationEasing : 'easeOutBounce',
-      animateRotate : true,
-      animateScale : false
-  };
-
-  $scope.fetchThemeData = function(){
-        DataFetcher.fetchDataRepresentativeTheme($location.search().id);
-  };
-  $scope.$on('fetch representativeTheme:completed', function(event) {
-      var themes = (DataFetcher.getResults());
-      $scope.themeData = themes;
-      themes.forEach(function(item){
-        var colorAux = colors.byName('random');
-        var aux = {
-          value: item.value,
-          color: colorAux,
-          highlight: colorAux,
-          label: item.key
-        };
-        $scope.pieData.push(aux);
-      });
-
-  });
-
-  $scope.fetchThemeData();
-
-}]);
-
-myApp.controller('RepresentativeTermController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher', 'ngTableParams',
-    function($location, $scope, $rootScope, $log, $http, DataFetcher,ngTableParams){
-    $scope.terms = {};
-    $scope.fetchTermsData = function(){
-        DataFetcher.fetchDataTermsRepresentative($location.search().id);
-    };
-    $scope.$on('fetch representativeTerm:completed', function(event) {
-        $scope.terms = DataFetcher.getResults();
-    });
-    $scope.fetchTermsData();
-
-}]);
-
-myApp.controller('RepresentativeBillsController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',
-    function($location, $scope, $rootScope, $log, $http, DataFetcher){
-    $scope.billsRepresentative = {};
-    $scope.fetchRepresentativesBillData = function(){
-        DataFetcher.fetchRepresentativesBillData($location.search().id);
-    };
-
-    $scope.$on('fetch representativeBills:completed', function(event) {
-        $scope.billsRepresentative = DataFetcher.getResults();
-    });
-
-    $scope.fetchRepresentativesBillData();
-}]);
-
-myApp.controller('RepresentativeCommitteesController',['$location','$scope','$rootScope', '$log', '$http', 'DataFetcher',  'ngTableParams',
-    function($location, $scope, $rootScope, $log, $http, DataFetcher, ngTableParams){
-    $scope.committeesRepresentative = {};
-    $scope.fetchRepresentativesBillData = function(){
-        DataFetcher.fetchRepresentativesCommittees($location.search().id);
-    };
-
-    $scope.$on('fetch representativeCommittees:completed', function(event) {
-        $scope.committeesRepresentative = DataFetcher.getResults();
-    });
-
-    $scope.fetchRepresentativesBillData();
-
-}]);
-
-
 
 myApp.filter('emailFilter', function() {
     return function(input, all) {

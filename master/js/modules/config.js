@@ -44,8 +44,8 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         resolve: helper.resolveFor('ngTable'),
         controller: 'BillController'
     })
-    .state('app.proposicao.pollDetails', {
-        url: '/pollDetails/{pollID}',
+    .state('app.bill.pollDetails', {
+        url: '/bill/pollDetails/:pollID',
         title: 'Visualizar detalhes da votação',
         onEnter: ['$stateParams', '$state', '$modal', '$resource', function($stateParams, $state, $modal, $resource) {
           $modal.open({
@@ -57,7 +57,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         }]
     })
     .state('app.representative', {
-        url: '/representative',
+        url: '/representative/:id',
         title: 'Parlamentar',
         templateUrl: helper.basepath('representative.html'),
         resolve: helper.resolveFor('chartjs', 'ngTable'),
@@ -73,6 +73,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         url: '/calendar',
         title: 'Calendários',
         templateUrl: helper.basepath('calendar.html')
+    })
+    .state('app.house', {
+        url: '/house/:house',
+        title: 'Casa Legislativa',
+        templateUrl: helper.basepath('house.html'),
+        controller: 'HouseDataController'
     })
     .state('page', {
         url: '/page',

@@ -1,4 +1,4 @@
-h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
+h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
 
 .container-fluid
   //FIRST COLUMN
@@ -17,7 +17,7 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
                   label Autor Principal:
                 .col-sm-9.form-control-static
                   p(ng-if="dados.SLP_AUTORES[0]._id === undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
-                  a(href="#/app/parlamentar?id={{dados.SLP_AUTORES[0]._id}}", ng-if="dados.SLP_AUTORES[0]._id != undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
+                  a(ui-sref="app.representative({ id: '{{dados.SLP_AUTORES[0]._id}}' })", ng-if="dados.SLP_AUTORES[0]._id != undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
                   span(ng-show="dados.SLP_AUTORES.length > 1 && coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")
                     em.fa.fa-plus-circle.sigalei-color(ng-show="coAuthorsCollapsed" alt="Mostrar co-autores")
                   span(ng-show="dados.SLP_AUTORES.length > 1 && !coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")
@@ -29,7 +29,7 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
                 .col-sm-9.form-control-static
                   div(ng-show="!$first" ng-repeat="coauthor in dados.SLP_AUTORES")
                     strong(ng-if="coauthor._id === undefined") {{coauthor.SLPa_NOME_FANTASIA}}
-                    a(href="#/app/parlamentar?id={{coauthor._id}}", ng-if="coauthor._id != undefined") {{coauthor.SLPa_NOME_FANTASIA}}
+                    a(ui-sref="app.representative({ id: '{{coauthor._id}}' })", ng-if="coauthor._id != undefined") {{coauthor.SLPa_NOME_FANTASIA}}
 
               .form-group
                 .col-sm-3.control-label
@@ -160,5 +160,5 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} {{dados.SLP_NOME}}
                 .form-group
                   .col-sm-3 Resultado:
                   .col-sm-9
-                    a.btn(ui-sref="app.proposicao.pollDetails({pollID: poll.id})", ng-class="resultado == 'Aprovado' ? 'bg-success' : 'bg-danger' ") {{poll.SLV_RESULTADO}}
+                    a.btn(ui-sref="app.bill.pollDetails({pollID: poll.id})", ng-class="resultado == 'Aprovado' ? 'bg-success' : 'bg-danger' ") {{poll.SLV_RESULTADO}}
       //POLL VIEW END

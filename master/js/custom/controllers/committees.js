@@ -7,17 +7,12 @@
   ['$scope', '$log', '$stateParams','DataFetcher',
     function($scope, $log, $stateParams, DataFetcher){
 
-    $log.log($stateParams.house);
-    $log.log($stateParams.committeeID);
+    DataFetcher.fetchCommitteeDetails($stateParams.house,
+        $stateParams.committeeID).then(function(data) {
+        $scope.committeesDetails = data[0].data;
+        $scope.committeesMembers = data[1].data;
 
-}]);
-
-myApp.controller("CommitteesMembersController",
-  ["$scope", "$log",
-    function($scope, $log){
-
-    $log.log("Example Controller");
-
+   });
 }]);
 
 
