@@ -6,13 +6,29 @@ h3 {{committeesDetails.SLC_NOME}}
         .panel.widget
             .panel-heading
                 h3 Dados Gerais
-            .panel-body
-              {{committeesDetails}}
+            .panel-body            
+              .form-horizontal
+                .form-group
+                  .col-sm-3.text-right 
+                    label Comissão:
+                  .col-sm-9 {{committeesDetails.SLC_NOME}}
+
+                .form-group
+                  .col-sm-3.text-right
+                    label Tipo:
+                  .col-sm-9 {{committeesDetails.SLC_TIPO_DESC}}
+
       .col-lg-6
         .panel.widget
             .panel-heading
               h3 Membros
             .panel-body
-              table.table
-                tr(ng-repeat="item in committeesMembers.rows")
-                  td {{item.key[3]}}
+              .table-responsive
+                table.table.table-bordered.table-striped.text-center(ng-table="membersTableParams")
+                  tr(ng-repeat="item in $data ")
+                    td(data-title="'Nome'",     sortable="'name'") 
+                      a(ui-sref="app.representative({ id: '{{item.key[8]}}' })") {{item.key[3]}}
+                    td(data-title="'Cargo'",    sortable="'position'") {{item.key[4]}} 
+                    td(data-title="'Situação'", sortable="'situation'") {{item.key[5]}}
+                    td(data-title="'Partido'",  sortable="'party'") {{item.key[6]}}
+                    td(data-title="'Casa legislativa'",   sortable="'house'") {{item.key[0]}}

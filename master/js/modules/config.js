@@ -67,6 +67,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         url: '/committees/:house/:committeeID',
         title: 'Comissão',
         templateUrl: helper.basepath('committee.html'),
+        resolve: helper.resolveFor('ngTable'),
         controller: 'CommitteesController'
     })
     .state('app.calendar', {
