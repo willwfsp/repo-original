@@ -45,11 +45,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'BillController'
     })
     .state('app.bill.pollDetails', {
-        url: '/bill/pollDetails/:pollID',
+        url: '/pollDetails/:pollID',
         title: 'Visualizar detalhes da votação',
         onEnter: ['$stateParams', '$state', '$modal', '$resource', function($stateParams, $state, $modal, $resource) {
           $modal.open({
             templateUrl: helper.basepath('pollDetails.html'),
+            resolve: helper.resolveFor('ngTable'),
             controller: 'PollDetailsController'
           }).result.finally(function() {
               $state.go('^');

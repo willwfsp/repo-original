@@ -1,30 +1,35 @@
 .panel.widget(data-ng-init="fetchData()")
     .panel-heading
       h3 {{pollData.SLV_OBJETO_VOTACAO}}
-      table
-        tr
-          td Resultado:
-          td {{pollData.SLV_RESULTADO}}
-        tr
-          td SIM:
-          td {{pollData.SLV_VOTOS_SIM}}
-        tr
-          td Nao:
-          td {{pollData.SLV_RESULTADO}}
-        tr
-          td Abstenções:
-          td {{pollData.SLV_VOTOS_ABSTENCOES}} 
-        tr
-          td Hora:
-          td {{pollData.SLV_DATA_HORA | date:"dd/MM/yyyy 'às' HH:mm"}}
+      .table-responsive
+        table.table
+          tr
+            td Resultado:
+            td {{pollData.SLV_RESULTADO}}
+
+            td
+            td
+
+            td Hora:
+            td {{pollData.SLV_DATA_HORA.replace(" ", "T") | date:"dd/MM/yyyy 'às' HH:mm"}}
+          tr
+            td SIM:
+            td {{pollData.SLV_VOTOS_SIM}}
+
+            td Nao:
+            td {{pollData.SLV_VOTOS_NAO}}
+
+            td Abstenções:
+            td {{pollData.SLV_VOTOS_ABSTENCOES}} 
 
     .panel-body
       .table-responsive
-        table.table.table-striped
-          tr
-            th Nome
-            th Voto
-          tr(ng-repeat="representative in pollData.SLV_VOTOS")
-            td {{representative.PARLAMENTAR_NOME}}
-            td {{representative.PARLAMENTAR_VOTO}}
+        table.table.table-striped(ng-table="pollTableParams", show-filter="true")
+          tr(ng-repeat="representative in $data")
+            td(data-title="'Nome'"     sortable="'PARLAMENTAR_NOME'", filter="{ 'PARLAMENTAR_NOME': 'text' }") 
+              p(ng-if="representative._id === undefined") {{representative.PARLAMENTAR_NOME}}
+              a(ui-sref="app.representative({ id: '{{representative._id}}' })", ng-if="representative._id != undefined") {{representative.PARLAMENTAR_NOME}}  
+            td(data-title="'Partido'"     sortable="'PARLAMENTAR_PARTIDO'", filter="{ 'PARLAMENTAR_PARTIDO': 'text' }") {{representative.PARLAMENTAR_PARTIDO}}
+            td(data-title="'Estado'"     sortable="'PARLAMENTAR_ESTADO'", filter="{ 'PARLAMENTAR_ESTADO': 'text' }") {{representative.PARLAMENTAR_ESTADO}}
+            td(data-title="'Voto'"     sortable="'PARLAMENTAR_VOTO'", filter="{ 'PARLAMENTAR_VOTO': 'text' }") {{representative.PARLAMENTAR_VOTO}}
 

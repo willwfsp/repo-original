@@ -20,7 +20,7 @@
 
                 var filteredData = $scope.membersJson;
                 if (params.filter() ){
-                    orderedData = $filter('filter')($scope.membersJson, params.filter());
+                    filteredData = $filter('filter')($scope.membersJson, params.filter());
                 }
 
                 var orderedData = params.sorting() ?
