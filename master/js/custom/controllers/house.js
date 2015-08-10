@@ -13,6 +13,7 @@ myApp.controller('HouseDataController',
         $scope.houseDetails = data[0].data;
         $scope.houseEvents = data[1].data;
         $scope.houseCommittees = data[2].data;
+        $scope.houseMembers = data[3].data;
     });
 
 }]);

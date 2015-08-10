@@ -16,14 +16,12 @@ App.controller('LoginFormController', ['$scope', '$http', '$state', function($sc
     if($scope.loginForm.$valid) {
 
       $http
-        .post('api/account/login', {email: $scope.account.email, password: $scope.account.password})
+        .post('http://localhost:6005/rest/login', {login: $scope.loginUser, password: $scope.account.password})
         .then(function(response) {
           // assumes if ok, response is an object with some data, if not, a string with error
           // customize according to your api
-          if ( !response.account ) {
-            $scope.authMsg = 'Incorrect credentials.';
-          }else{
-            $state.go('app.dashboard');
+          if ( response.status == "204" ) {
+            $state.go('app.dashBoard');
           }
         }, function(x) {
           $scope.authMsg = 'Server Request Error';

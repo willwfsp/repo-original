@@ -6,8 +6,9 @@
 
 var myApp = angular.module('sigaLeiApp', ['angle']);
 
-myApp.run(["$log", function($log) {
+myApp.run(["$log",'$cookies', function($log, $cookies) {
 
   $log.log('I\'m a line from custom.js');
+  $log.log($cookies);
 
 }]);

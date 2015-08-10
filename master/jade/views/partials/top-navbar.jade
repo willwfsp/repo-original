@@ -16,8 +16,9 @@ nav.navbar.topnavbar(role='navigation')
   .collapse.navbar-collapse(collapse="navCollapsed")
     .nav.navbar-left
       form.navbar-form(ng-controller="SearchBarController", ng-submit="searchQ()")
-        .form-group
+        .form-group.has-feedback
           input.form-control(type="text", ng-model="query", placeholder="{{'topbar.search.PLACEHOLDER' | translate }}")
+          button.fa.fa-search.form-control-feedback.sigalei-search(type="submit")
 
     .nav.navbar-right
       ul.nav.navbar-nav(ng-controller="SidebarController")
@@ -31,9 +32,17 @@ nav.navbar.topnavbar(role='navigation')
             li(ng-repeat="subitem in item.submenu")
               a(ui-sref="app.house({ house: '{{subitem.code}}' })" title="{{subitem.text}}")
                 span {{(subitem.translate | translate) || subitem.text}}
-        li
-          a(href='#')
+        li.dropdown.dropdown-list(dropdown="")
+          a(dropdown-toggle="")
             em.icon-user
+          ul.dropdown-menu(class="animated fadeInUp")
+            li
+              a(title="Perfil" ng-click="profile()")
+                span Perfil
+            li
+              a(title="Logout" ng-click="logout()")
+                span Sair
+
   // END Nav wrapper
 
 

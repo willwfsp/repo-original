@@ -105,12 +105,16 @@ myApp.factory('DataFetcher',
         var promiseHouseCommittees = $http.get(baseUrl + "comissoes" +
             '?access_token=' + databaseToken +
             "&sigla=" + houseId);
+        var promiseHouseMembers = $http.get(baseUrl + "parlamentares" +
+            '?access_token=' + databaseToken +
+            "&casa=" + houseId);
 
         var defer = $q.defer();
 
         $q.all([promiseHouseDetails,
                  promiseHouseEvents,
-                 promiseHouseCommittees])
+                 promiseHouseCommittees,
+                 promiseHouseMembers])
           .then(function(results) {
             defer.resolve(results);
         });

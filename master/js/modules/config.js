@@ -81,6 +81,16 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         templateUrl: helper.basepath('house.html'),
         controller: 'HouseDataController'
     })
+    .state('app.profile', {
+        url: '/profile',
+        title: 'Perfil do Usuário',
+        templateUrl: helper.basepath('profile.html')
+    })
+    .state('app.reports', {
+        url: '/reports',
+        title: 'Relatórios',
+        templateUrl: helper.basepath('reports.html')
+    })
     .state('page', {
         url: '/page',
         templateUrl: 'app/pages/page.html',
@@ -94,10 +104,15 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         title: "Não encontrada",
         templateUrl: 'app/pages/404.html'
     })
-    .state('login', {
+    .state('page.login', {
         url: '/login',
         title: 'Login',
         templateUrl: 'app/pages/login.html'
+    })
+    .state('page.register', {
+        url: '/register',
+        title: 'Registrar',
+        templateUrl: 'app/pages/register.html'
     })
     ;
 

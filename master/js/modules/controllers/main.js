@@ -122,4 +122,11 @@ App.controller('AppController',
       $event.stopPropagation();
     };
 
+    $scope.logout = function(){
+      $state.go("page.login");
+    }
+    $scope.profile = function(){
+      $state.go("app.profile");
+    }
+
 }]);

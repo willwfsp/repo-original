@@ -9,21 +9,25 @@ App.controller('RegisterFormController', ['$scope', '$http', '$state', function(
   $scope.account = {};
   // place the message if something goes wrong
   $scope.authMsg = '';
-    
+  $scope.username = "";
+  $scope.$watch('username', function() {
+      if($scope.username){
+          $scope.username = $scope.username.toLowerCase().replace(/\s+/g,'');
+      }
+  });
+
   $scope.register = function() {
     $scope.authMsg = '';
 
     if($scope.registerForm.$valid) {
 
       $http
-        .post('api/account/register', {email: $scope.account.email, password: $scope.account.password})
+        .post('http://localhost:6005/rest/signup', {name: $scope.username, email: $scope.email, password: $scope.password})
         .then(function(response) {
           // assumes if ok, response is an object with some data, if not, a string with error
           // customize according to your api
-          if ( !response.account ) {
-            $scope.authMsg = response;
-          }else{
-            $state.go('app.dashboard');
+          if ( response.status == "204" ) {
+            $state.go('app.dashBoard');
           }
         }, function(x) {
           $scope.authMsg = 'Server Request Error';
@@ -34,7 +38,7 @@ App.controller('RegisterFormController', ['$scope', '$http', '$state', function(
       $scope.registerForm.account_email.$dirty = true;
       $scope.registerForm.account_password.$dirty = true;
       $scope.registerForm.account_agreed.$dirty = true;
-      
+
     }
   };
 
