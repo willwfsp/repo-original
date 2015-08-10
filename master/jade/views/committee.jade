@@ -24,11 +24,11 @@ h3 {{committeesDetails.SLC_NOME}}
               h3 Membros
             .panel-body
               .table-responsive
-                table.table.table-bordered.table-striped.text-center(ng-table="membersTableParams")
-                  tr(ng-repeat="item in $data ")
-                    td(data-title="'Nome'",     sortable="'name'") 
-                      a(ui-sref="app.representative({ id: '{{item.key[8]}}' })") {{item.key[3]}}
-                    td(data-title="'Cargo'",    sortable="'position'") {{item.key[4]}} 
-                    td(data-title="'Situação'", sortable="'situation'") {{item.key[5]}}
-                    td(data-title="'Partido'",  sortable="'party'") {{item.key[6]}}
-                    td(data-title="'Casa legislativa'",   sortable="'house'") {{item.key[0]}}
+                table.table.table-bordered.table-striped.text-center(ng-table="membersTableParams", show-filter="true")
+                  tr(ng-repeat="representative in $data")
+                    td(data-title="'Nome'"     sortable="'name'", filter="{ 'name': 'text' }") 
+                      a(ui-sref="app.representative({ id: '{{representative.id}}' })") {{representative.name}}
+                    td(data-title="'Cargo'",    sortable="'position'", filter="{ 'position': 'text' }") {{representative.position | capitalize}} 
+                    td(data-title="'Situação'", sortable="'situation'", filter="{ 'situation': 'text' }") {{representative.situation}}
+                    td(data-title="'Partido'",  sortable="'party'", filter="{ 'party': 'text' }") {{representative.party || '--'}}
+                    td(data-title="'Casa legislativa'",   sortable="'house'", filter="{ 'house': 'text' }") {{representative.house}}
