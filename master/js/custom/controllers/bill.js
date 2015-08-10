@@ -4,17 +4,43 @@
  =========================================================*/
 
 myApp.controller('BillController',
-  ['$location', '$scope','$state', '$stateParams', '$log', '$http',
+  ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter',
    'ngTableParams', 'DataFetcher',
-    function($location,$scope, $state, $stateParams, $log, $http,
+    function($location,$scope, $state, $stateParams, $log, $http, $filter,
         ngTableParams, DataFetcher){
+
+    $scope.coAuthorsCollapsed = true;
+    $scope.dados = {};
+    $scope.docsTableParams = new ngTableParams({
+        page: 1,
+        count: 10,
+        sorting: {SLD_DATA: 'des'}
+    }, {
+        total: $scope.dados.SLP_DOCUMENTOS,
+        counts: [],
+        getData: function($defer, params){
+
+            var filteredData = $scope.dados.SLP_DOCUMENTOS;
+            if (params.filter() ){
+                filteredData = $filter('filter')($scope.dados.SLP_DOCUMENTOS, params.filter());
+            }
+
+            var orderedData = params.sorting() ?
+                $filter('orderBy')(filteredData, params.orderBy()) :
+                filteredData;
+
+            params.total(orderedData.length); // set total for recalc pagination
+            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
 
     DataFetcher.fetchBill($stateParams.billName).then(function(data) {
        $scope.dados = data[0].data;
        $scope.tracksBill = data[1].data;
        $scope.billVotingList = data[2].data;
+       $scope.docsTableParams.reload();
    });
-    $scope.coAuthorsCollapsed = true;
+    
 
 }]);
 

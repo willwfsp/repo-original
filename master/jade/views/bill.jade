@@ -13,9 +13,9 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
           .panel-body
             .form-horizontal
               .form-group
-                .col-sm-3.control-label
+                .col-sm-3.text-right
                   label Autor Principal:
-                .col-sm-9.form-control-static
+                .col-sm-9.text-left
                   p(ng-if="dados.SLP_AUTORES[0]._id === undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
                   a(ui-sref="app.representative({ id: '{{dados.SLP_AUTORES[0]._id}}' })", ng-if="dados.SLP_AUTORES[0]._id != undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
                   span(ng-show="dados.SLP_AUTORES.length > 1 && coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")
@@ -24,53 +24,58 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
                     em.fa.fa-minus-circle.sigalei-color(ng-show="!coAuthorsCollapsed" alt="Esconder co-autores")
 
               .form-group(ng-show="!coAuthorsCollapsed")
-                .col-sm-3.control-label
+                .col-sm-3.text-right
                   label Coautores:
-                .col-sm-9.form-control-static
+                .col-sm-9.text-left
                   div(ng-show="!$first" ng-repeat="coauthor in dados.SLP_AUTORES")
                     strong(ng-if="coauthor._id === undefined") {{coauthor.SLPa_NOME_FANTASIA}}
                     a(ui-sref="app.representative({ id: '{{coauthor._id}}' })", ng-if="coauthor._id != undefined") {{coauthor.SLPa_NOME_FANTASIA}}
 
               .form-group
-                .col-sm-3.control-label
+                .col-sm-3.text-right
                   label Tema:
-                .col-sm-9.form-control-static
+                .col-sm-9.text-left
                   p {{dados.SLP_SL_TEMA || "-"}}
 
               .form-group
-                .col-sm-3.control-label
+                .col-sm-3.text-right
                   label Subtema:
-                .col-sm-9.form-control-static
+                .col-sm-9.text-left
                   p {{dados.SLP_SL_SUBTEMA}}
+              
+              .form-group
+                .col-sm-3.text-right
+                  label Apreciação:
+                .col-sm-9.text-left
+                  p {{dados.SLP_APRECIACAO || '-'}}
 
               .form-group
-                .col-sm-3.control-label
+                .col-sm-3.text-right
                   label Regime de Tramitação:
-                .col-sm-9.form-control-static
+                .col-sm-9.text-left
                   p {{dados.SLP_REGIME_TRAMITACAO || '-'}}
-
+                  
               .form-group
-                .col-sm-3.control-label
+                .col-sm-3.text-right
                   label Ementa:
-                .col-sm-9.form-control-static
+                .col-sm-9.text-left
                   p {{dados.SLP_EMENTA}}
 
               .form-group(ng-if="dados.SLP_DOCUMENTOS.length > 0")
-                .col-sm-3.control-label
+                .col-sm-3.text-right
                   label Documentos:
                 .col-sm-9
-                  table.table.table-bordered.table-striped(ng-table='docsTableParams')
+                  table.table.table-bordered.table-striped(ng-table='docsTableParams', show-filter="true")
                     tbody
-                      tr(ng-repeat="doc in docs | orderBy: '-SLD_DATA' ")
-                        td(data-title=" 'Nome' ")
-                          a(href="{{doc.SLD_LINK}}")
-                            | {{doc.SLD_TIPO}}
-                        td(data-title=" 'Data' ") {{doc.SLD_DATA | date:'dd/MM/yyyy' || "Não Disponível"}}
+                      tr(ng-repeat="doc in $data")
+                        td(data-title=" 'Nome' ", sortable="'SLD_TIPO'", filter="{ 'SLD_TIPO': 'text' }")
+                          a(href="{{doc.SLD_LINK}}") {{doc.SLD_TIPO}}
+                        td.text-center(data-title=" 'Data' ", sortable="'SLD_DATA'", filter="{ 'SLD_DATA': 'text' }") {{doc.SLD_DATA | date:'dd/MM/yyyy' || "Não Disponível"}}
 
       //GENERAL INFO VIEW END
 
       //TRAMIT VIEW START
-      .col-md-12
+      .col-md-12(height="600px")
         .panel.widget
           .panel-heading
             h3 Tramitações
@@ -110,36 +115,43 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
           .panel-body
             .form-horizontal
               .form-group
-                .col-sm-3.control-label
+                .col-sm-3.text-right
                   label Apresentação:
-                .col-sm-9.form-control-static
+                .col-sm-9.text-left
                   p {{dados.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}
 
               .form-group
-                .col-sm-3.control-label
+                .col-sm-3.text-right
                   label Última Ação:
-                .col-sm-9.form-control-static
+                .col-sm-9.text-left
                   p {{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}
 
-            .table-responsive(ng-repeat="(house, data) in dados.SLP_STATUS", ng-show="data.FASE != -1")
-              h3 {{houseFullName(house)}}
-              table.table.table-bordered
-                tr
-                  td.text-right
-                    strong Órgão Responsável:
-                  td.text-left  {{data.ORG_DESC}}
-                tr
-                  td.text-right
-                    strong Fase:
-                  td.text-left  {{data.FASE}}
-                tr
-                  td.text-right
-                    strong Última Ação:
-                  td.text-left  {{data.DATA | date:'dd/MM/yyyy'}}
-                tr
-                  td.text-right
-                    strong Status:
-                  td.text-left  {{data.DESC}}
+            .form-horizontal(ng-repeat="(house, data) in dados.SLP_STATUS", ng-show="data.FASE != -1")
+              
+              h4 {{houseFullName(house)}}
+              .form-group
+                .col-sm-3.text-right
+                  label Órgão Responsável:
+                .col-sm-9.text-left
+                  p {{data.ORG_DESC}}
+
+              .form-group
+                .col-sm-3.text-right
+                  label Fase:
+                .col-sm-9.text-left
+                  p {{data.FASE}}
+
+              .form-group
+                .col-sm-3.text-right
+                  label Última Ação:
+                .col-sm-9.text-left
+                  p {{data.DATA | date:'dd/MM/yyyy'}}
+
+              .form-group
+                .col-sm-3.text-right
+                  label Status:
+                .col-sm-9.text-left
+                  p {{data.DESC}}
       //GENERAL STATUS VIEW END
 
       //POLL VIEW START
