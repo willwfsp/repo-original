@@ -80,6 +80,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         url: '/house/:house',
         title: 'Casa Legislativa',
         templateUrl: helper.basepath('house.html'),
+        resolve: helper.resolveFor('ngTable'),
         controller: 'HouseDataController'
     })
     .state('app.profile', {

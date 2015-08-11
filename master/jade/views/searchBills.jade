@@ -92,8 +92,8 @@ h3(ng-init="init()") Pesquisa
                                 strong(ng-if="parseAuthor(author).id === undefined") {{parseAuthor(author).name}}
 
                                 strong(ng-if="parseAuthor(author).id != undefined")
-                                  a(ng-href="#/app/representative?id={{parseAuthor(author).id}}") {{parseAuthor(author).name}}
-                                span(ng-show="$index != bill.fields.SLP_AUTOR.length - 1") ,
+                                  a(ui-sref="app.representative({ id: '{{ parseAuthor(author).id}}' })") {{parseAuthor(author).name}}
+                                span(ng-hide="$index == bill.fields.SLP_AUTOR.length - 1 || $first == $last - 1") ,
                       br
                       small.text-muted Tema: {{bill.fields.SLP_SL_TEMA || '-'}}
                       br
