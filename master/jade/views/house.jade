@@ -4,35 +4,59 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
   .col-lg-12
     .panel
       .panel-heading
-        label Detalhes
+        h3 Detalhes
       .panel-body
         p {{houseDetails.SLAs_DESC}}
 .row
   .col-lg-12
     .panel
       .panel-heading
-        label Mesa Diretora
+        h3 Mesa Diretora
       .panel-body
-        p {{houseDetails.SLAs_MESA_DIRETORA}}
+        .row
+          .col-md-2.text-center(ng-repeat="representative in houseDetails.SLAs_MESA_DIRETORA")
+            a(ui-sref="app.representative({ id: '{{representative.id}}' })")
+              .thumbnail
+                .caption
+                  img.thumb128.b(ng-src="https://sigalei-api.mybluemix.net/v1/parlamentares/{{representative.id}}/foto?access_token=admin%40sigalei")
+                  strong.sigalei-color {{representative.Nome}}
+                  p {{representative.Cargo}}
 
-.row
+.row( ng-hide="houseDetails.SLAs_SIGLA == 'CN' ")
   .col-lg-12
     .panel
       .panel-heading
-        label Deputados
+        h3 Deputados
       .panel-body
-        p {{houseMembers}}
+        table.table.table-bordered.table-striped.text-center(ng-table='representativeTableParams', show-filter="true")
+          tbody
+            tr(ng-repeat="representative in $data")
+              td(data-title=" 'Nome' ", sortable="'nome'", filter="{ 'nome': 'text' }")
+                a(ui-sref="app.representative({ id: '{{representative._id}}' })") {{representative.nome}}
+              td(data-title=" 'Legislatura' ", sortable="'legislatura'", filter="{ 'legislatura': 'text' }") {{representative.legislatura}}
+              td(data-title=" 'Cargo' ", sortable="'cargo'", filter="{ 'cargo': 'text' }") {{representative.cargo}}
+              td(data-title=" 'Situação' ", sortable="'status'", filter="{ 'status': 'text' }") {{representative.status}}
 
 .row
   .col-lg-6
     .panel
       .panel-heading
-        label Eventos
+        h3 Eventos
       .panel-body
-        p {{houseEvents}}
+        table.table.table-bordered.table-striped.text-center(ng-table='eventsTableParams', show-filter="true")
+          tbody
+            tr(ng-repeat="event in $data")
+              td(data-title=" 'Data' ", sortable="'date'", filter="{ 'date': 'text' }") {{event.date.replace(" ", "T") | date:"dd/MM/yyyy 'às' HH:mm" || "Não Disponível"}}
+              td(data-title=" 'Evento' ", sortable="'name'", filter="{ 'name': 'text' }") {{event.name}}
+              td(data-title=" 'Local' ", sortable="'place'", filter="{ 'place': 'text' }") {{event.place}}
   .col-lg-6
     .panel
       .panel-heading
-        label Comissoes
+        h3 Comissões
       .panel-body
-        p {{houseCommittees}}
+        table.table.table-bordered.table-striped.text-center(ng-table='committeesTableParams', show-filter="true")
+          tbody
+            tr(ng-repeat="committee in $data")
+              td(data-title=" 'Sigla' ", sortable="'initials'", filter="{ 'initials': 'text' }") {{committee.initials}}
+              td(data-title=" 'Nome' ", sortable="'name'", filter="{ 'name': 'text' }") 
+                a(ui-sref="app.committee({ house:committee.house, committeeID: committee.refCode })") {{committee.name}}
