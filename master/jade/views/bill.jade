@@ -42,7 +42,7 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
                   label Subtema:
                 .col-sm-9.text-left
                   p {{dados.SLP_SL_SUBTEMA}}
-              
+
               .form-group
                 .col-sm-3.text-right
                   label Apreciação:
@@ -54,23 +54,12 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
                   label Regime de Tramitação:
                 .col-sm-9.text-left
                   p {{dados.SLP_REGIME_TRAMITACAO || '-'}}
-                  
+
               .form-group
                 .col-sm-3.text-right
                   label Ementa:
                 .col-sm-9.text-left
                   p {{dados.SLP_EMENTA}}
-
-              .form-group(ng-if="dados.SLP_DOCUMENTOS.length > 0")
-                .col-sm-3.text-right
-                  label Documentos:
-                .col-sm-9
-                  table.table.table-bordered.table-striped(ng-table='docsTableParams', show-filter="true")
-                    tbody
-                      tr(ng-repeat="doc in $data")
-                        td(data-title=" 'Nome' ", sortable="'SLD_TIPO'", filter="{ 'SLD_TIPO': 'text' }")
-                          a(href="{{doc.SLD_LINK}}") {{doc.SLD_TIPO}}
-                        td.text-center(data-title=" 'Data' ", sortable="'SLD_DATA'", filter="{ 'SLD_DATA': 'text' }") {{doc.SLD_DATA | date:'dd/MM/yyyy' || "Não Disponível"}}
 
       //GENERAL INFO VIEW END
 
@@ -127,7 +116,7 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
                   p {{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}
 
             .form-horizontal(ng-repeat="(house, data) in dados.SLP_STATUS", ng-show="data.FASE != -1")
-              
+
               h4 {{houseFullName(house)}}
               .form-group
                 .col-sm-3.text-right
@@ -153,7 +142,20 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
                 .col-sm-9.text-left
                   p {{data.DESC}}
       //GENERAL STATUS VIEW END
-
+      // DOCS START
+      .col-md-12
+        .panel.widget
+          .panel-heading
+            h3 Documentos
+          .panel-body
+            .form-group(ng-if="dados.SLP_DOCUMENTOS.length > 0")
+              table.table.table-bordered.table-striped(ng-table='docsTableParams', show-filter="true")
+                tbody
+                  tr(ng-repeat="doc in $data")
+                    td(data-title=" 'Nome' ", sortable="'SLD_TIPO'", filter="{ 'SLD_TIPO': 'text' }")
+                      a(href="{{doc.SLD_LINK}}") {{doc.SLD_TIPO}}
+                    td.text-center(data-title=" 'Data' ", sortable="'SLD_DATA'", filter="{ 'SLD_DATA': 'text' }") {{doc.SLD_DATA | date:'dd/MM/yyyy' || "Não Disponível"}}
+      // DOCS END
       //POLL VIEW START
       .col-md-12
         .panel.widget
