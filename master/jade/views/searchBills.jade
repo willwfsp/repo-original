@@ -68,7 +68,7 @@ h3(ng-init="init()") Pesquisa
                     .media-box-body
                       a(ui-sref="app.bill({ billName: '{{bill.fields.SLP_NOME}}' })")
                         h4.media-box-heading {{bill.fields.SLP_NOME}}
-                          small.text-muted(ng-if="bill.fields.SLR_NOME != undefined")  ( ou {{bill.fields.SLR_NOME}} )
+                          small.text-muted(ng-if="bill.fields.SLR_NOME")  ( ou {{bill.fields.SLR_NOME}} )
                       medium
                         | {{ (bill.fields.SLP_STATUS_DESC  | capitalize:true) || "-"}}
                       br
@@ -77,10 +77,10 @@ h3(ng-init="init()") Pesquisa
                         //show main author
                         span(ng-init = "author = getMainAuthor(bill.fields.SLP_AUTOR)")
                           //author has no id
-                          strong(ng-if="author.id === undefined") {{author.name}}
+                          strong(ng-if="! author.id") {{author.name}}
 
                           //author has id
-                          strong(ng-if="author.id !== undefined")
+                          strong(ng-if="author.id")
                             a(ui-sref="app.representative({ id: '{{author.id}}' })") {{author.name}}
 
                         //show coauthors
@@ -89,9 +89,9 @@ h3(ng-init="init()") Pesquisa
                           div(collapse="!showOtherAuthors")
                             span(ng-init = "mainAuthor = getMainAuthor(bill.fields.SLP_AUTOR)")
                               strong(ng-repeat="author in bill.fields.SLP_AUTOR | orderBy", ng-hide="mainAuthor.name == parseAuthor(author).name")
-                                strong(ng-if="parseAuthor(author).id === undefined") {{parseAuthor(author).name}}
+                                strong(ng-if="! parseAuthor(author).id") {{parseAuthor(author).name}}
 
-                                strong(ng-if="parseAuthor(author).id != undefined")
+                                strong(ng-if="parseAuthor(author).id")
                                   a(ui-sref="app.representative({ id: '{{ parseAuthor(author).id}}' })") {{parseAuthor(author).name}}
                                 span(ng-hide="$index == bill.fields.SLP_AUTOR.length - 1 || $first == $last - 1") ,
                       br

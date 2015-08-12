@@ -18,9 +18,12 @@ html(lang="pt-br", data-ng-app="sigaLeiApp")
     // Themes
     link(rel='stylesheet', ng-href='{{app.layout.theme}}', data-ng-if="app.layout.theme")
 
+    // Favicons
+    link(rel='icon', href='app/img/favicon-32.png', sizes='32x32')
   body(data-ng-class="{'layout-h': true}")
 
     .wrapper(data-ui-view="", data-autoscroll='false')
 
     script(src='app/js/base.js')
     script(src='app/js/app.js')
+    script(src='app/js/angular-locale_pt-br.js')

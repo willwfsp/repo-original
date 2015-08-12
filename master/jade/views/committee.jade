@@ -4,31 +4,31 @@ h3 {{committeesDetails.SLC_NOME}}
     .row
       .col-lg-6
         .panel.widget
-            .panel-heading
-                h3 Dados Gerais
-            .panel-body            
-              .form-horizontal
-                .form-group
-                  .col-sm-3.text-right 
-                    label Comissão:
-                  .col-sm-9 {{committeesDetails.SLC_NOME}}
+          .panel-heading
+              h3 Dados Gerais
+          .panel-body            
+            .form-horizontal
+              .form-group
+                .col-sm-3.text-right 
+                  label Comissão:
+                .col-sm-9 {{committeesDetails.SLC_NOME}}
 
-                .form-group
-                  .col-sm-3.text-right
-                    label Tipo:
-                  .col-sm-9 {{committeesDetails.SLC_TIPO_DESC}}
+              .form-group
+                .col-sm-3.text-right
+                  label Tipo:
+                .col-sm-9 {{committeesDetails.SLC_TIPO_DESC}}
 
       .col-lg-6
         .panel.widget
-            .panel-heading
-              h3 Membros
-            .panel-body
-              .table-responsive
-                table.table.table-bordered.table-striped.text-center(ng-table="membersTableParams", show-filter="true")
-                  tr(ng-repeat="representative in $data")
-                    td(data-title="'Nome'"     sortable="'name'", filter="{ 'name': 'text' }") 
-                      a(ui-sref="app.representative({ id: '{{representative.id}}' })") {{representative.name}}
-                    td(data-title="'Cargo'",    sortable="'position'", filter="{ 'position': 'text' }") {{representative.position | capitalize}} 
-                    td(data-title="'Situação'", sortable="'situation'", filter="{ 'situation': 'text' }") {{representative.situation}}
-                    td(data-title="'Partido'",  sortable="'party'", filter="{ 'party': 'text' }") {{representative.party || '--'}}
-                    td(data-title="'Casa legislativa'",   sortable="'house'", filter="{ 'house': 'text' }") {{representative.house}}
+          .panel-heading
+            h3 Membros
+          .panel-body
+            .table-responsive
+              table.table.table-bordered.table-striped.text-center(ng-table="membersTableParams", show-filter="true")
+                tr(ng-repeat="representative in $data")
+                  td(data-title="'Nome'"     sortable="'name'", filter="{ 'name': 'text' }") 
+                    a(ui-sref="app.representative({ id: '{{representative.id}}' })") {{representative.name}}
+                  td(data-title="'Cargo'",    sortable="'position'", filter="{ 'position': 'text' }") {{representative.position | capitalize}} 
+                  td(data-title="'Situação'", sortable="'situation'", filter="{ 'situation': 'text' }") {{representative.situation}}
+                  td(data-title="'Partido'",  sortable="'party'", filter="{ 'party': 'text' }") {{representative.party || '--'}}
+                  td(data-title="'Casa legislativa'",   sortable="'house'", filter="{ 'house': 'text' }") {{representative.house}}
