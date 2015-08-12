@@ -12,23 +12,23 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
 
           .panel-body
             .form-horizontal
-
-              .col-sm-3.text-right
-                label Autor Principal:
-              .col-sm-9.text-left
-                //author doesn't have id
-                p(ng-if="dados.SLP_AUTORES[0]._id === undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
-                //author has id
-                a(ui-sref="app.representative({ id: '{{dados.SLP_AUTORES[0]._id}}' })", ng-if="dados.SLP_AUTORES[0]._id != undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
-
-                //icon to show coauthors
-                span(ng-show="dados.SLP_AUTORES.length > 1 && coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")
-                  em.fa.fa-plus-circle.sigalei-color(ng-show="coAuthorsCollapsed" alt="Mostrar co-autores")
-                span(ng-show="dados.SLP_AUTORES.length > 1 && !coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")
-                  em.fa.fa-minus-circle.sigalei-color(ng-show="!coAuthorsCollapsed" alt="Esconder co-autores")
+              .form-group.m0
+                .col-sm-3.text-right
+                  label Autor Principal:
+                .col-sm-9.text-left
+                  //author doesn't have id
+                  p(ng-if="dados.SLP_AUTORES[0]._id === undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
+                  //author has id
+                  a(ui-sref="app.representative({ id: '{{dados.SLP_AUTORES[0]._id}}' })", ng-if="dados.SLP_AUTORES[0]._id != undefined") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
+                  
+                  //icon to show coauthors
+                  span(ng-show="dados.SLP_AUTORES.length > 1 && coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")
+                    em.fa.fa-plus-circle.sigalei-color(ng-show="coAuthorsCollapsed" alt="Mostrar co-autores")
+                  span(ng-show="dados.SLP_AUTORES.length > 1 && !coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")
+                    em.fa.fa-minus-circle.sigalei-color(ng-show="!coAuthorsCollapsed" alt="Esconder co-autores")
 
               //coauthors view, showing only if there are more than one author
-              div(ng-show="!coAuthorsCollapsed")
+              .form-group.m0(ng-show="!coAuthorsCollapsed")
                 .col-sm-3.text-right
                   label Coautores:
                 .col-sm-9.text-left
@@ -36,40 +36,39 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
                     strong(ng-if="coauthor._id === undefined") {{coauthor.SLPa_NOME_FANTASIA}}
                     a(ui-sref="app.representative({ id: '{{coauthor._id}}' })", ng-if="coauthor._id != undefined") {{coauthor.SLPa_NOME_FANTASIA}}
 
-              .form-group
+              .form-group.m0
                 .col-sm-3.text-right
                   label Tema:
                 .col-sm-9.text-left
                   p {{dados.SLP_SL_TEMA || "-"}}
 
-              .form-group
+              .form-group.m0
                 .col-sm-3.text-right
                   label Subtema:
                 .col-sm-9.text-left
                   p {{dados.SLP_SL_SUBTEMA}}
-
-              .form-group
+              
+              .form-group.m0
                 .col-sm-3.text-right
                   label Apreciação:
                 .col-sm-9.text-left
                   p {{dados.SLP_APRECIACAO || '-'}}
 
-              .form-group
+              .form-group.m0
                 .col-sm-3.text-right
                   label Regime de Tramitação:
                 .col-sm-9.text-left
                   p {{dados.SLP_REGIME_TRAMITACAO || '-'}}
-
-              .form-group
+                  
+              .form-group.m0
                 .col-sm-3.text-right
                   label Ementa:
                 .col-sm-9.text-left
                   p {{dados.SLP_EMENTA}}
-
       //GENERAL INFO VIEW END
 
       //TRAMIT VIEW START
-      .col-md-12.tramit-panel
+      .col-md-12.bill-box
         .panel.widget
           .panel-heading
             h3 Tramitações
@@ -104,51 +103,51 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
       .col-md-12
         .panel.widget
           .panel-heading
-            h3 Status Geral
+            h3 Situação Geral
 
           .panel-body
             .form-horizontal
+              .form-group.m0
+                .col-sm-3.text-right
+                  label Apresentação:
+                .col-sm-9.text-left
+                  p {{dados.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}
 
-              .col-sm-3.text-right
-                label Apresentação:
-              .col-sm-9.text-left
-                p {{dados.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}
+              .form-group.m0
+                .col-sm-3.text-right
+                  label Última Ação:
+                .col-sm-9.text-left
+                  p {{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}
 
+            div(ng-repeat="(house, data) in dados.SLP_STATUS", ng-show="data.FASE != -1")
+              
+              h4 {{ house | houseFullName}}
+              .form-horizontal
+                .form-group.m0
+                  .col-sm-3.text-right
+                    label Órgão Responsável:
+                  .col-sm-9.text-left
+                    p {{data.ORGAO}} - {{data.ORG_DESC}}
 
-              .col-sm-3.text-right
-                label Última Ação:
-              .col-sm-9.text-left
-                p {{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}
+                .form-group.m0
+                  .col-sm-3.text-right
+                    label Fase:
+                  .col-sm-9.text-left
+                    p {{data.FASE}}
 
-            .form-horizontal(ng-repeat="(house, data) in dados.SLP_STATUS", ng-show="data.FASE != -1")
+                .form-group.m0
+                  .col-sm-3.text-right
+                    label Última Ação:
+                  .col-sm-9.text-left
+                    p {{data.DATA | date:'dd/MM/yyyy'}}
 
-              .col-sm-12
-                h4 {{houseFullName(house)}}
-
-              .col-sm-3.text-right
-                label Órgão Responsável:
-              .col-sm-9.text-left
-                p {{data.ORG_DESC}}
-
-
-              .col-sm-3.text-right
-                label Fase:
-              .col-sm-9.text-left
-                p {{data.FASE}}
-
-
-              .col-sm-3.text-right
-                label Última Ação:
-              .col-sm-9.text-left
-                p {{data.DATA | date:'dd/MM/yyyy'}}
-
-
-              .col-sm-3.text-right
-                label Status:
-              .col-sm-9.text-left
-                p {{data.DESC}}
-
+                .form-group.m0
+                  .col-sm-3.text-right
+                    label Status:
+                  .col-sm-9.text-left
+                    p {{data.DESC}}
       //GENERAL STATUS VIEW END
+
       // DOCS START
       .col-md-12
         .panel.widget
@@ -163,8 +162,9 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
                       a(href="{{doc.SLD_LINK}}") {{doc.SLD_TIPO}}
                     td.text-center(data-title=" 'Data' ", sortable="'SLD_DATA'", filter="{ 'SLD_DATA': 'text' }") {{doc.SLD_DATA | date:'dd/MM/yyyy' || "Não Disponível"}}
       // DOCS END
+
       //POLL VIEW START
-      .col-md-12
+      .col-md-12.bill-box
         .panel.widget
           .panel-heading
             h3 Votações
@@ -172,14 +172,14 @@ h3(data-ng-init="fetchData()") {{dados.SLP_TIPO_DESC}} - {{dados.SLP_NOME}}
             p(ng-if="billVotingList.length == 0") Não há votações para este projeto de lei.
             .panel.widget(ng-repeat="poll in billVotingList" ng-init="resultado = poll.SLV_RESULTADO")
               .form-horizontal
-
-                .col-sm-3 Data:
-                .col-sm-9 {{formattedDate(poll.SLV_DATA_HORA) | date:"dd/MM/yyyy 'às' HH:mm"}}
-
-                .col-sm-3 Objeto:
-                .col-sm-9 {{poll.SLV_OBJETO_VOTACAO}}
-
-                .col-sm-3 Resultado:
-                .col-sm-9
-                  a.btn(ui-sref="app.bill.pollDetails({pollID: poll.id})", ng-class="resultado == 'Aprovado' ? 'bg-success' : 'bg-danger' ") {{poll.SLV_RESULTADO}}
+                .form-group.m0
+                  .col-sm-3 Data:
+                  .col-sm-9 {{formattedDate(poll.SLV_DATA_HORA) | date:"dd/MM/yyyy 'às' HH:mm"}}
+                .form-group.m0
+                  .col-sm-3 Objeto:
+                  .col-sm-9 {{poll.SLV_OBJETO_VOTACAO}}
+                .form-group.m0
+                  .col-sm-3 Resultado:
+                  .col-sm-9
+                    a.btn(ui-sref="app.bill.pollDetails({pollID: poll.id})", ng-class="resultado == 'Aprovado' ? 'bg-success' : 'bg-danger' ") {{poll.SLV_RESULTADO}}
       //POLL VIEW END
