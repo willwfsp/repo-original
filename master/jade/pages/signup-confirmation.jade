@@ -1,0 +1,11 @@
+h3.block-center.mt-xl.wd-xxl
+  // START panel
+  .panel.panel-dark.panel-flat
+    .panel-heading.text-center
+      img.block-center.img-rounded.wd-sm(src='app/img/logo.png', alt='Image')
+    .panel-body
+      p.text-center.pv(ng-show="showLoading") Confirmando o seu cadastro...
+        .ball-clip-rotate
+      .alert.alert-danger.text-center(ng-show='authMsg') {{authMsg}}
+      .alert.alert-success.text-center(ng-show='authSucMsg') {{authSucMsg}}
+  // END panel

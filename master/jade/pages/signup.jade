@@ -1,0 +1,92 @@
+.block-center.mt-xl.wd-xxl
+  // START panel
+  .panel.panel-dark.panel-flat
+    .panel-heading.text-center
+      a(href="#")
+        img.block-center.img-rounded.wd-sm(src='app/img/logo.png', alt='Image')
+    .panel-body
+      p.text-center.pv Registre-se para usar o SigaLei.
+      form.form-validate.mb-lg(role='form', name="registerForm", novalidate='', ng-submit="register()")
+        .row
+          .col-md-12
+            .form-group.has-feedback
+              input.form-control(type='user', name="register_username" placeholder='Usuário', autocomplete="off", ng-model="register_username", required='', username-validation)
+              span.fa.fa-user.form-control-feedback.text-muted
+              span.text-danger(ng-show="registerForm.register_username.$dirty && registerForm.register_username.$error.required") &nbsp;&nbsp;Campo Obrigatório
+        .row
+          .col-md-12
+            .form-group.has-feedback
+              input.form-control(type='text', name="register_firstname" placeholder='Nome', ng-model="register_firstname", required='')
+              span.fa.fa-pencil.form-control-feedback.text-muted
+              span.text-danger(ng-show="registerForm.register_firstname.$dirty && registerForm.register_firstname.$error.required") &nbsp;&nbsp;Campo Obrigatório
+        .row
+          .col-md-12
+            .form-group.has-feedback
+              input.form-control(type='text', name="register_lastname" placeholder='Sobrenome', ng-model="register_lastname", required='')
+              span.fa.fa-pencil.form-control-feedback.text-muted
+              span.text-danger(ng-show="registerForm.register_lastname.$dirty && registerForm.register_lastname.$error.required") &nbsp;&nbsp;Campo Obrigatório
+        .row
+          .col-md-12
+            .form-group.has-feedback
+              input.form-control(type='text', name="register_organization", placeholder='Organização (Empresa, Ong, Associação...)', ng-model="register_organization", required='', ng-trim='false')
+              span.fa.fa-building-o.form-control-feedback.text-muted
+              span.text-danger(ng-show="registerForm.register_organization.$dirty && registerForm.register_organization.$error.required") &nbsp;&nbsp;Campo Obrigatório
+        .row
+          .col-md-12
+            .form-group.has-feedback
+              select.form-control(ng-model="register_industry", name="register_industry", ng-options="value for value in industryOptions", required='')
+                option.text-muted(value='') -- Área de Interesse --
+              span.text-danger(ng-show="registerForm.register_industry.$dirty && registerForm.register_industry.$error.required") &nbsp;&nbsp;Campo Obrigatório
+        .row
+          .col-md-12
+            .form-group.has-feedback
+              input.form-control(type='text', name="register_phone" , ng-model="register_phone", required='', number-validation, ui-mask="{{'(99) ?99999-9999' }}")
+              span.fa.fa-phone-square.form-control-feedback.text-muted
+              span.text-danger(ng-show="registerForm.register_phone.$dirty && registerForm.register_phone.$error.required") &nbsp;&nbsp;Campo Obrigatório
+
+        .row
+          .col-md-12
+            .form-group.has-feedback
+              input.form-control(type='email', name="register_email" placeholder='Email', autocomplete="off", ng-model="email", required='')
+              span.fa.fa-envelope.form-control-feedback.text-muted
+              span.text-danger(ng-show="registerForm.register_email.$dirty && registerForm.register_email.$error.required") Campo Obrigatório
+              span.text-danger(ng-show="registerForm.register_email.$dirty && registerForm.register_email.$error.email") E-mail inválido
+        .row
+          .col-md-12
+            .form-group.has-feedback
+              input#id-password.form-control(type='password', name="register_password", ng-model="register_password", ng-pattern="/^[a-zA-Z0-9]{4,18}$/", required='',  placeholder="Senha")
+              span.fa.fa-lock.form-control-feedback.text-muted
+              span.text-danger(ng-show="registerForm.register_password.$dirty && registerForm.register_password.$error.required") Campo Obrigatório
+              span.text-danger(ng-show="registerForm.register_password.$dirty && registerForm.register_password.$error.pattern") Senha pode conter somente os caracteres 'a-zA-Z0-9' e ter o tamanho entre 4-18
+        .row
+          .col-md-12
+            .form-group.has-feedback
+              input.form-control(type='password', name="register_password_confirm", ng-model="register_password_confirm", ui-validate="'$value==register_password'" ui-validate-watch="'password'", placeholder="Confirme a senha")
+              span.fa.fa-lock.form-control-feedback.text-muted
+              span.text-danger(ng-show="registerForm.register_password_confirm.$dirty && registerForm.register_password_confirm.$error.validator") Senhas digitadas são diferentes
+        .clearfix
+          .checkbox.c-checkbox.pull-left.mt0
+            label
+              input(type='checkbox', required='', name="register_agreed", ng-model="account.agreed")
+              span.fa.fa-check
+              |  Eu concordo com os&nbsp;
+              a(href="#") termos
+        .text-danger(ng-show="registerForm.register_agreed.$dirty && registerForm.register_agreed.$error.required") Você deve concordar com os termos
+
+        button.btn.btn-block.btn-primary.mt-lg(type='submit') Criar a conta
+
+      .alert.alert-danger.text-center(ng-show='authMsg') {{authMsg}}
+      .alert.alert-success.text-center(ng-show='authSucMsg') {{authSucMsg}}
+
+      p.pt-lg.text-center Você já tem uma conta?
+      a(ui-sref="page.login").btn.btn-block.btn-default Entrar
+  // END panel
+  .p-lg.text-center
+    span &copy;
+    span(ng-bind="app.year")
+    span  -
+    span(ng-bind="app.name")
+    span -
+    span Openlex
+    br
+    span(ng-bind="app.description")

@@ -111,10 +111,17 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         title: 'Login',
         templateUrl: 'app/pages/login.html'
     })
-    .state('page.register', {
-        url: '/register',
+    .state('page.signup', {
+        url: '/signup',
         title: 'Registrar',
-        templateUrl: 'app/pages/register.html'
+        controller: 'SignupController',
+        templateUrl: 'app/pages/signup.html'
+    })
+    .state('page.signup-confirmation', {
+        url: '/signup/:token',
+        title: 'Registrar',
+        controller: 'SignupConfirmController',
+        templateUrl: 'app/pages/signup-confirmation.html'
     })
     ;
 

@@ -40,7 +40,7 @@ myApp.controller('BillController',
        $scope.billVotingList = data[2].data;
        $scope.docsTableParams.reload();
    });
-    
+
 
 }]);
 
