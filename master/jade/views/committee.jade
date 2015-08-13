@@ -6,17 +6,17 @@ h3 {{committeesDetails.SLC_NOME}}
         .panel.widget
           .panel-heading
               h3 Dados Gerais
-          .panel-body            
+          .panel-body.table-striped     
             .form-horizontal
-              .form-group
-                .col-sm-3.text-right 
+              .form-group.m0
+                .col-sm-3.control-label-sm 
                   label Comissão:
-                .col-sm-9 {{committeesDetails.SLC_NOME}}
+                .col-sm-9.form-control-static-sm {{committeesDetails.SLC_NOME}}
 
-              .form-group
-                .col-sm-3.text-right
+              .form-group.m0
+                .col-sm-3.control-label-sm
                   label Tipo:
-                .col-sm-9 {{committeesDetails.SLC_TIPO_DESC}}
+                .col-sm-9.form-control-static-sm {{committeesDetails.SLC_TIPO_DESC}}
 
       .col-lg-6
         .panel.widget
@@ -25,7 +25,7 @@ h3 {{committeesDetails.SLC_NOME}}
           .panel-body
             .table-responsive
               table.table.table-bordered.table-striped.text-center(ng-table="membersTableParams", show-filter="true")
-                tr(ng-repeat="representative in $data")
+                tr(ng-repeat="representative in $data", ng-hide="!representative.name")
                   td(data-title="'Nome'"     sortable="'name'", filter="{ 'name': 'text' }") 
                     a(ui-sref="app.representative({ id: '{{representative.id}}' })") {{representative.name}}
                   td(data-title="'Cargo'",    sortable="'position'", filter="{ 'position': 'text' }") {{representative.position | capitalize}} 

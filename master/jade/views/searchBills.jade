@@ -85,7 +85,7 @@ h3(ng-init="init()") Pesquisa
 
                         //show coauthors
                         strong(ng-if="hasCoauthors(bill.fields.SLP_AUTOR)") e&nbsp;
-                          a(ng-click="showOtherAuthors = !showOtherAuthors") {{bill.fields.SLP_AUTOR.length - 1}} outros
+                          a(ng-click="showOtherAuthors = !showOtherAuthors") {{bill.fields.SLP_AUTOR.length - 1 > 1 ? bill.fields.SLP_AUTOR.length - 1 + ' outros' : '1 outro'}}
                           div(collapse="!showOtherAuthors")
                             span(ng-init = "mainAuthor = getMainAuthor(bill.fields.SLP_AUTOR)")
                               strong(ng-repeat="author in bill.fields.SLP_AUTOR | orderBy", ng-hide="mainAuthor.name == parseAuthor(author).name")

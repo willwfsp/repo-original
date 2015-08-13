@@ -254,7 +254,8 @@ App.controller('SearchBillsController',
         if($scope.fetchingMore){
             for(i = 0; i < aux.rows.length; i++){
                 $scope.bills.push(aux.rows[i]);
-            }
+            };
+            $scope.bookmark = aux.bookmark;
             $scope.fetchingMore = false;
         }
 
