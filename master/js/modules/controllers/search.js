@@ -3,7 +3,7 @@
  * Searches logic (bills, representatives and comissions)
  =========================================================*/
 
-myApp.controller('SearchBarController',
+App.controller('SearchBarController',
   ['$location', '$log', '$scope','$state',  'DataFetcher',
     function($location, $log, $scope, $state, DataFetcher){
 
@@ -13,7 +13,7 @@ myApp.controller('SearchBarController',
 
 }]);
 
-myApp.controller('SearchBillsController',
+App.controller('SearchBillsController',
   ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal', 'DataFetcher',
     function($http, $stateParams, $location, $scope, $log, $state, $modal, DataFetcher) {
 
@@ -264,7 +264,7 @@ myApp.controller('SearchBillsController',
 
 }]);
 
-myApp.filter('capitalize', function() {
+App.filter('capitalize', function() {
     return function(input, all) {
         var inputAux = "";
         if(input.constructor === Array){

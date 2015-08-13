@@ -4,7 +4,7 @@
 
  =========================================================*/
 
-myApp.factory('DataFetcher',
+App.factory('DataFetcher',
   ['$q','$http', '$log', '$rootScope',
     function($q, $http, $log, $rootScope){
     // Constants...

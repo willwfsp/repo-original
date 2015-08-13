@@ -3,7 +3,7 @@
  * Legislative Houses controller
  =========================================================*/
 
- myApp.controller('CommitteesController',
+ App.controller('CommitteesController',
   ['$scope', '$log', '$stateParams', '$filter', 'ngTableParams', 'DataFetcher',
     function($scope, $log, $stateParams, $filter, ngTableParams, DataFetcher){
     $scope.committeesMembers = [];

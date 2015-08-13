@@ -2,7 +2,7 @@
   // START panel
   .panel.panel-dark.panel-flat
     .panel-heading.text-center
-      a(href="#")
+      a(href="https://sigalei.openlex.com.br")
         img.block-center.img-rounded.wd-sm(src='app/img/logo.png', alt='Image')
     .panel-body
       p.text-center.pv Registre-se para usar o SigaLei.
@@ -80,6 +80,9 @@
 
       p.pt-lg.text-center Você já tem uma conta?
       a(ui-sref="page.login").btn.btn-block.btn-default Entrar
+    .panel-footer
+      a(ui-sref="page.signup-confirmation({token: 'resend'})")
+        p.text-center.text-sm Reenviar email de verificação.
   // END panel
   .p-lg.text-center
     span &copy;
@@ -89,4 +92,8 @@
     span -
     span Openlex
     br
-    span(ng-bind="app.description")
+    span Problemas no cadastro?
+    br
+    span Entre em contato:
+    br
+    span suporte@openlex.com.br

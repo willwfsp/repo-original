@@ -2,13 +2,13 @@
   // START panel
   .panel.panel-dark.panel-flat
     .panel-heading.text-center
-      a(href="#")
+      a(href="https://sigalei.openlex.com.br")
         img.block-center.img-rounded.wd-sm(src='app/img/logo.png', alt='Image')
     .panel-body
       p.text-center.pv LOGIN
       form.form-validate(role='form', ng-submit="login()", name='loginForm', novalidate='').mb-lg
         .form-group.has-feedback
-          input#exampleInputEmail1.form-control(type='loginUser', name="account_login" placeholder='Usuário', autocomplete="off", ng-model="loginUser", required='')
+          input#exampleInputEmail1.form-control(type='loginUser', name="account_login" placeholder='Email/Usuário', autocomplete="off", ng-model="loginUser", required='')
           span.fa.fa-user.form-control-feedback.text-muted
           span.text-danger(ng-show="loginForm.account_login.$dirty && loginForm.account_login.$error.required") Obrigatório
         .form-group.has-feedback
@@ -27,7 +27,7 @@
         button.btn.btn-block.btn-primary.mt-lg(type='submit') Entrar
 
       .alert.alert-danger.text-center(ng-show='authMsg') {{authMsg}}
-      p.pt-lg.text-center Ainda não tem a conta?
+      p.pt-lg.text-center Ainda não tem conta?
       a(ui-sref="page.signup").btn.btn-block.btn-default Registre Agora!
   // END panel
   .p-lg.text-center
@@ -38,4 +38,8 @@
     span -
     span Openlex
     br
-    span(ng-bind="app.description")
+    span Problemas em fazer login?
+    br
+    span Entre em contato:
+    br
+    span suporte@openlex.com.br

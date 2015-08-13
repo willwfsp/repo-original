@@ -2,10 +2,23 @@ h3.block-center.mt-xl.wd-xxl
   // START panel
   .panel.panel-dark.panel-flat
     .panel-heading.text-center
-      img.block-center.img-rounded.wd-sm(src='app/img/logo.png', alt='Image')
+      a(href="https://sigalei.openlex.com.br")
+        img.block-center.img-rounded.wd-sm(src='app/img/logo.png', alt='Image')
     .panel-body
-      p.text-center.pv(ng-show="showLoading") Confirmando o seu cadastro...
+      p.text-center.pv(ng-show="showLoading") Processando...
         .ball-clip-rotate
-      .alert.alert-danger.text-center(ng-show='authMsg') {{authMsg}}
-      .alert.alert-success.text-center(ng-show='authSucMsg') {{authSucMsg}}
+      .alert.alert-danger.text-md.text-center(ng-show='authErrMsg') {{authErrMsg}}
+      .alert.alert-success.text-md.text-center(ng-show='authSucMsg') {{authSucMsg}}
+      .alert.alert-info.text-md.text-center(ng-show='authInfoMsg') {{authInfoMsg}}
+    .panel-footer
+      a(ng-click="openConfirm()")
+        p.text-center.text-sm Reenviar email de verificação.
   // END panel
+
+script(type="text/ng-template", id="modalDialogId")
+  .ngdialog-message
+    h3 Digite o seu e-mail abaixo:
+    input.form-control(type='email', ng-model='confirmValue')
+    p
+    button.btn.btn-primary.mr(type='button', ng-click='confirm(confirmValue)') Reenviar
+    button.btn.btn-default(type='button', ng-click="closeThisDialog('button')") Cancelar

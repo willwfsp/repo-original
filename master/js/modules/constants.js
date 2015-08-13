@@ -42,7 +42,10 @@ App
       {name: 'ui.select',                 files: ['vendor/angular-ui-select/dist/select.js',
                                                   'vendor/angular-ui-select/dist/select.css']},
       {name: 'ngTable',                   files: ['vendor/ng-table/dist/ng-table.min.js',
-                                                  'vendor/ng-table/dist/ng-table.min.css']}
+                                                  'vendor/ng-table/dist/ng-table.min.css']},
+      {name: 'ngDialog',                  files: ['vendor/ngDialog/js/ngDialog.min.js',
+                                                 'vendor/ngDialog/css/ngDialog.min.css',
+                                                 'vendor/ngDialog/css/ngDialog-theme-default.min.css'] }
     ]
 
   })

@@ -32,7 +32,7 @@ App.controller('SignupController', ['$scope', '$http', '$state', '$log', functio
                     $scope.authSucMsg = 'Usuário Criado. Verifique seu email para completar o cadastro';
                 }
             }, function(x) {
-              $scope.authMsg = 'Server Request Error';
+              $scope.authMsg = x.data.error.split(":")[1];
             });
 
         } else {

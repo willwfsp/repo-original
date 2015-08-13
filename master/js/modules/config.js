@@ -121,7 +121,8 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         url: '/signup/:token',
         title: 'Registrar',
         controller: 'SignupConfirmController',
-        templateUrl: 'app/pages/signup-confirmation.html'
+        templateUrl: 'app/pages/signup-confirmation.html',
+        resolve: angular.extend(helper.resolveFor('ngDialog'))
     })
     ;
 

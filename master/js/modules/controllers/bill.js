@@ -3,7 +3,7 @@
  * Bills Details
  =========================================================*/
 
-myApp.controller('BillController',
+App.controller('BillController',
   ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter',
    'ngTableParams', 'DataFetcher',
     function($location,$scope, $state, $stateParams, $log, $http, $filter,
@@ -44,7 +44,7 @@ myApp.controller('BillController',
 
 }]);
 
-myApp.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'ngTableParams',
+App.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'ngTableParams',
     function($scope, $log, DataFetcher, $filter, $stateParams, ngTableParams) {
 
     $scope.pollData = {};
@@ -84,7 +84,7 @@ myApp.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$fi
     };
 }]);
 
-myApp.filter('houseFullName', function() {
+App.filter('houseFullName', function() {
     return function(input, all) {
         switch(input){
             case "CD": return "Câmara dos Deputados";   break;

@@ -13,7 +13,7 @@ if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript 
 // APP START
 // -----------------------------------
 
-var App = angular.module('angle', [
+var App = angular.module('sigaLeiApp', [
     'ngRoute',
     'ngAnimate',
     'ngStorage',

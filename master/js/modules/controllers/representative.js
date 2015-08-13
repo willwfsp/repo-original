@@ -3,7 +3,7 @@
  * Representative details
  =========================================================*/
 
-myApp.controller('RepresentativeDataController',
+App.controller('RepresentativeDataController',
   ['$scope','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', "colors",
     function($scope, $rootScope, $stateParams, $log, $http, DataFetcher, colors){
     $scope.dados = {};
@@ -44,7 +44,7 @@ myApp.controller('RepresentativeDataController',
 
 }]);
 
-myApp.filter('emailFilter', function() {
+App.filter('emailFilter', function() {
     return function(input, all) {
         var inputAux = "";
         if(input){
@@ -61,7 +61,7 @@ myApp.filter('emailFilter', function() {
   }
 );
 
-myApp.filter('ageFilter', function() {
+App.filter('ageFilter', function() {
      function calculateAge(birthdayString) { // birthday is a date
          birthday = new Date(birthdayString);
          var ageDifMs = Date.now() - birthday.getTime();
@@ -74,14 +74,14 @@ myApp.filter('ageFilter', function() {
      };
 });
 
-myApp.filter('statusDesc', function() {
+App.filter('statusDesc', function() {
     return function(input, attribute) {
         return input[attribute].DESC;
     }
 });
 
 
-myApp.filter('orderObjectBy', function(){
+App.filter('orderObjectBy', function(){
  return function(input, attribute) {
     if (!angular.isObject(input)) return input;
 

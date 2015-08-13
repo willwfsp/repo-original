@@ -3,7 +3,7 @@
  * Legislative Houses controller
  =========================================================*/
 
-myApp.controller('HouseDataController',
+App.controller('HouseDataController',
   ['$scope','$rootScope', '$stateParams', '$filter', 'ngTableParams', '$log', '$http', 'DataFetcher',
     function($scope, $rootScope, $stateParams, $filter, ngTableParams, $log, $http, DataFetcher){
 
@@ -91,7 +91,7 @@ myApp.controller('HouseDataController',
         //parsing house events
         var aux = [];
         for(var i = 0; i < $scope.houseEvents.length; i++){
-        	
+
         	var evento = {};
         	evento.name = $scope.houseEvents[i].key[4];
         	evento.place = $scope.houseEvents[i].key[3];
