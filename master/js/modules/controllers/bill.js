@@ -89,7 +89,7 @@ App.filter('houseFullName', function() {
         switch(input){
             case "CD": return "Câmara dos Deputados";   break;
             case "SF": return "Senado Federal";         break;
-            case "MG": return "Minas Gerais";           break;
+            case "MG": return "ALMG";                   break;
             case "SP": return "ALESP";                  break;
             default: return "";
         }

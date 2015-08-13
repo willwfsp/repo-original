@@ -68,11 +68,11 @@ h3(data-ng-init="fetchData()")
                 .col-sm-9.form-control-static-sm.m0
                   p {{dados.SLP_EMENTA}}
 
-              .form-group.m0.custom-stripe(ng-if="dados.SLP_EMENTA_EXPLICACAO")
+              .form-group.m0.custom-stripe(ng-if="dados.SLP_EXPLICACAO_EMENTA")
                 .col-sm-3.control-label-sm.m0
-                  label Ementa:
+                  label Explicação:
                 .col-sm-9.form-control-static-sm.m0
-                  p {{dados.SLP_EMENTA_EXPLICACAO}}
+                  p {{dados.SLP_EXPLICACAO_EMENTA}}
       //GENERAL INFO VIEW END
 
       //TRAMIT VIEW START
@@ -87,7 +87,7 @@ h3(data-ng-init="fetchData()")
                 // START timeline item
                 li
                   .timeline-panel
-                    .pull-left.timeline-custom-date.text-center {{tramitacao.doc.SLT_DATA_TRAMITACAO.replace(" ", "T") | date: 'MMM dd'}}
+                    .pull-left.timeline-custom-date.text-center {{tramitacao.doc.SLT_DATA_TRAMITACAO.replace(" ", "T") | date: 'MMM dd' | capitalize}}
                     .timeline-custom-badge
                     .popover(ng-class="timelineAlt ? 'right' : 'left'")
                       h4.popover-title(ng-if="tramitacao.doc.SLT_ORGAO_ORIGEM_DESC")
@@ -139,7 +139,7 @@ h3(data-ng-init="fetchData()")
                       span(ng-if="data.ORGAO") {{data.ORGAO}} - &nbsp;
                       | {{data.ORG_DESC}}
 
-                .form-group.m0(ng-if="data.FASE")
+                .form-group.m0(ng-if="data.FASE && data.FASE != '---' ")
                   .col-sm-3.control-label-sm.m0
                     label Fase:
                   .col-sm-9.form-control-static-sm.m0
