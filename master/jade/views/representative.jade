@@ -2,7 +2,9 @@ h3 {{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIVIL}}
 .row
   .col-lg-12
     .row
+      // Column 1 START
       .col-lg-6
+        // Dados Gerais START
         .panel.widget
           .panel-body
             .form-horizontal
@@ -31,45 +33,52 @@ h3 {{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIVIL}}
                     tr
                       td.text-bold  Email:
                       td &nbsp;&nbsp;{{dados.SLPa_EMAIL | emailFilter}}
+        // Dados Gerais END
+
+        // Mandatos START
         .panel.widget
           .panel-heading
             h3 Mandatos
           .panel-body
-            table(class='table')
-              thead
-                tr.text-center
-                  td Assembleia
-                  td Cargo
-                  td Legislatura
-                  td Partido
-                  td UF
-                  td Situação
-              tr.text-center(ng-repeat="item in terms")
-                td(data-title="'Assembleia'") {{item.doc.SLM_ASSEMBLEIA.SLAs_NOME}}
-                td(data-title="'Cargo'") {{item.doc.SLM_CARGO}}
-                td(data-title="'Legislatura'") {{item.doc.SLM_LEGISLATURA}}
-                td(data-title="'Partido'") {{item.doc.SLM_PARLAMENTAR.SLPa_PARTIDO}}
-                td(data-title="'UF'") {{item.doc.SLM_UF_REP}}
-                td(data-title="'Situação'") {{item.doc.SLM_STATUS}}
+            .table-responsive
+              table.table.table-striped.table-bordered.ng-table
+                thead
+                  tr
+                    th.text-center Assembleia
+                    th.text-center Cargo
+                    th.text-center Legislatura
+                    th.text-center Partido
+                    th.text-center UF
+                    th.text-center Situação
+                tbody
+                  tr.text-center(ng-repeat="item in terms")
+                    td {{item.doc.SLM_ASSEMBLEIA.SLAs_NOME}}
+                    td {{item.doc.SLM_CARGO}}
+                    td {{item.doc.SLM_LEGISLATURA}}
+                    td {{item.doc.SLM_PARLAMENTAR.SLPa_PARTIDO}}
+                    td {{item.doc.SLM_UF_REP}}
+                    td {{item.doc.SLM_STATUS}}
+        // Mandatos END
+
+        // Comissoes START
         .panel.widget
           .panel-heading
             h3 Comissões que participa
           .panel-body
-            table(class='table')
-              thead
-                tr.text-center
-                  td Assembleia
-                  td Comissão
-                  td Cargo
-                  td Situação
-              tr.text-center(ng-repeat="item in committeesRepresentative | orderBy:'-doc.SLMc_STATUS'")
-                td(data-title="'Assembleia'") {{item.doc.SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA}}
-                td(data-title="'Comissão'")
-                  a(ui-sref="app.committee({ house:item.doc.SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA, committeeID: item.doc.SLMc_COMISSAO.SLC_COD_REF })")
-                    | {{item.doc.SLMc_COMISSAO.SLC_NOME}}
-                td(data-title="'Cargo'") {{item.doc.SLMc_CARGO}}
-                td(data-title="'Situação'") {{item.doc.SLMc_STATUS}}
+            table.table.table-striped.table-bordered(ng-table='committeesTableParams', show-filter="true")
+              tr.text-center(ng-repeat="item in $data")
+                td(data-title="'Assembleia'", sortable="'SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA'", filter="{ 'SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA': 'text' }") {{item.SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA | houseFullName}}
+                td(data-title="'Comissão'", sortable="'SLMc_COMISSAO.SLC_NOME'", filter="{ 'SLMc_COMISSAO.SLC_NOME': 'text' }")
+                  a(ui-sref="app.committee({ house:item.SLMc_COMISSAO.SLC_ASSEMBLEIA.SLAs_SIGLA, committeeID: item.SLMc_COMISSAO.SLC_COD_REF })")
+                    | {{item.SLMc_COMISSAO.SLC_NOME | limitTo: 100}} {{item.SLMc_COMISSAO.SLC_NOME.length > 100 ? "..." : ""}}
+                td(data-title="'Cargo'", sortable="'SLMc_CARGO'", filter="{ 'SLMc_CARGO': 'text' }") {{item.SLMc_CARGO | capitalize}}
+                td(data-title="'Situação'", sortable="'SLMc_STATUS'", filter="{ 'SLMc_STATUS': 'text' }") {{item.SLMc_STATUS}}
+        // Comissoes END
+      // Column 1 END
+
+      // Column 2 START
       .col-lg-6
+        // Atuacao START
         .panel.widget
           .panel-heading
             .row
@@ -92,27 +101,25 @@ h3 {{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIVIL}}
                   tr(ng-repeat="item in themeData | orderObjectBy:'value'")
                     td {{item.key}}
                     td {{item.value}}
-
+        // Atuacao END
+        // Proposicoes START
         .panel.widget
           .panel-heading
             h3 Proposições de sua Autoria
           .panel-body
             .table-responsive
-              table.table
-                thead
-                  tr.text-center
-                    td Proposição
-                    td Data de Apresentação
-                    td Tema
-                    td Situação
-                tr.text-center(ng-repeat="item in billsRepresentative | orderBy:'-doc.SLP_DATA_APRESENTACAO'")
-                  td
-                    a(ui-sref="app.bill({ billName:item.doc.SLP_NOME})")
-                      | {{item.doc.SLP_NOME}}
-                  td {{item.doc.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}
-                  td {{item.doc.SLP_SL_SUBTEMA}}
-                  td {{item.doc.SLP_STATUS | statusDesc:item.doc.SLP_CASA_SIGLA}}
+              table.table.table-striped.table-bordered(ng-table='billsTableParams', show-filter="true")
+                tr.text-center(ng-repeat="item in $data")
+                  td(data-title=" 'Nome' ", sortable="'SLP_NOME'", filter="{ 'SLP_NOME': 'text' }")
+                    a(ui-sref="app.bill({ billName:item.SLP_NOME})")
+                      | {{item.SLP_NOME}}
+                  td(data-title=" 'Apresentação' ", sortable="'SLP_DATA_APRESENTACAO'", filter="{ 'SLP_DATA_APRESENTACAO': 'text' }") {{item.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}
+                  td(data-title=" 'Tema' ", sortable="'SLP_SL_SUBTEMA'", filter="{ 'SLP_SL_SUBTEMA': 'text' }") {{item.SLP_SL_SUBTEMA}}
+                  td(data-title=" 'Situação' ", sortable="'SLP_STATUS'", filter="{ 'SLP_STATUS': 'text' }") {{item.SLP_STATUS | statusDesc:item.SLP_CASA_SIGLA}}
+                  td(data-title=" 'Ementa' ", sortable="'SLP_EMENTA'", filter="{ 'SLP_EMENTA': 'text' }") {{item.SLP_EMENTA | limitTo: 60}} {{ item.SLP_EMENTA.length > 20? ' ...' : ''}}
+        // Proposicoes END
 
+      // Column 2 END
 
 
 

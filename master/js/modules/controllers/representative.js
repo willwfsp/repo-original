@@ -4,12 +4,14 @@
  =========================================================*/
 
 App.controller('RepresentativeDataController',
-  ['$scope','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', "colors",
-    function($scope, $rootScope, $stateParams, $log, $http, DataFetcher, colors){
+  ['$scope','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', 'colors', '$filter', 'ngTableParams',
+    function($scope, $rootScope, $stateParams, $log, $http, DataFetcher, colors, $filter, ngTableParams){
     $scope.dados = {};
     $scope.dados._id = $stateParams.id;
     $scope.pieData =[];
     $scope.themeData = [];
+    $scope.billsRepresentative = [];
+    $scope.committeesRepresentative = [];
 
     $scope.pieOptions = {
         segmentShowStroke : true,
@@ -22,13 +24,71 @@ App.controller('RepresentativeDataController',
         animateScale : false
     };
 
+    $scope.committeesTableParams = new ngTableParams({
+        page: 1,
+        count: 10,
+        sorting: {SLP_DATA_APRESENTACAO: 'des'}
+    }, {
+        total: $scope.committeesRepresentative,
+        counts: [],
+        getData: function($defer, params){
+
+            var filteredData = $scope.committeesRepresentative;
+            if (params.filter() ){
+                filteredData = $filter('filter')($scope.committeesRepresentative, params.filter());
+            }
+
+            var orderedData = params.sorting() ?
+                $filter('orderBy')(filteredData, params.orderBy()) :
+                filteredData;
+
+            params.total(orderedData.length); // set total for recalc pagination
+            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
+
+    $scope.billsTableParams = new ngTableParams({
+        page: 1,
+        count: 10,
+        sorting: {SLP_DATA_APRESENTACAO: 'des'}
+    }, {
+        total: $scope.billsRepresentative,
+        counts: [],
+        getData: function($defer, params){
+
+            var filteredData = $scope.billsRepresentative;
+            if (params.filter() ){
+                filteredData = $filter('filter')($scope.billsRepresentative, params.filter());
+            }
+
+            var orderedData = params.sorting() ?
+                $filter('orderBy')(filteredData, params.orderBy()) :
+                filteredData;
+
+            params.total(orderedData.length); // set total for recalc pagination
+            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
+
     DataFetcher.fetchDataRepresentative($stateParams.id).then(function(data) {
-        console.log(data)
+        console.log(data);
         $scope.dados = data[0].data;
         $scope.themeData = data[1].data;
         $scope.terms = data[2].data;
-        $scope.billsRepresentative = data[3].data;
-        $scope.committeesRepresentative = data[4].data;
+        //$scope.billsRepresentative = data[3].data;
+        //$scope.committeesRepresentative = data[4].data;
+
+        //insert representative's bills into variable
+        for(var i = 0; i < data[3].data.length; i++){
+          $scope.billsRepresentative.push(data[3].data[i].doc);
+        };
+        $scope.billsTableParams.reload();
+
+        //insert committees the representative participate into variable
+        for(var i = 0; i < data[4].data.length; i++){
+          $scope.committeesRepresentative.push(data[4].data[i].doc);
+        };
+        $scope.committeesTableParams.reload();
 
         $scope.themeData.forEach(function(item){
             var colorAux = colors.byName('random');
@@ -41,6 +101,7 @@ App.controller('RepresentativeDataController',
             $scope.pieData.push(aux);
         });
     });
+
 
 }]);
 

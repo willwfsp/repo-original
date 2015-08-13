@@ -5,10 +5,18 @@
 body {
   
   // Basic styles override
+  .ng-table th{
+    background-color: fade(lighten(@sigalei-green, 10%), 30%);
+    color: #fff;
+  }
+  .ng-table th.filter{
+    background-color: #fff;
+  }
   .ng-table th.sortable.sort-desc,
   .ng-table th.sortable.sort-asc {
-    background-color: #fff;
+    background-color: fade(@sigalei-green, 70%);
     text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+    color: #fff;
   }
 
   .ng-table th.sortable div:after,
