@@ -71,7 +71,7 @@ App.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$filt
                     filteredData;
 
                 params.total(orderedData.length); // set total for recalc pagination
-                $defer.resolve(orderedData);
+                $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()) );
             }
     });
 

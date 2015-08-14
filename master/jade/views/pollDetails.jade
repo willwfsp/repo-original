@@ -25,7 +25,7 @@
     .panel-body
       .table-responsive
         table.table.table-striped(ng-table="pollTableParams", show-filter="true")
-          tr(ng-repeat="representative in $data")
+          tr.text-center(ng-repeat="representative in $data")
             td(data-title="'Nome'"     sortable="'PARLAMENTAR_NOME'", filter="{ 'PARLAMENTAR_NOME': 'text' }") 
               p(ng-if="representative._id === undefined") {{representative.PARLAMENTAR_NOME}}
               a(ui-sref="app.representative({ id: '{{representative._id}}' })", ng-if="representative._id != undefined") {{representative.PARLAMENTAR_NOME}}  

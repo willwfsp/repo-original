@@ -9,10 +9,9 @@ App.factory('DataFetcher',
     function($q, $http, $log, $rootScope){
     // Constants...
     var service = {};
-
     var baseUrl = "https://sigalei-api.mybluemix.net/v1/";
-    var databaseToken = "admin@sigalei";
-
+    var databaseToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im10YWthdGEiLCJlbWFpbCI6Im1hdGhldXN0YWthdGFAZ21haWwuY29tIiwiaWF0IjoxNDM5NTcxMjcwLCJleHAiOjE0Mzk1ODU2NzB9.eTaAzxcFFsoHIIxNCFtk9M7BxHiAuCwEH6UG4yOPDeg";
+    $http.defaults.headers.common.authorization = " Bearer " + databaseToken;
     // "Private" Variables
     var _billSearchResults = {};
 
@@ -22,11 +21,11 @@ App.factory('DataFetcher',
         var path = "proposicoes";
         var url = "";
         if(termos){
-            query = '&q=' + termos;
-        }
+            query = '?q=' + termos;
+        }   
 
-        url = baseUrl + path + '?access_token=' + databaseToken + query;
-
+        url = baseUrl + path + query;
+        console.log(filters);
         return $http.post(url, filters).then(function(result) {
             _billSearchResults = result.data;
             $rootScope.$broadcast("fetch billSearchResults:completed");
@@ -38,12 +37,9 @@ App.factory('DataFetcher',
 
     service.fetchBill = function(nome){
 
-        var promiseBillDetails = $http.get(baseUrl + "proposicoes/" + nome +
-            '?access_token=' + databaseToken);
-        var promiseBillTrack = $http.get(baseUrl + "proposicoes/" + nome + "/tramitacao" +
-            '?access_token=' + databaseToken);
-        var promiseBillPollList = $http.get(baseUrl + "proposicoes/" + nome + "/votacao" +
-            '?access_token=' + databaseToken);
+        var promiseBillDetails = $http.get(baseUrl + "proposicoes/" + nome);
+        var promiseBillTrack = $http.get(baseUrl + "proposicoes/" + nome + "/tramitacao");
+        var promiseBillPollList = $http.get(baseUrl + "proposicoes/" + nome + "/votacao");
 
         var defer = $q.defer();
 
@@ -58,8 +54,7 @@ App.factory('DataFetcher',
 
     service.fetchDataPollDetails = function(id){
         var result;
-        return $http.get(baseUrl + "proposicoes/votacao/" + id +
-            '?access_token=' + databaseToken).then(function(result) {
+        return $http.get(baseUrl + "proposicoes/votacao/" + id).then(function(result) {
 
             return result.data;
         },
@@ -69,16 +64,17 @@ App.factory('DataFetcher',
     };
 
     service.fetchDataRepresentative = function(id){
-        var promiseRepresentativeDetails = $http.get(baseUrl + "parlamentares/" + id +
-            '?access_token=' + databaseToken);
-        var promiseRepresentativeTemas = $http.get(baseUrl + "parlamentares/" + id + "/temas" +
-            '?access_token=' + databaseToken);
+        var promiseRepresentativeDetails = $http.get(baseUrl + "parlamentares/" + id);
+        var promiseRepresentativeTemas = $http.get(baseUrl + "parlamentares/" + id + "/temas");
         var promiseRepresentativeMandatos = $http.get(baseUrl + "parlamentares/" + id +
-            "/mandatos" + '?access_token=' + databaseToken);
+            "/mandatos");
         var promiseRepresentativeProposicoes = $http.get(baseUrl + "parlamentares/" + id +
-            "/proposicoes" + '?access_token=' + databaseToken);
+            "/proposicoes");
         var promiseRepresentativeCommittees = $http.get(baseUrl + "parlamentares/" + id +
-            "/comissoes" + '?access_token=' + databaseToken);
+            "/comissoes");
+
+        var promiseRepresentativePhoto = $http.get(baseUrl + "parlamentares/" + id +
+            "/foto");
 
         var defer = $q.defer();
 
@@ -86,7 +82,8 @@ App.factory('DataFetcher',
                  promiseRepresentativeTemas,
                  promiseRepresentativeMandatos,
                  promiseRepresentativeProposicoes,
-                 promiseRepresentativeCommittees])
+                 promiseRepresentativeCommittees,
+                 promiseRepresentativePhoto])
           .then(function(results) {
             defer.resolve(results);
 
@@ -98,16 +95,12 @@ App.factory('DataFetcher',
     service.fetchDataHouseDetails = function(houseId){
         var result;
 
-        var promiseHouseDetails = $http.get(baseUrl + "assembleias/" + houseId +
-            '?access_token=' + databaseToken);
-        var promiseHouseEvents = $http.get(baseUrl + "eventos/" + houseId +
-            '?access_token=' + databaseToken);
+        var promiseHouseDetails = $http.get(baseUrl + "assembleias/" + houseId);
+        var promiseHouseEvents = $http.get(baseUrl + "eventos/" + houseId);
         var promiseHouseCommittees = $http.get(baseUrl + "comissoes" +
-            '?access_token=' + databaseToken +
-            "&sigla=" + houseId);
+            "?sigla=" + houseId);
         var promiseHouseMembers = $http.get(baseUrl + "parlamentares" +
-            '?access_token=' + databaseToken +
-            "&casa=" + houseId);
+            "?casa=" + houseId);
 
         var defer = $q.defer();
 
@@ -126,9 +119,9 @@ App.factory('DataFetcher',
     service.fetchCommitteeDetails = function(house, committeeID){
 
         var promiseCommitteeDetails = $http.get(baseUrl + "comissoes/" + house +
-            "/" + committeeID + '?access_token=' + databaseToken);
+            "/" + committeeID);
         var promiseCommmitteeMembers = $http.get(baseUrl + "comissoes/" + house +
-            "/" + committeeID + "/parlamentares" + '?access_token=' + databaseToken);
+            "/" + committeeID + "/parlamentares");
 
 
         var defer = $q.defer();

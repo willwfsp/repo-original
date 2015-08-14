@@ -48,7 +48,10 @@ App.controller('AppController',
     $rootScope.$on('$stateChangeSuccess',
       function(event, toState, toParams, fromState, fromParams) {
         // display new view from top
-        $window.scrollTo(0, 0);
+        if(! toState.name == 'app.bill.pollDetails'){
+
+          $window.scrollTo(0, 0);
+        }
         // Save the route title
         $rootScope.currTitle = $state.current.title;
       });

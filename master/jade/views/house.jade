@@ -33,7 +33,7 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
             tr(ng-repeat="representative in $data")
               td(data-title=" 'Nome' ", sortable="'nome'", filter="{ 'nome': 'text' }")
                 a(ui-sref="app.representative({ id: '{{representative._id}}' })") {{representative.nome}}
-              td(data-title=" 'Legislatura' ", sortable="'legislatura'", filter="{ 'legislatura': 'text' }") {{representative.legislatura}}
+              td(data-title=" 'Legislatura' ", sortable="'legislatura'", filter="{ 'legislatura': 'text' }") {{representative.legislatura[0]}}
               td(data-title=" 'Cargo' ", sortable="'cargo'", filter="{ 'cargo': 'text' }") {{representative.cargo}}
               td(data-title=" 'Situação' ", sortable="'status'", filter="{ 'status': 'text' }") {{representative.status}}
 
