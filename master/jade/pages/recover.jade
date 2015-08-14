@@ -1,0 +1,37 @@
+.block-center.mt-xl.wd-xl
+  // START panel
+  .panel.panel-dark.panel-flat
+    .panel-heading.text-center
+      a(href="https://sigalei.openlex.com.br")
+        img.block-center.img-rounded.wd-sm(src='app/img/logo.png', alt='Image')
+    .panel-body
+      p.text-center.pv Recuperar a Senha
+      form.form-validate(role='form', name="recoverForm", novalidate='', ng-submit="recover()")
+        .form-group.has-feedback
+          label.text-muted Email
+          input.form-control(type='email', name='email', placeholder='Digite seu email', autocomplete="off", ng-model="recover.email", required='')
+          span.fa.fa-envelope.form-control-feedback.text-muted
+          span.text-danger(ng-show="recoverForm.email.$dirty && recoverForm.email.$error.required") Campo Obrigatório
+          span.text-danger(ng-show="recoverForm.email.$dirty && recoverForm.email.$error.email") Email inválido
+        button.btn.btn-block.btn-primary.mt-lg(type='submit') Recuperar
+        div.text-center(ng-if="showLoading")
+          .ball-clip-rotate
+            div
+          p Carregando...
+      br
+      .alert.alert-success.text-center(ng-show='authSucMsg') {{authSucMsg}}
+      .alert.alert-danger.text-center(ng-show='authErrMsg') {{authErrMsg}}
+  // END panel
+  .p-lg.text-center
+    span &copy;
+    span(ng-bind="app.year")
+    span  -
+    span(ng-bind="app.name")
+    span -
+    span Openlex
+    br
+    span Problemas?
+    br
+    span Entre em contato:
+    br
+    span suporte@openlex.com.br

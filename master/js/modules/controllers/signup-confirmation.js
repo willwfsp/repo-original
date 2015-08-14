@@ -4,8 +4,8 @@
  =========================================================*/
 
 App.controller('SignupConfirmController',
-  ['$scope', '$http', '$state', '$log', '$state', '$stateParams', '$timeout', 'ngDialog',
-    function($scope, $http, $state, $log, $state, $stateParams, $timeout, ngDialog) {
+  ['$scope', '$http', '$log', '$state', '$stateParams', '$timeout', 'ngDialog',
+    function($scope, $http, $log, $state, $stateParams, $timeout, ngDialog) {
 
     var token = $stateParams.token;
     $scope.showLoading = true;
@@ -31,7 +31,9 @@ App.controller('SignupConfirmController',
                         $scope.showLoading = false;
                     }, function(x) {
                         if( x.data.error == "email: already valid"){
-                            $scope.authInfoMsg = "E-mail já validado.";
+                            $scope.authSucMsg = "E-mail já validado.";
+                            $timeout(function(){$state.go("page.login")}, 2000);
+
 
                         }else{
                             $scope.authErrMsg = "E-mail Inválido.";
@@ -69,7 +71,7 @@ App.controller('SignupConfirmController',
                 if ( response.status == "200" ) {
                     $scope.authSucMsg = 'Email Validado! Redirecionando...';
                     $scope.showLoading = false;
-                    $timeout(function(){$state.go("page.login")}, 3000);
+                    $timeout(function(){$state.go("page.login")}, 2000);
                 } else{
                     $scope.authErrMsg  = 'Token Inválido. Cheque o seu email para recuperar o token correto.';
                     $scope.showLoading = false;

@@ -28,7 +28,9 @@ var App = angular.module('sigaLeiApp', [
     'ui.utils'
   ]);
 
-App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', function ($rootScope, $state, $stateParams, $window, $templateCache) {
+App.run(
+  ["$rootScope", "$state", "$stateParams",  '$window', '$templateCache',
+    function ($rootScope, $state, $stateParams, $window, $templateCache) {
     // Set reference to access them from any scope
     $window.localStorage.clear();
     $rootScope.$state = $state;
@@ -63,5 +65,7 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
       hiddenFooter: false,
       viewAnimation: 'ng-fadeInUp'
     };
+    $rootScope.user = {};
+
 
 }]);

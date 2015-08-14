@@ -13,15 +13,5 @@ h3.block-center.mt-xl.wd-xxl
       .alert.alert-danger.text-md.text-center(ng-show='authErrMsg') {{authErrMsg}}
       .alert.alert-success.text-md.text-center(ng-show='authSucMsg') {{authSucMsg}}
       .alert.alert-info.text-md.text-center(ng-show='authInfoMsg') {{authInfoMsg}}
-    .panel-footer
-      a(ng-click="openConfirm()")
-        p.text-center.text-sm Reenviar email de verificação.
-  // END panel
 
-script(type="text/ng-template", id="modalDialogId")
-  .ngdialog-message
-    h3 Digite o seu e-mail abaixo:
-    input.form-control(type='email', ng-model='confirmValue')
-    p
-    button.btn.btn-primary.mr(type='button', ng-click='confirm(confirmValue)') Reenviar
-    button.btn.btn-default(type='button', ng-click="closeThisDialog('button')") Cancelar
+  // END panel

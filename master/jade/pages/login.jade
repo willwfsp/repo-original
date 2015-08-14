@@ -5,7 +5,7 @@
       a(href="https://sigalei.openlex.com.br")
         img.block-center.img-rounded.wd-sm(src='app/img/logo.png', alt='Image')
     .panel-body
-      p.text-center.pv LOGIN
+      p.text-center.pv Login
       form.form-validate(role='form', ng-submit="login()", name='loginForm', novalidate='').mb-lg
         .form-group.has-feedback
           input#exampleInputEmail1.form-control(type='loginUser', name="account_login" placeholder='Email/Usuário', autocomplete="off", ng-model="loginUser", required='')
@@ -25,10 +25,18 @@
             a.text-muted(ui-sref="page.recover") Esqueceu a senha?
 
         button.btn.btn-block.btn-primary.mt-lg(type='submit') Entrar
+        div.text-center(ng-if="showLoading")
+          .ball-clip-rotate
+            div
+          p Carregando...
 
       .alert.alert-danger.text-center(ng-show='authMsg') {{authMsg}}
+      .alert.alert-info.text-center(ng-show='authInfoMsg') {{authInfoMsg}}
       p.pt-lg.text-center Ainda não tem conta?
       a(ui-sref="page.signup").btn.btn-block.btn-default Registre Agora!
+    .panel-footer(ng-if="showFooter")
+      a(ui-sref="page.signup-confirmation({token: 'resend'})")
+        p.text-center.text-sm Reenviar email de verificação.
   // END panel
   .p-lg.text-center
     span &copy;
@@ -38,7 +46,7 @@
     span -
     span Openlex
     br
-    span Problemas em fazer login?
+    span Problemas?
     br
     span Entre em contato:
     br

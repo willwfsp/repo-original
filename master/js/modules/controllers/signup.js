@@ -3,18 +3,21 @@
  * Controller to register in SigaLei app
  =========================================================*/
 
-App.controller('SignupController', ['$scope', '$http', '$state', '$log', function($scope, $http, $state, $log) {
+App.controller('SignupController',
+  ['$scope', '$http', '$state', '$log', 'ngDialog',
+    function($scope, $http, $state, $log, ngDialog) {
 
     // bind here all data from the form
     $scope.account = {};
     // place the message if something goes wrong
     $scope.authMsg = '';
-
+    $scope.showLoading = false;
     $scope.register = function() {
         $scope.authMsg = '';
         $scope.authSucMsg = '';
 
         if($scope.registerForm.$valid) {
+            $scope.showLoading = true;
             var user = {}
             user.name = $scope.registerForm.register_username.$modelValue;
             user.firstname = $scope.registerForm.register_firstname.$modelValue;
@@ -30,9 +33,11 @@ App.controller('SignupController', ['$scope', '$http', '$state', '$log', functio
 
                 if ( response.status == "201" ) {
                     $scope.authSucMsg = 'Usuário Criado. Verifique seu email para completar o cadastro';
+                    $scope.showLoading = false;
                 }
             }, function(x) {
-              $scope.authMsg = x.data.error.split(":")[1];
+                $scope.showLoading = false;
+                $scope.authMsg = x.data.error.split(":")[1];
             });
 
         } else {
@@ -48,46 +53,18 @@ App.controller('SignupController', ['$scope', '$http', '$state', '$log', functio
             $scope.registerForm.register_agreed.$dirty = true;
         }
     };
-  $scope.industryOptions = [
+    $scope.industryOptions = [
       "Acordos Internacionais", "Agricultura", "Agrotóxico", "Alimentício", "Automotivo", "Aviação", "Bancário", "Bebidas", "Bens de consumo", "Biotecnologia", "Comércio", "Comunicação", "Conglomerados empresariais", "Construção", "Consultoria", "Cosmético", "Eletrônicos", "Energia", "Engenharia", "Entretenimento", "Farmacêutico", "Federações e Associações", "Finanças", "Fumo", "Governamental", "Máquinas", "Mineração", "Naval", "Óleo e Gás", "ONGs (Terceiro Setor)", "Outros", "Químico", "Saúde", "Seguros", "Sindicatos", "Tecnologia", "Telecomunicações", "Transportes", "Tributário"
-  ]
+    ]
+
+    $scope.openTerms = function () {
+        ngDialog.open({
+            template: 'modalDialogTermId',
+            className: 'ngdialog-theme-default'
+        });
+    };
 
 }]);
-
-App.directive('numberValidation', function(){
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attrs, modelCtrl) {
-            modelCtrl.$parsers.push(function (inputValue) {
-                var transformedInput = /^\d+$/.test(inputValue);
-                if (!transformedInput) {
-                    modelCtrl.$setViewValue(inputValue.replace(/[^0-9\.]+/g, ''));
-                    modelCtrl.$render();
-                }
-                return inputValue;
-            });
-        }
-    };
-});
-
-App.directive('usernameValidation', function(){
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attrs, modelCtrl) {
-
-            modelCtrl.$parsers.push(function (inputValue) {
-
-                inputValue = inputValue.toLowerCase().replace(/\s+/g,'');
-                var transformedInput = /^\d+$/.test(inputValue.slice(-1));
-
-                modelCtrl.$setViewValue(inputValue);
-                modelCtrl.$render();
-                return inputValue;
-
-            });
-        }
-    };
-});
 
 App.filter('tel', function () {
     return function (tel) {

@@ -70,11 +70,14 @@
               input(type='checkbox', required='', name="register_agreed", ng-model="account.agreed")
               span.fa.fa-check
               |  Eu concordo com os&nbsp;
-              a(href="#") termos
+              a(ng-click="openTerms()") termos
         .text-danger(ng-show="registerForm.register_agreed.$dirty && registerForm.register_agreed.$error.required") Você deve concordar com os termos
 
         button.btn.btn-block.btn-primary.mt-lg(type='submit') Criar a conta
-
+        div.text-center(ng-if="showLoading")
+          .ball-clip-rotate
+            div
+          p Carregando...
       .alert.alert-danger.text-center(ng-show='authMsg') {{authMsg}}
       .alert.alert-success.text-center(ng-show='authSucMsg') {{authSucMsg}}
 
@@ -92,8 +95,27 @@
     span -
     span Openlex
     br
-    span Problemas no cadastro?
+    span Problemas?
     br
     span Entre em contato:
     br
     span suporte@openlex.com.br
+
+script(type="text/ng-template", id="modalDialogTermId")
+  .ngdialog-message
+    h3 Termos e Condições de uso da ferramenta SigaLei.
+    p Este termo regulamenta o uso da ferramenta SigaLei que é de propriedade da empresa Openlex. A empresa Openlex oferece uma página web no endereço www.openlex.com.br o acesso à ferramenta SigaLei. A ferramenta é atualmente gratuita e seu uso estará sujeito ao seu comprometimento com os termos e condições a seguir.
+    p 1. Ao clicar em CONCORDO e realizar o acesso da ferramenta SigaLei, o usuário declara de forma irretratável e irrevogável que leu e está de acordo com os termos e condições de uso e se responsabiliza em garantir que os termos e condições sejam lidos com regularidade;
+    p 2. Não são oferecidas garantias de que o site www.openlex.com.br oferecerá acesso ininterrupto para acesso ao formulário de download da SigaLei;
+    p 3. Ao solicitar o acesso à SigaLei, o usuário é direcionado para um formulário que deverá ser preenchido, sendo que não são oferecidas garantias de que o formulário de download oferecerá acesso ininterrupto para acesso à SigaLei;
+    p 4. Não são oferecidas garantias de que o servidor no qual a versão de instalação da ferramenta SigaLei está armazenado oferecerá acesso ininterrupto para acesso ao referido arquivo;
+    p 5. A SigaLei trata-se de um software que se encontra em fase experimental e em fase de teste. Por esse motivo, não são oferecidas garantias de que a ferramenta SigaLei está livre de erros/defeitos ou que erros/defeitos na ferramenta serão corrigidos, incluindo neste item todos os possíveis arquivos gerenciados pela ferramenta. Ao encontrar um erro/defeito, o usuário pode reporta-lo enviando um e-mail para contato@openlex.com.br;
+    p 6. Não são oferecidas garantias de que a ferramenta SigaLei estará disponível de forma gratuita em todas as suas possíveis versões;
+    p 7. Não são oferecidas garantias de suporte ao uso da ferramenta SigaLei. Salienta-se que a SigaLei oferece suporte à condução de estudos que se utilizam do processo de acompanhamento da produção legislativa, sejam eles quais forem, é de inteira responsabilidade do usuário;
+    p 8. Em nenhuma circunstância terá os autores da ferramenta responsabilidade sobre danos indiretos, acidentais, especiais ou consequenciais ou por quaisquer perdas de lucros, economias, receitas ou dados decorrentes ou relativos ao mau uso ou uso incorreto deste software ou ainda decorrentes de causas externas como, falha no hardware, falta de energia, instalação indevida ou configuração do sistema operacional;
+    p 9. Este termo poderá ser rescindido a qualquer momento por qualquer uma das partes, havendo ou não infração de qualquer uma das cláusulas, bastando para isso a extinção do cadastro do usuário;
+    p 10. A rescisão deste termo impedirá a utilização da SigaLei em virtude da não autorização de acesso, além da suspensão de qualquer tipo de suporte;
+    p 11. Apenas os autores da ferramenta e pessoas por eles legalmente autorizadas estão aptas a ministrar qualquer tipo de palestra, curso, minicurso ou treinamento sobre a ferramenta SigaLei. Interessados em se tornar parceiros nessas ações podem entrar em contato enviando e-mail para contato@openlex.com.br;
+    p 12. Os responsáveis pelo software se comprometem a não divulgar o nome, endereço de e-mail, instituição, telefone e demais informações solicitadas dos usuários da SigaLei;
+    p 13. Os responsáveis pelo software se comprometem a não divulgar qualquer informação sobre os dados acompanhados pelos usuários da SigaLei, nem o modo como o usuário utiliza os dados disponibilizados pela ferramenta;
+    p 14. A empresa Openlex reserva-se o direito de resolver os casos omissos e as situações não previstas neste termo e condições de uso da ferramenta SigaLei.

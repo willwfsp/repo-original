@@ -3,17 +3,30 @@
  * App routes and resources configuration
  =========================================================*/
 
-App.config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'RouteHelpersProvider',
-function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
+App.config(
+  ['$stateProvider', '$locationProvider', '$urlRouterProvider',
+   'RouteHelpersProvider','$httpProvider',
+    function($stateProvider, $locationProvider, $urlRouterProvider,
+             helper, $httpProvider) {
   'use strict';
 
-  // Set the following to true to enable the HTML5 Mode
-  // You may have to set <base> tag in index and a routing configuration in your server
-  $locationProvider.html5Mode(false);
+    // Set the following to true to enable the HTML5 Mode
+    // You may have to set <base> tag in index and a routing configuration in your server
+    $locationProvider.html5Mode(false);
 
-  // default route
-  $urlRouterProvider.otherwise('/app/dashboard');
+    // default route
+    $urlRouterProvider.otherwise('/page/404');
+    $httpProvider.interceptors.push(function($q, $location) {
+        return {
+            'responseError': function(response) {
+                if(response.status === 401) {
+                    $location.path('/page/login');
 
+                }
+                return $q.reject(response);
+            }
+        };
+    });
   //
   // Application Routes
   // -----------------------------------
@@ -96,7 +109,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
     .state('page', {
         url: '/page',
         templateUrl: 'app/pages/page.html',
-        resolve: helper.resolveFor('modernizr', 'icons'),
+        resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit'),
         controller: ["$rootScope", function($rootScope) {
             $rootScope.app.layout.isBoxed = false;
         }]
@@ -115,7 +128,8 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         url: '/signup',
         title: 'Registrar',
         controller: 'SignupController',
-        templateUrl: 'app/pages/signup.html'
+        templateUrl: 'app/pages/signup.html',
+        resolve: angular.extend(helper.resolveFor('ngDialog'))
     })
     .state('page.signup-confirmation', {
         url: '/signup/:token',
@@ -123,6 +137,18 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'SignupConfirmController',
         templateUrl: 'app/pages/signup-confirmation.html',
         resolve: angular.extend(helper.resolveFor('ngDialog'))
+    })
+    .state('page.recover', {
+        url: '/recover',
+        title: "Recover",
+        controller: 'RecoverPasswordController',
+        templateUrl: 'app/pages/recover.html'
+    })
+    .state('page.recover-confirmation', {
+        url: '/recover/:token',
+        title: "Recover",
+        controller: 'RecoverPasswordConfirmController',
+        templateUrl: 'app/pages/recover-confirmation.html'
     })
     ;
 
