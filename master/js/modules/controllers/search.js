@@ -14,8 +14,10 @@ App.controller('SearchBarController',
 }]);
 
 App.controller('SearchBillsController',
-  ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal', 'DataFetcher',
-    function($http, $stateParams, $location, $scope, $log, $state, $modal, DataFetcher) {
+  ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal',
+  'DataFetcher', 'Auth',
+    function($http, $stateParams, $location, $scope, $log, $state, $modal,
+        DataFetcher, Auth) {
 
     $scope.isCollapsed = false;
     $scope.showOtherAuthors = false;
@@ -121,7 +123,7 @@ App.controller('SearchBillsController',
         $scope.filters.bookmark="";
         $scope.bills = [];
         $scope.fetchingStart = true;
-        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
     };
 
     // Status Filter
@@ -141,7 +143,7 @@ App.controller('SearchBillsController',
         $scope.filters.bookmark="";
         $scope.bills = [];
         $scope.fetchingStart = true;
-        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
     };
 
     //Type Filter
@@ -167,7 +169,7 @@ App.controller('SearchBillsController',
         $scope.filters.bookmark="";
         $scope.bills = [];
         $scope.fetchingStart = true;
-        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
     };
 
     // Theme Filter
@@ -177,7 +179,7 @@ App.controller('SearchBillsController',
         $scope.filters.bookmark="";
         $scope.bills = [];
         $scope.fetchingStart = true;
-        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
 
     };
 
@@ -191,7 +193,7 @@ App.controller('SearchBillsController',
             $scope.filters.bookmark="";
             $scope.bills = [];
             $scope.fetchingStart = true;
-            DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
+            DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
         }
     };
     // Change Order
@@ -201,7 +203,7 @@ App.controller('SearchBillsController',
         $scope.filters.bookmark="";
         $scope.bills = [];
         $scope.fetchingStart = true;
-        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
 
     };
 
@@ -224,20 +226,20 @@ App.controller('SearchBillsController',
         //fetch most recent data
         $scope.bills = [];
         $scope.fetchingStart = true;
-        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
     };
 
     $scope.init = function(){
         $scope.fetchingStart = true;
         $scope.loadThemes();
-        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
     };
 
     $scope.moreResults = function(){
 
         $scope.filters.bookmark = $scope.bookmark;
         $scope.fetchingMore = true;
-        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters);
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
     };
 
     // Listeners

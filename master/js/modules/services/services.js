@@ -5,28 +5,30 @@
  =========================================================*/
 
 App.factory('DataFetcher',
-  ['$q','$http', '$log', '$rootScope',
-    function($q, $http, $log, $rootScope){
+  ['$q','$http', '$log', '$rootScope', 'Auth',
+    function($q, $http, $log, $rootScope, Auth){
     // Constants...
     var service = {};
     var baseUrl = "https://sigalei-api.mybluemix.net/v1/";
-    var databaseToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im10YWthdGEiLCJlbWFpbCI6Im1hdGhldXN0YWthdGFAZ21haWwuY29tIiwiaWF0IjoxNDM5NTcxMjcwLCJleHAiOjE0Mzk1ODU2NzB9.eTaAzxcFFsoHIIxNCFtk9M7BxHiAuCwEH6UG4yOPDeg";
-    $http.defaults.headers.common.authorization = " Bearer " + databaseToken;
+
     // "Private" Variables
     var _billSearchResults = {};
 
-    service.fetchSearchDataBills = function(termos, filters){
+    service.fetchSearchDataBills = function(termos, filters, token){
         var query = "";
-        var headers = {};
+        var headers = {
+            headers: {'Authorization': 'Bearer ' + token}
+        };
         var path = "proposicoes";
         var url = "";
         if(termos){
             query = '?q=' + termos;
-        }   
+        }
 
         url = baseUrl + path + query;
-        console.log(filters);
-        return $http.post(url, filters).then(function(result) {
+
+
+        return $http.post(url, filters, headers).then(function(result) {
             _billSearchResults = result.data;
             $rootScope.$broadcast("fetch billSearchResults:completed");
         },
@@ -35,11 +37,13 @@ App.factory('DataFetcher',
         });
     };
 
-    service.fetchBill = function(nome){
-
-        var promiseBillDetails = $http.get(baseUrl + "proposicoes/" + nome);
-        var promiseBillTrack = $http.get(baseUrl + "proposicoes/" + nome + "/tramitacao");
-        var promiseBillPollList = $http.get(baseUrl + "proposicoes/" + nome + "/votacao");
+    service.fetchBill = function(nome, token){
+        var headers = {
+            headers: {'Authorization': 'Bearer ' + token}
+        };
+        var promiseBillDetails = $http.get((baseUrl + "proposicoes/" + nome),headers);
+        var promiseBillTrack = $http.get((baseUrl + "proposicoes/" + nome + "/tramitacao"), headers);
+        var promiseBillPollList = $http.get((baseUrl + "proposicoes/" + nome + "/votacao"), headers);
 
         var defer = $q.defer();
 
@@ -52,9 +56,12 @@ App.factory('DataFetcher',
         return defer.promise;
     };
 
-    service.fetchDataPollDetails = function(id){
+    service.fetchDataPollDetails = function(id, token){
         var result;
-        return $http.get(baseUrl + "proposicoes/votacao/" + id).then(function(result) {
+        var headers = {
+            headers: {'Authorization': 'Bearer ' + token}
+        };
+        return $http.get((baseUrl + "proposicoes/votacao/" + id),headers).then(function(result) {
 
             return result.data;
         },
@@ -63,18 +70,21 @@ App.factory('DataFetcher',
         });
     };
 
-    service.fetchDataRepresentative = function(id){
-        var promiseRepresentativeDetails = $http.get(baseUrl + "parlamentares/" + id);
-        var promiseRepresentativeTemas = $http.get(baseUrl + "parlamentares/" + id + "/temas");
-        var promiseRepresentativeMandatos = $http.get(baseUrl + "parlamentares/" + id +
-            "/mandatos");
-        var promiseRepresentativeProposicoes = $http.get(baseUrl + "parlamentares/" + id +
-            "/proposicoes");
-        var promiseRepresentativeCommittees = $http.get(baseUrl + "parlamentares/" + id +
-            "/comissoes");
+    service.fetchDataRepresentative = function(id, token){
+        var headers = {
+            headers: {'Authorization': 'Bearer ' + token}
+        };
+        var promiseRepresentativeDetails = $http.get((baseUrl + "parlamentares/" + id),headers);
+        var promiseRepresentativeTemas = $http.get((baseUrl + "parlamentares/" + id + "/temas"),headers);
+        var promiseRepresentativeMandatos = $http.get((baseUrl + "parlamentares/" + id +
+            "/mandatos"),headers);
+        var promiseRepresentativeProposicoes = $http.get((baseUrl + "parlamentares/" + id +
+            "/proposicoes"),headers);
+        var promiseRepresentativeCommittees = $http.get((baseUrl + "parlamentares/" + id +
+            "/comissoes"),headers);
 
-        var promiseRepresentativePhoto = $http.get(baseUrl + "parlamentares/" + id +
-            "/foto");
+        var promiseRepresentativePhoto = $http.get((baseUrl + "parlamentares/" + id +
+            "/foto"),headers);
 
         var defer = $q.defer();
 
@@ -92,15 +102,17 @@ App.factory('DataFetcher',
         return defer.promise;
     }
 
-    service.fetchDataHouseDetails = function(houseId){
+    service.fetchDataHouseDetails = function(houseId, token){
         var result;
-
-        var promiseHouseDetails = $http.get(baseUrl + "assembleias/" + houseId);
-        var promiseHouseEvents = $http.get(baseUrl + "eventos/" + houseId);
-        var promiseHouseCommittees = $http.get(baseUrl + "comissoes" +
-            "?sigla=" + houseId);
-        var promiseHouseMembers = $http.get(baseUrl + "parlamentares" +
-            "?casa=" + houseId);
+        var headers = {
+            headers: {'Authorization': 'Bearer ' + token}
+        };
+        var promiseHouseDetails = $http.get((baseUrl + "assembleias/" + houseId),headers);
+        var promiseHouseEvents = $http.get((baseUrl + "eventos/" + houseId),headers);
+        var promiseHouseCommittees = $http.get((baseUrl + "comissoes" +
+            "?sigla=" + houseId),headers);
+        var promiseHouseMembers = $http.get((baseUrl + "parlamentares" +
+            "?casa=" + houseId),headers);
 
         var defer = $q.defer();
 
@@ -116,12 +128,14 @@ App.factory('DataFetcher',
 
     };
 
-    service.fetchCommitteeDetails = function(house, committeeID){
-
-        var promiseCommitteeDetails = $http.get(baseUrl + "comissoes/" + house +
-            "/" + committeeID);
-        var promiseCommmitteeMembers = $http.get(baseUrl + "comissoes/" + house +
-            "/" + committeeID + "/parlamentares");
+    service.fetchCommitteeDetails = function(house, committeeID, token){
+        var headers = {
+            headers: {'Authorization': 'Bearer ' + token}
+        };
+        var promiseCommitteeDetails = $http.get((baseUrl + "comissoes/" + house +
+            "/" + committeeID),headers);
+        var promiseCommmitteeMembers = $http.get((baseUrl + "comissoes/" + house +
+            "/" + committeeID + "/parlamentares"),headers);
 
 
         var defer = $q.defer();

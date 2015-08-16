@@ -17,5 +17,6 @@
   "bower_components/oclazyload/dist/ocLazyLoad.js",
   "bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
   "bower_components/angular-loading-bar/build/loading-bar.js",
-  "bower_components/jquery.browser/dist/jquery.browser.js"
+  "bower_components/jquery.browser/dist/jquery.browser.js",
+  "bower_components/angular-http-auth/src/http-auth-interceptor.js"
 ]

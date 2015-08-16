@@ -5,9 +5,9 @@
 
 App.controller('BillController',
   ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter',
-   'ngTableParams', 'DataFetcher',
+   'ngTableParams', 'DataFetcher', 'Auth',
     function($location,$scope, $state, $stateParams, $log, $http, $filter,
-        ngTableParams, DataFetcher){
+        ngTableParams, DataFetcher, Auth){
 
     $scope.coAuthorsCollapsed = true;
     $scope.dados = {};
@@ -34,7 +34,7 @@ App.controller('BillController',
         }
     });
 
-    DataFetcher.fetchBill($stateParams.billName).then(function(data) {
+    DataFetcher.fetchBill($stateParams.billName, Auth.user.token).then(function(data) {
        $scope.dados = data[0].data;
        $scope.tracksBill = data[1].data;
        $scope.billVotingList = data[2].data;
@@ -44,8 +44,8 @@ App.controller('BillController',
 
 }]);
 
-App.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'ngTableParams',
-    function($scope, $log, DataFetcher, $filter, $stateParams, ngTableParams) {
+App.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'ngTableParams', 'Auth',
+    function($scope, $log, DataFetcher, $filter, $stateParams, ngTableParams, Auth) {
 
     $scope.pollData = {};
     $scope.pollResults = [];
@@ -76,7 +76,7 @@ App.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$filt
     });
 
     $scope.fetchData = function(){
-        DataFetcher.fetchDataPollDetails($stateParams.pollID).then(function(data) {
+        DataFetcher.fetchDataPollDetails($stateParams.pollID, Auth.user.token).then(function(data) {
             $scope.pollData = data;
             $scope.pollResults = data.SLV_VOTOS;
             $scope.pollTableParams.reload();

@@ -4,8 +4,8 @@
  =========================================================*/
 
 App.controller('HouseDataController',
-  ['$scope','$rootScope', '$stateParams', '$filter', 'ngTableParams', '$log', '$http', 'DataFetcher',
-    function($scope, $rootScope, $stateParams, $filter, ngTableParams, $log, $http, DataFetcher){
+  ['$scope','$rootScope', '$stateParams', '$filter', 'ngTableParams', '$log', '$http', 'DataFetcher', 'Auth',
+    function($scope, $rootScope, $stateParams, $filter, ngTableParams, $log, $http, DataFetcher, Auth){
 
     $scope.houseMembers = [];
 	$scope.houseEvents = [];
@@ -81,7 +81,7 @@ App.controller('HouseDataController',
         }
     });
 
-    DataFetcher.fetchDataHouseDetails($stateParams.house).then(function(data){
+    DataFetcher.fetchDataHouseDetails($stateParams.house, Auth.user.token).then(function(data){
         $log.log("houseDetails");
         $scope.houseDetails = data[0].data;
         $scope.houseEvents = data[1].data.rows;

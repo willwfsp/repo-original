@@ -4,8 +4,8 @@
  =========================================================*/
 
 App.controller('AppController',
-  ['$rootScope', '$scope', '$state', '$translate', '$window', '$localStorage', '$timeout', 'toggleStateService', 'colors', 'browser', 'cfpLoadingBar',
-  function($rootScope, $scope, $state, $translate, $window, $localStorage, $timeout, toggle, colors, browser, cfpLoadingBar) {
+  ['$rootScope', '$scope', '$state', '$translate', '$window', '$localStorage', '$timeout', 'toggleStateService', 'colors', 'browser', 'cfpLoadingBar', 'Auth',
+  function($rootScope, $scope, $state, $translate, $window, $localStorage, $timeout, toggle, colors, browser, cfpLoadingBar, Auth) {
     "use strict";
 
     // Setup the layout mode
@@ -14,12 +14,7 @@ App.controller('AppController',
     // Loading bar transition
     // -----------------------------------
     var thBar;
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-        if($('.wrapper > section').length) // check if bar container exists
-          thBar = $timeout(function() {
-            cfpLoadingBar.start();
-          }, 0); // sets a latency Threshold
-    });
+
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
         event.targetScope.$watch("$viewContentLoaded", function () {
           $timeout.cancel(thBar);
@@ -126,10 +121,15 @@ App.controller('AppController',
     };
 
     $scope.logout = function(){
+      Auth.logout();
       $state.go("page.login");
     }
     $scope.profile = function(){
       $state.go("app.profile");
     }
+
+    $rootScope.$on("event:auth-loginRequired", function() {
+       $scope.logout();
+    });
 
 }]);

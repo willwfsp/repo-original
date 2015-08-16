@@ -4,8 +4,8 @@
  =========================================================*/
 
  App.controller('CommitteesController',
-  ['$scope', '$log', '$stateParams', '$filter', 'ngTableParams', 'DataFetcher',
-    function($scope, $log, $stateParams, $filter, ngTableParams, DataFetcher){
+  ['$scope', '$log', '$stateParams', '$filter', 'ngTableParams', 'DataFetcher', 'Auth',
+    function($scope, $log, $stateParams, $filter, ngTableParams, DataFetcher, Auth){
     $scope.committeesMembers = [];
     $scope.membersJson = [];
 
@@ -34,7 +34,7 @@
     });
 
     DataFetcher.fetchCommitteeDetails($stateParams.house,
-        $stateParams.committeeID).then(function(data) {
+        $stateParams.committeeID, Auth.user.token).then(function(data) {
         $scope.committeesDetails = data[0].data;
         $scope.committeesMembers = data[1].data.rows;
 

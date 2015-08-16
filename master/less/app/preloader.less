@@ -3,8 +3,8 @@
  ========================================================================== */
 
 @preloader-bg:  @sigalei-green;
-@preloader-wd:  100px;
-@preloader-hg:  30px;
+@preloader-wd:  120px;
+@preloader-hg:  74px;
 /*@noflip*/
 .preloader {
   position: fixed;
@@ -20,18 +20,18 @@
   background-image:      -o-linear-gradient(90deg, @preloader-bg 10%, darken(@preloader-bg, 5%) 90%); /* Opera 11.10+ */
   background-image:         linear-gradient(90deg, @preloader-bg 10%, darken(@preloader-bg, 5%) 90%); /* W3C */
   z-index: 9999;
-  .transition(opacity .65s); 
+  .transition(opacity .65s);
 }
 /*@noflip*/
 .preloader-progress {
   position: absolute;
-  top: 0; left: 0; bottom: 0; right: 0;  
+  top: 0; left: 0; bottom: 0; right: 0;
   width: @preloader-wd;
   height: @preloader-hg;
   margin: auto;
   overflow: auto;
   background-image: url(../img/preloader/preloader.empty.png);
-  background-size: @preloader-wd @preloader-hg; 
+  background-size: @preloader-wd @preloader-hg;
 }
 /*@noflip*/
 .preloader-progress-bar {
@@ -41,23 +41,23 @@
   bottom: 0;
   min-width: 10px;
   background-image: url(../img/preloader/preloader.full.png);
-  background-size: @preloader-wd @preloader-hg; 
+  background-size: @preloader-wd @preloader-hg;
 }
 
 .preloader-hidden {
-  display: none; 
+  display: none;
 }
 
 // ngAnimate behavior
 .preloader-hidden-add {
   opacity: 1;
-  display: block; 
+  display: block;
   .preloader-progress {
     .transition-transform(.4s ease);
-    .scale(0); 
+    .scale(0);
   }
 }
 .preloader-hidden-add-active {
-  opacity: 0; 
+  opacity: 0;
 }
 

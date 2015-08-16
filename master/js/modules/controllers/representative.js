@@ -4,8 +4,8 @@
  =========================================================*/
 
 App.controller('RepresentativeDataController',
-  ['$scope','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', 'colors', '$filter', 'ngTableParams',
-    function($scope, $rootScope, $stateParams, $log, $http, DataFetcher, colors, $filter, ngTableParams){
+  ['$scope','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', 'colors', '$filter', 'ngTableParams', 'Auth',
+    function($scope, $rootScope, $stateParams, $log, $http, DataFetcher, colors, $filter, ngTableParams, Auth){
     $scope.dados = {};
     $scope.dados._id = $stateParams.id;
     $scope.pieData =[];
@@ -70,7 +70,7 @@ App.controller('RepresentativeDataController',
         }
     });
 
-    DataFetcher.fetchDataRepresentative($stateParams.id).then(function(data) {
+    DataFetcher.fetchDataRepresentative($stateParams.id, Auth.user.token).then(function(data) {
         console.log(data);
         $scope.dados = data[0].data;
         $scope.themeData = data[1].data;
@@ -100,7 +100,24 @@ App.controller('RepresentativeDataController',
             };
             $scope.pieData.push(aux);
         });
+        var arr = new Uint8Array(data[5].data);
+
+        var raw = '';
+        var i, j, subArray, chunk = 5000;
+        for (i = 0, j = arr.length; i < j; i += chunk) {
+            subArray = arr.subarray(i, i + chunk);
+            raw += String.fromCharCode.apply(null, subArray);
+        }
+
+        var b64 = btoa(raw);
+        $scope.RepresentativePhoto = b64;
+
+
     });
+    var headersPhoto = {
+            headers: {Authorization: 'Bearer ' + Auth.user.token,
+                      responseType: "arraybuffer"}
+    };
 
 
 }]);

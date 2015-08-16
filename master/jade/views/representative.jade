@@ -12,7 +12,7 @@ h3 {{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIVIL}}
               .form-group
 
                 .col-md-3
-                  img.thumb128.b(ng-src="{{photo}}")
+                  img.thumb128.b(ng-src="data:image/jpeg;base64,{{RepresentativePhoto}}", id="photo-id")
                 .col-md-9
                   table
                     tr
@@ -54,9 +54,7 @@ h3 {{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIVIL}}
                   tr.text-center(ng-repeat="item in terms")
                     td {{item.doc.SLM_ASSEMBLEIA.SLAs_NOME}}
                     td {{item.doc.SLM_CARGO}}
-                    td 
-                      span(ng-repeat="leg in item.doc.SLM_LEGISLATURA")
-                        span {{$index == item.doc.SLM_LEGISLATURA.length - 1 ? leg : leg+', '}}
+
                     td {{item.doc.SLM_PARLAMENTAR.SLPa_PARTIDO}}
                     td {{item.doc.SLM_UF_REP}}
                     td {{item.doc.SLM_STATUS}}

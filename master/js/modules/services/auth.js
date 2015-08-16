@@ -26,26 +26,20 @@ App.factory('Auth', function($http, $cookieStore){
             }
             return user.role.title === userRoles.user.title || user.role.title === userRoles.admin.title;
         },
-        register: function(user, success, error) {
-            $http.post('/register', user).success(function(res) {
-                changeUser(res);
-                success();
-            }).error(error);
+        signup: function(user, success, error) {
+            $http.post('https://sigalei-api.mybluemix.net/v1/accounts/signup', user)
+            .success(function(res) { success();})
+            .error(error);
         },
         login: function(user, success, error) {
-            $http.post('/login', user).success(function(user){
+            $http.post('https://sigalei-api.mybluemix.net/v1/accounts/login', user)
+            .success(function(user){
                 changeUser(user);
                 success(user);
             }).error(error);
         },
         logout: function(success, error) {
-            $http.post('/logout').success(function(){
-                changeUser({
-                    username: '',
-                    role: userRoles.public
-                });
-                success();
-            }).error(error);
+            changeUser({ username: '', role: userRoles.public });
         },
         accessLevels: accessLevels,
         userRoles: userRoles,

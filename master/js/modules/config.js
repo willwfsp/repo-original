@@ -3,30 +3,22 @@
  * App routes and resources configuration
  =========================================================*/
 
+
 App.config(
   ['$stateProvider', '$locationProvider', '$urlRouterProvider',
    'RouteHelpersProvider','$httpProvider',
     function($stateProvider, $locationProvider, $urlRouterProvider,
              helper, $httpProvider) {
-  'use strict';
 
+    'use strict';
+    var access = routingConfig.accessLevels;
     // Set the following to true to enable the HTML5 Mode
     // You may have to set <base> tag in index and a routing configuration in your server
     $locationProvider.html5Mode(false);
 
     // default route
-    $urlRouterProvider.otherwise('/page/404');
-    $httpProvider.interceptors.push(function($q, $location) {
-        return {
-            'responseError': function(response) {
-                if(response.status === 401) {
-                    $location.path('/page/login');
+    $urlRouterProvider.otherwise('/page/login');
 
-                }
-                return $q.reject(response);
-            }
-        };
-    });
   //
   // Application Routes
   // -----------------------------------
@@ -36,7 +28,10 @@ App.config(
         abstract: true,
         templateUrl: helper.basepath('app.html'),
         controller: 'AppController',
-        resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit')
+        resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit'),
+        data: {
+                access: access.user
+            }
     })
     .state('app.dashBoard', {
         url: '/dashboard',
@@ -108,11 +103,15 @@ App.config(
     })
     .state('page', {
         url: '/page',
+        abstract: true,
         templateUrl: 'app/pages/page.html',
         resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit'),
         controller: ["$rootScope", function($rootScope) {
             $rootScope.app.layout.isBoxed = false;
-        }]
+        }],
+        data: {
+                access: access.anon
+            }
     })
     .state('page.404', {
         url: '/404',

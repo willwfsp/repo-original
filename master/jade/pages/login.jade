@@ -16,7 +16,7 @@
           span.fa.fa-lock.form-control-feedback.text-muted
           span.text-danger(ng-show="loginForm.account_password.$dirty && loginForm.account_password.$error.required") Obrigatório
         .clearfix
-          .checkbox.c-checkbox.pull-left.mt0
+          .checkbox.c-checkbox.pull-left.mt0(ng-hide = "true")
             label
               input(type='checkbox', value='', name="account_remember", ng-model="account.remember")
               span.fa.fa-check

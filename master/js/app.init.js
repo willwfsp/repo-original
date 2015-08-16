@@ -25,12 +25,41 @@ var App = angular.module('sigaLeiApp', [
     'cfp.loadingBar',
     'ngSanitize',
     'ngResource',
-    'ui.utils'
+    'ui.utils',
+    'http-auth-interceptor'
   ]);
 
 App.run(
-  ["$rootScope", "$state", "$stateParams",  '$window', '$templateCache',
-    function ($rootScope, $state, $stateParams, $window, $templateCache) {
+  ['$rootScope', '$state', '$stateParams',  '$window', '$templateCache',
+   'Auth', '$timeout', 'cfpLoadingBar',
+    function ($rootScope, $state, $stateParams, $window, $templateCache, Auth, $timeout, cfpLoadingBar) {
+
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+
+
+        /* Auth */
+        if(!('data' in toState) || !('access' in toState.data)){
+            $rootScope.error = "Access undefined for this state";
+            event.preventDefault();
+        }
+        else if (!Auth.authorize(toState.data.access)) {
+            $rootScope.error = "Seems like you tried accessing a route you don't have access to...";
+            event.preventDefault();
+
+            if(fromState.url === '^') {
+                if(Auth.isLoggedIn()) {
+                    $state.go('app.dashBoard');
+                } else {
+                    $rootScope.error = null;
+                    $state.go('page.login');
+                }
+            }
+        }
+        if($('.wrapper > section').length) // check if bar container exists
+          thBar = $timeout(function() {
+            cfpLoadingBar.start();
+          }, 0); // sets a latency Threshold
+    });
     // Set reference to access them from any scope
     $window.localStorage.clear();
     $rootScope.$state = $state;

@@ -4,8 +4,8 @@
  =========================================================*/
 
 App.controller('SignupController',
-  ['$scope', '$http', '$state', '$log', 'ngDialog',
-    function($scope, $http, $state, $log, ngDialog) {
+  ['$scope', '$http', '$state', '$log', 'ngDialog', 'Auth',
+    function($scope, $http, $state, $log, ngDialog, Auth) {
 
     // bind here all data from the form
     $scope.account = {};
@@ -28,16 +28,12 @@ App.controller('SignupController',
             user.email = $scope.registerForm.register_email.$modelValue;
             user.password = $scope.registerForm.register_password.$modelValue;
 
-            $http.post('https://sigalei-api.mybluemix.net/v1/accounts/signup', user)
-              .then(function(response) {
-
-                if ( response.status == "201" ) {
-                    $scope.authSucMsg = 'Usuário Criado. Verifique seu email para completar o cadastro';
-                    $scope.showLoading = false;
-                }
-            }, function(x) {
+            Auth.signup(user, function() {
+                $scope.authSucMsg = 'Usuário Criado. Verifique seu email para completar o cadastro';
                 $scope.showLoading = false;
-                $scope.authMsg = x.data.error.split(":")[1];
+            },function(err) {
+                $scope.showLoading = false;
+                $scope.authMsg = err;
             });
 
         } else {
