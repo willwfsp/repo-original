@@ -88,6 +88,7 @@ App.controller('HouseDataController',
         $scope.houseCommittees = data[2].data.rows;
         $scope.houseMembers = data[3].data.rows;
 
+
         //parsing house events
         var aux = [];
         for(var i = 0; i < $scope.houseEvents.length; i++){

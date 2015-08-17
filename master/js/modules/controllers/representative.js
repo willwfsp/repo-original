@@ -114,10 +114,7 @@ App.controller('RepresentativeDataController',
 
 
     });
-    var headersPhoto = {
-            headers: {Authorization: 'Bearer ' + Auth.user.token,
-                      responseType: "arraybuffer"}
-    };
+
 
 
 }]);

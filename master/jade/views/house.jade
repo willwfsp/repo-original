@@ -18,7 +18,7 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
             a(ui-sref="app.representative({ id: '{{representative.id}}' })")
               .thumbnail
                 .caption
-                  img.thumb128.b(ng-src="https://sigalei-api.mybluemix.net/v1/parlamentares/{{representative.id}}/foto?access_token=admin%40sigalei")
+                  img.thumb128.b(ng-src="data:image/jpeg;base64,{{representative.photo}}")
                   strong.sigalei-color {{representative.Nome}}
                   p {{representative.Cargo}}
 
@@ -58,5 +58,5 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
           tbody
             tr(ng-repeat="committee in $data")
               td(data-title=" 'Sigla' ", sortable="'initials'", filter="{ 'initials': 'text' }") {{committee.initials}}
-              td(data-title=" 'Nome' ", sortable="'name'", filter="{ 'name': 'text' }") 
+              td(data-title=" 'Nome' ", sortable="'name'", filter="{ 'name': 'text' }")
                 a(ui-sref="app.committee({ house:committee.house, committeeID: committee.refCode })") {{committee.name}}

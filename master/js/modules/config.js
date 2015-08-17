@@ -30,7 +30,7 @@ App.config(
         controller: 'AppController',
         resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit'),
         data: {
-                access: access.user
+                access: access.anon
             }
     })
     .state('app.dashBoard', {
@@ -184,7 +184,7 @@ App.config(
     $translateProvider.usePostCompiling(true);
 
 }]).config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
-    cfpLoadingBarProvider.includeBar = true;
+    cfpLoadingBarProvider.includeBar = false;
     cfpLoadingBarProvider.includeSpinner = false;
     cfpLoadingBarProvider.latencyThreshold = 500;
     cfpLoadingBarProvider.parentSelector = '.wrapper > section';
