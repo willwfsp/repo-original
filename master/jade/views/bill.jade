@@ -96,7 +96,7 @@ h3(data-ng-init="fetchData()")
                       .arrow
                       .popover-content
                         p {{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO || "Sem descrição"}}
-                      a(ng-if="tramitacao.doc.SLT_LINK_INTEIRO_TEOR", href="{{tramitacao.doc.SLT_LINK_INTEIRO_TEOR}}")
+                      a(ng-if="tramitacao.doc.SLT_LINK_INTEIRO_TEOR", href="{{tramitacao.doc.SLT_LINK_INTEIRO_TEOR}}", target="_blank")
                         .popover-footer.text-center
                           em.icon-doc
                           label Inteiro Teor
@@ -169,7 +169,7 @@ h3(data-ng-init="fetchData()")
                 tbody
                   tr(ng-repeat="doc in $data")
                     td(data-title=" 'Nome' ", sortable="'SLD_TIPO'", filter="{ 'SLD_TIPO': 'text' }")
-                      a(href="{{doc.SLD_LINK}}") {{doc.SLD_TIPO}}
+                      a(href="{{doc.SLD_LINK}}", target="_blank") {{doc.SLD_TIPO}}
                     td.text-center(data-title=" 'Data' ", sortable="'SLD_DATA'", filter="{ 'SLD_DATA': 'text' }") {{doc.SLD_DATA | date:'dd/MM/yyyy' || "Não Disponível"}}
       // DOCS END
 
