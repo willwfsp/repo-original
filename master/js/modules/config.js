@@ -30,7 +30,7 @@ App.config(
         controller: 'AppController',
         resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit'),
         data: {
-                access: access.anon
+                access: access.public
             }
     })
     .state('app.dashBoard', {
@@ -110,7 +110,7 @@ App.config(
             $rootScope.app.layout.isBoxed = false;
         }],
         data: {
-                access: access.anon
+                access: access.public
             }
     })
     .state('page.404', {

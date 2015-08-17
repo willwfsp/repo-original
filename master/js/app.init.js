@@ -31,19 +31,19 @@ var App = angular.module('sigaLeiApp', [
 
 App.run(
   ['$rootScope', '$state', '$stateParams',  '$window', '$templateCache',
-   'Auth', '$timeout', 'cfpLoadingBar',
-    function ($rootScope, $state, $stateParams, $window, $templateCache, Auth, $timeout, cfpLoadingBar) {
+   'Auth', '$timeout', 'cfpLoadingBar', '$log',
+    function ($rootScope, $state, $stateParams, $window, $templateCache, Auth, $timeout, cfpLoadingBar, $log) {
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
 
         /* Auth */
         if(!('data' in toState) || !('access' in toState.data)){
-            $rootScope.error = "Access undefined for this state";
+            $log.error("Access undefined for this state");
             event.preventDefault();
         }
         else if (!Auth.authorize(toState.data.access)) {
-            $rootScope.error = "Seems like you tried accessing a route you don't have access to...";
+            $log.error("Seems like you tried accessing a route you don't have access to...");
             event.preventDefault();
 
             if(fromState.url === '^') {
