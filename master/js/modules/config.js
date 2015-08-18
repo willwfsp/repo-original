@@ -56,7 +56,7 @@ App.config(
     .state('app.bill.pollDetails', {
         url: '/pollDetails/:pollID',
         title: 'Visualizar detalhes da votação',
-        onEnter: ['$stateParams', '$state', '$modal', '$resource', function($stateParams, $state, $modal, $resource) {
+        onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
           $modal.open({
             templateUrl: helper.basepath('pollDetails.html'),
             resolve: helper.resolveFor('ngTable'),

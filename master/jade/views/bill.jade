@@ -169,8 +169,8 @@ h3
                 tbody
                   tr(ng-repeat="doc in $data")
                     td(data-title=" 'Nome' ", sortable="'SLD_TIPO'", filter="{ 'SLD_TIPO': 'text' }")
-                      a(href="{{doc.SLD_LINK}}", target="_blank") {{doc.SLD_TIPO}}
-                    td.text-center(data-title=" 'Data' ", sortable="'SLD_DATA'", filter="{ 'SLD_DATA': 'text' }") {{doc.SLD_DATA | date:'dd/MM/yyyy' || "Não Disponível"}}
+                      a(ng-click="viewDoc( doc.SLD_LINK )") {{doc.SLD_TIPO}}
+                    td.text-center(data-title=" 'Data' ", sortable="'SLD_DATA'", filter="{ 'SLD_DATA': 'text' }") {{doc.SLD_DATA ? (doc.SLD_DATA | date:'dd/MM/yyyy') : "---"}}
       // DOCS END
 
       //POLL VIEW START

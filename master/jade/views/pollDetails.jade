@@ -1,35 +1,46 @@
-.panel.widget(data-ng-init="fetchData()")
-    .panel-heading
-      h3 {{pollData.SLV_OBJETO_VOTACAO}}
-      .table-responsive
-        table.table
-          tr
-            td Resultado:
-            td {{pollData.SLV_RESULTADO}}
+.panel.widget
+  .panel-heading
+    h3 {{pollData.SLV_OBJETO_VOTACAO}}
+      span.btn.btn-pill-left.pull-right(ng-if="pollData.SLV_RESULTADO", ng-class="pollData.SLV_RESULTADO == 'Aprovado' ? 'bg-success' : 'bg-danger' ") {{pollData.SLV_RESULTADO}}
 
-            td
-            td
+  .panel-body
+    .table-responsive
+      table.table
+        tr
+          th.sigalei-bg.text-center(colspan="3") Data
+        tr
+          td(colspan="2")
+            strong Dia:&nbsp; 
+            | {{pollData.SLV_DATA_HORA.replace(" ", "T") | date:"dd/MM/yyyy"}}
 
-            td Hora:
-            td {{pollData.SLV_DATA_HORA.replace(" ", "T") | date:"dd/MM/yyyy 'às' HH:mm"}}
-          tr
-            td SIM:
-            td {{pollData.SLV_VOTOS_SIM}}
+          td 
+            strong Hora:&nbsp; 
+            | {{pollData.SLV_DATA_HORA.replace(" ", "T") | date:"HH:mm"}}
 
-            td Nao:
-            td {{pollData.SLV_VOTOS_NAO}}
+        tr
+          th.sigalei-bg.text-center(colspan="3") Votos
+        tr
+          td 
+            strong Sim:&nbsp;
+            | {{pollData.SLV_VOTOS_SIM}}
 
-            td Abstenções:
-            td {{pollData.SLV_VOTOS_ABSTENCOES}} 
+          td 
+            strong Não:&nbsp;
+            | {{pollData.SLV_VOTOS_NAO}}
 
-    .panel-body
-      .table-responsive
-        table.table.table-striped(ng-table="pollTableParams", show-filter="true")
-          tr.text-center(ng-repeat="representative in $data")
-            td(data-title="'Nome'"     sortable="'PARLAMENTAR_NOME'", filter="{ 'PARLAMENTAR_NOME': 'text' }") 
-              p(ng-if="representative._id === undefined") {{representative.PARLAMENTAR_NOME}}
-              a(ui-sref="app.representative({ id: '{{representative._id}}' })", ng-if="representative._id != undefined") {{representative.PARLAMENTAR_NOME}}  
-            td(data-title="'Partido'"     sortable="'PARLAMENTAR_PARTIDO'", filter="{ 'PARLAMENTAR_PARTIDO': 'text' }") {{representative.PARLAMENTAR_PARTIDO}}
-            td(data-title="'Estado'"     sortable="'PARLAMENTAR_ESTADO'", filter="{ 'PARLAMENTAR_ESTADO': 'text' }") {{representative.PARLAMENTAR_ESTADO}}
-            td(data-title="'Voto'"     sortable="'PARLAMENTAR_VOTO'", filter="{ 'PARLAMENTAR_VOTO': 'text' }") {{representative.PARLAMENTAR_VOTO}}
+          td 
+            strong Abstenções:&nbsp;
+            | {{pollData.SLV_VOTOS_ABSTENCOES}} 
+        tr(ng-if="pollData.SLV_RESULTADO")
+            
+    h3 Votos
+    .table-responsive
+      table.table.table-striped(ng-table="pollTableParams", show-filter="true")
+        tr.text-center(ng-repeat="representative in $data")
+          td(data-title="'Nome'"     sortable="'PARLAMENTAR_NOME'", filter="{ 'PARLAMENTAR_NOME': 'text' }") 
+            p(ng-if="representative._id === undefined") {{representative.PARLAMENTAR_NOME}}
+            a(ui-sref="app.representative({ id: '{{representative._id}}' })", ng-if="representative._id != undefined") {{representative.PARLAMENTAR_NOME}}  
+          td(data-title="'Partido'"     sortable="'PARLAMENTAR_PARTIDO'", filter="{ 'PARLAMENTAR_PARTIDO': 'text' }") {{representative.PARLAMENTAR_PARTIDO}}
+          td(data-title="'Estado'"     sortable="'PARLAMENTAR_ESTADO'", filter="{ 'PARLAMENTAR_ESTADO': 'text' }") {{representative.PARLAMENTAR_ESTADO}}
+          td(data-title="'Voto'"     sortable="'PARLAMENTAR_VOTO'", filter="{ 'PARLAMENTAR_VOTO': 'text' }") {{representative.PARLAMENTAR_VOTO}}
 

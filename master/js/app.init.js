@@ -72,7 +72,6 @@ App.run(
           $templateCache.remove(toState.templateUrl);
         }
     });
-
     // Scope Globals
     // -----------------------------------
     $rootScope.app = {

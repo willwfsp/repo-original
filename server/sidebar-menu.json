@@ -5,8 +5,8 @@
     "translate": "sidebar.heading.HEADER"
   },
   {
-    "text": "Relatórios",
-    "sref": "app.reports",
+    "text": "Projetos Mais Recentes",
+    "sref": "app.searchBills",
     "icon": "fa fa-file-o"
   },
   {

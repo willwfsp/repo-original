@@ -6,7 +6,7 @@ App.factory('Auth', function($http, $cookieStore){
         , userRoles = routingConfig.userRoles
         , currentUser = $cookieStore.get('user') || { username: '', role: userRoles.public };
 
-    $cookieStore.remove('user');
+    //$cookieStore.remove('user');
 
     function changeUser(user) {
         angular.extend(currentUser, user);
@@ -36,10 +36,12 @@ App.factory('Auth', function($http, $cookieStore){
             .success(function(user){
                 changeUser(user);
                 success(user);
+                $cookieStore.put('user', user);
             }).error(error);
         },
         logout: function(success, error) {
             changeUser({ username: '', role: userRoles.public });
+            $cookieStore.remove('user');
         },
         accessLevels: accessLevels,
         userRoles: userRoles,

@@ -122,35 +122,35 @@ App.factory('DataFetcher',
                  promiseHouseMembers])
           .then(function(results) {
 
+            if(results[0].data.SLAs_MESA_DIRETORA){
+                var promisesPhotos = [];
+                results[0].data.SLAs_MESA_DIRETORA.forEach(function(member) {
 
-            var promisesPhotos = [];
-            results[0].data.SLAs_MESA_DIRETORA.forEach(function(member) {
+                    var promiseRepresentativePhoto = $http.get((baseUrl +
+                        "parlamentares/" + member.id + "/foto"), headers);
+                    promisesPhotos.push(promiseRepresentativePhoto);
+                });
 
-                var promiseRepresentativePhoto = $http.get((baseUrl +
-                    "parlamentares/" + member.id + "/foto"), headers);
-                promisesPhotos.push(promiseRepresentativePhoto);
-            });
+                $q.all(promisesPhotos)
+                .then(function(resultsPhoto){
+                    var resultItem = {};
+                    resultItem.data =[];
+                    for (index = 0; index < resultsPhoto.length; ++index) {
+                        var arr = new Uint8Array(resultsPhoto[index].data);
+                        var raw = '';
+                        var i, j, subArray, chunk = 5000;
+                        for (i = 0, j = arr.length; i < j; i += chunk) {
+                            subArray = arr.subarray(i, i + chunk);
+                            raw += String.fromCharCode.apply(null, subArray);
+                        }
 
-            $q.all(promisesPhotos)
-            .then(function(resultsPhoto){
-                var resultItem = {};
-                resultItem.data =[];
-                for (index = 0; index < resultsPhoto.length; ++index) {
-                    var arr = new Uint8Array(resultsPhoto[index].data);
-                    var raw = '';
-                    var i, j, subArray, chunk = 5000;
-                    for (i = 0, j = arr.length; i < j; i += chunk) {
-                        subArray = arr.subarray(i, i + chunk);
-                        raw += String.fromCharCode.apply(null, subArray);
+                        var b64 = btoa(raw);
+
+                        results[0].data.SLAs_MESA_DIRETORA[index].photo = b64;
                     }
-
-                    var b64 = btoa(raw);
-
-                    results[0].data.SLAs_MESA_DIRETORA[index].photo = b64;
-                }
-                defer.resolve(results);
-            });
-
+                });
+            }
+            defer.resolve(results);
         });
 
         return defer.promise;

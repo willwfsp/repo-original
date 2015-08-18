@@ -4,13 +4,16 @@
  =========================================================*/
 
 App.controller('BillController',
-  ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter',
+  ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter', '$window',
    'ngTableParams', 'DataFetcher', 'Auth',
-    function($location,$scope, $state, $stateParams, $log, $http, $filter,
+    function($location,$scope, $state, $stateParams, $log, $http, $filter, $window,
         ngTableParams, DataFetcher, Auth){
 
     $scope.coAuthorsCollapsed = true;
     $scope.dados = {};
+    $scope.viewDoc = function(url){
+        $window.open(url, '_blank');
+    };
     $scope.docsTableParams = new ngTableParams({
         page: 1,
         count: 10,
@@ -49,9 +52,11 @@ App.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$filt
 
     $scope.pollData = {};
     $scope.pollResults = [];
+
     $scope.dismiss = function() {
         $scope.$dismiss();
     };
+
     $scope.pollTableParams = new ngTableParams({
             page: 1,
             count: 10,
@@ -75,11 +80,9 @@ App.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$filt
             }
     });
 
-    $scope.fetchData = function(){
-        DataFetcher.fetchDataPollDetails($stateParams.pollID, Auth.user.token).then(function(data) {
-            $scope.pollData = data;
-            $scope.pollResults = data.SLV_VOTOS;
-            $scope.pollTableParams.reload();
-        });
-    };
+    DataFetcher.fetchDataPollDetails($stateParams.pollID, Auth.user.token).then(function(data) {
+        $scope.pollData = data;
+        $scope.pollResults = data.SLV_VOTOS;
+        $scope.pollTableParams.reload();
+    });
 }]);
