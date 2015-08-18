@@ -1,6 +1,23 @@
 h3
-  | Painel Principal
+    | Painel Principal
 
 .panel.widget
+    .panel-heading
+        h3 Últimas Notícias
     .panel-body
-      iframe(ng-src="http://www2.camara.leg.br/camaranoticias/dinamico/ultimasNoticiasAgencia#resultadoPesquisa")
+        .row
+            .col-md-3(ng-repeat="house in housesNews")
+                .panel.widget
+                    .panel-heading.sigalei-bg
+                        h4 {{house.name | houseFullName}}
+                    .panel-body.news-box.scrollable
+                            .list-group
+                                .list-group-item(ng-repeat="news in house.item")
+                                    .media-box
+                                        .media-box-body.clearfix
+                                            a(href="{{news.link}}", target="_blank") 
+                                                strong {{news.titulo}}
+                                            p(ng-if="news.desc") {{news.desc | limitTo: 80}} {{news.desc.length > 80 ? "..." : ""}}
+                    .panel-footer
+                        a(ng-href="{{house.linkMore}}", target="_blank")
+                            | + Mais Notícias

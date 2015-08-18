@@ -266,20 +266,3 @@ App.controller('SearchBillsController',
 
 
 }]);
-
-App.filter('capitalize', function() {
-    return function(input, all) {
-        var inputAux = "";
-        if(input.constructor === Array){
-            input.forEach(function(name){
-                inputAux = inputAux + ' - ' + name;
-            });
-            inputAux = inputAux.substring(3);
-        }else{
-            inputAux = input;
-        }
-
-      return (!!inputAux) ? inputAux.replace(/([^\W_]+[^\s-]*) */g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
-    };
-  }
-);

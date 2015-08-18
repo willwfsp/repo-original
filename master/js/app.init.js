@@ -61,7 +61,7 @@ App.run(
           }, 0); // sets a latency Threshold
     });
     // Set reference to access them from any scope
-    $window.localStorage.clear();
+    //$window.localStorage.clear();
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.$storage = $window.localStorage;

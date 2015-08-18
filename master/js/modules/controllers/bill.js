@@ -83,16 +83,3 @@ App.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$filt
         });
     };
 }]);
-
-App.filter('houseFullName', function() {
-    return function(input, all) {
-        switch(input){
-            case "CD": return "Câmara dos Deputados";   break;
-            case "SF": return "Senado Federal";         break;
-            case "MG": return "ALMG";                   break;
-            case "SP": return "ALESP";                  break;
-            default: return "";
-        }
-        return ;
-    }
-});

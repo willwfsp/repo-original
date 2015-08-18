@@ -36,7 +36,8 @@ App.config(
     .state('app.dashBoard', {
         url: '/dashboard',
         title: 'Página Principal',
-        templateUrl: helper.basepath('dashboard.html')
+        templateUrl: helper.basepath('dashboard.html'),
+        controller: 'DashboardController'
     })
     .state('app.searchBills', {
         url: '/searchBills?q',

@@ -18,7 +18,7 @@ nav.navbar.topnavbar(role='navigation')
       form.navbar-form(ng-controller="SearchBarController", ng-submit="searchQ()")
         .form-group.has-feedback
           input.form-control(type="text", ng-model="query", placeholder="{{'topbar.search.PLACEHOLDER' | translate }}")
-          button.fa.fa-search.form-control-feedback.sigalei-search(type="submit")
+          button.btn-inline.fa.fa-search.form-control-feedback.sigalei-search(type="submit")
 
     .nav.navbar-right
       ul.nav.navbar-nav(ng-controller="SidebarController")

@@ -156,6 +156,31 @@ App.factory('DataFetcher',
         return defer.promise;
 
     };
+
+    service.fetchHousesNews = function(houseIds, token){
+        var result;
+        var headers = {
+            headers: {'Authorization': 'Bearer ' + token}
+        };
+        var promiseCongressNews =   $http.get((baseUrl + "noticias/" + houseIds[0]), headers);
+        var promiseSenateNews =     $http.get((baseUrl + "noticias/" + houseIds[1]), headers);
+        var promiseSpNews =         $http.get((baseUrl + "noticias/" + houseIds[2]), headers);
+        var promiseMgNews =         $http.get((baseUrl + "noticias/" + houseIds[3]), headers);
+
+        var defer = $q.defer();
+
+        $q.all([promiseCongressNews,
+                promiseSenateNews,
+                promiseSpNews,
+                promiseMgNews])
+            .then(function(results) {
+                defer.resolve(results);
+        });
+
+        return defer.promise;
+
+    };
+
     service.fetchCommitteeDetails = function(house, committeeID, token){
         var headers = {
             headers: {'Authorization': 'Bearer ' + token}
