@@ -1,10 +1,15 @@
-'use strict';
+/**=========================================================
+ * Module: Auth.js
+ * Browser detection
+ =========================================================*/
 
-App.factory('Auth', function($http, $cookieStore){
+App.factory('Auth',
+  ['$http','$cookieStore',
+    function($http, $cookieStore){
 
-    var accessLevels = routingConfig.accessLevels
-        , userRoles = routingConfig.userRoles
-        , currentUser = $cookieStore.get('user') || { username: '', role: userRoles.public };
+    var accessLevels = routingConfig.accessLevels,
+        userRoles = routingConfig.userRoles,
+        currentUser = $cookieStore.get('user') || { username: '', role: userRoles.public };
 
     //$cookieStore.remove('user');
 
@@ -47,12 +52,14 @@ App.factory('Auth', function($http, $cookieStore){
         userRoles: userRoles,
         user: currentUser
     };
-});
+}]);
 
-App.factory('Users', function($http) {
-    return {
-        getAll: function(success, error) {
-            $http.get('/users').success(success).error(error);
-        }
-    };
-});
+App.factory('Users',
+  ['$http',
+    function($http) {
+        return {
+            getAll: function(success, error) {
+                $http.get('/users').success(success).error(error);
+            }
+        };
+}]);

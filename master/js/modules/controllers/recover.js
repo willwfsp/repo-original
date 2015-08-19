@@ -14,7 +14,7 @@ App.controller("RecoverPasswordController",
         if($scope.recoverForm.$valid) {
 
             $scope.showLoading = true;
-            var email = {}
+            var email = {};
             email.email = $scope.recoverForm.email.$modelValue;
             $http.post('https://sigalei-api.mybluemix.net/v1/accounts/forgot', email)
               .then(function(response) {
@@ -25,12 +25,12 @@ App.controller("RecoverPasswordController",
                 }
             }, function(x) {
                 $scope.showLoading = false;
-                $scope.authErrMsg = "Erro na solicitação."
+                $scope.authErrMsg = "Erro na solicitação.";
             });
 
         } else {
             $scope.recoverForm.email.$dirty = true;
         }
-    }
+    };
 
 }]);

@@ -18,7 +18,7 @@ App.controller('SignupController',
 
         if($scope.registerForm.$valid) {
             $scope.showLoading = true;
-            var user = {}
+            var user = {};
             user.name = $scope.registerForm.register_username.$modelValue;
             user.firstname = $scope.registerForm.register_firstname.$modelValue;
             user.lastname = $scope.registerForm.register_lastname.$modelValue;
@@ -51,7 +51,7 @@ App.controller('SignupController',
     };
     $scope.industryOptions = [
       "Acordos Internacionais", "Agricultura", "Agrotóxico", "Alimentício", "Automotivo", "Aviação", "Bancário", "Bebidas", "Bens de consumo", "Biotecnologia", "Comércio", "Comunicação", "Conglomerados empresariais", "Construção", "Consultoria", "Cosmético", "Eletrônicos", "Energia", "Engenharia", "Entretenimento", "Farmacêutico", "Federações e Associações", "Finanças", "Fumo", "Governamental", "Máquinas", "Mineração", "Naval", "Óleo e Gás", "ONGs (Terceiro Setor)", "Outros", "Químico", "Saúde", "Seguros", "Sindicatos", "Tecnologia", "Telecomunicações", "Transportes", "Tributário"
-    ]
+    ];
 
     $scope.openTerms = function () {
         ngDialog.open({

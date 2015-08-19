@@ -43,7 +43,7 @@ App.controller('AppController',
     $rootScope.$on('$stateChangeSuccess',
       function(event, toState, toParams, fromState, fromParams) {
         // display new view from top
-        if(! toState.name == 'app.bill.pollDetails'){
+        if(toState.name != 'app.bill.pollDetails'){
 
           $window.scrollTo(0, 0);
         }
@@ -123,10 +123,10 @@ App.controller('AppController',
     $scope.logout = function(){
       Auth.logout();
       $state.go("page.login");
-    }
+    };
     $scope.profile = function(){
       $state.go("app.profile");
-    }
+    };
 
     $rootScope.$on("event:auth-loginRequired", function() {
        $scope.logout();

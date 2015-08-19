@@ -17,8 +17,8 @@ App.factory('colors', ['APP_COLORS', function(colors) {
   return {
     byName: function(name) {
         if(name == "random"){
-            var randomColor = pickRandomProperty(colors)
-            return colors[randomColor]
+            var randomColor = pickRandomProperty(colors);
+            return colors[randomColor];
         }else{
             return (colors[name] || '#fff');
         }

@@ -47,7 +47,7 @@
             parsedMember.house = $scope.committeesMembers[i].key[0];
             parsedMember.id = $scope.committeesMembers[i].key[8];
             $scope.membersJson.push(parsedMember);
-        };
+        }
         $scope.membersTableParams.reload();
     });
 }]);

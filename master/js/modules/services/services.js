@@ -100,7 +100,7 @@ App.factory('DataFetcher',
         });
 
         return defer.promise;
-    }
+    };
 
     service.fetchDataHouseDetails = function(houseId, token){
         var result;
@@ -204,7 +204,7 @@ App.factory('DataFetcher',
 
     service.getBillSearchResults = function(){
         return _billSearchResults;
-    }
+    };
 
 
     return service;

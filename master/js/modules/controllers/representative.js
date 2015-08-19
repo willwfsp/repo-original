@@ -79,15 +79,15 @@ App.controller('RepresentativeDataController',
         //$scope.committeesRepresentative = data[4].data;
 
         //insert representative's bills into variable
-        for(var i = 0; i < data[3].data.length; i++){
-          $scope.billsRepresentative.push(data[3].data[i].doc);
-        };
+        for(var a = 0; a < data[3].data.length; a++){
+          $scope.billsRepresentative.push(data[3].data[a].doc);
+        }
         $scope.billsTableParams.reload();
 
         //insert committees the representative participate into variable
-        for(var i = 0; i < data[4].data.length; i++){
-          $scope.committeesRepresentative.push(data[4].data[i].doc);
-        };
+        for(var b = 0; b < data[4].data.length; b++){
+          $scope.committeesRepresentative.push(data[4].data[b].doc);
+        }
         $scope.committeesTableParams.reload();
 
         $scope.themeData.forEach(function(item){

@@ -31,7 +31,7 @@ App.filter('ageFilter', function() {
 App.filter('statusDesc', function() {
     return function(input, attribute) {
         return input[attribute].DESC;
-    }
+    };
 });
 
 
@@ -50,35 +50,33 @@ App.filter('orderObjectBy', function(){
         return b - a;
     });
     return array;
- }
+ };
 });
 
 App.filter('houseFullName', function() {
     return function(input, all) {
         switch(input){
-            case "CD": return "Câmara dos Deputados";   break;
-            case "SF": return "Senado Federal";         break;
-            case "MG": return "ALMG";                   break;
-            case "SP": return "ALESP";                  break;
+            case "CD": return "Câmara dos Deputados";
+            case "SF": return "Senado Federal";
+            case "MG": return "ALMG";
+            case "SP": return "ALESP";
             default: return "";
         }
         return ;
-    }
+    };
 });
 
 App.filter('legislature', function() {
     return function(input, all) {
         if (typeof input === 'string'){
             return input;
-        }
-        else if(input instanceof Array &&  input.length > 1){
+        } else if(input instanceof Array &&  input.length > 1){
             return input[0] + ', ' + input[1];
-        }
-        else {
+        } else {
             return input[0];
-        };
+        }
         return;
-    }
+    };
 });
 
 App.filter('capitalize', function() {

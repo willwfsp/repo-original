@@ -5,7 +5,7 @@
 
 App.service('Utils', ["$window", "APP_MEDIAQUERY", function($window, APP_MEDIAQUERY) {
     'use strict';
-    
+
     var $html = angular.element("html"),
         $win  = angular.element($window),
         $body = angular.element('body');
@@ -59,8 +59,8 @@ App.service('Utils', ["$window", "APP_MEDIAQUERY", function($window, APP_MEDIAQU
         touch: (
             ('ontouchstart' in window && navigator.userAgent.toLowerCase().match(/mobile|tablet/)) ||
             (window.DocumentTouch && document instanceof window.DocumentTouch)  ||
-            (window.navigator['msPointerEnabled'] && window.navigator['msMaxTouchPoints'] > 0) || //IE 10
-            (window.navigator['pointerEnabled'] && window.navigator['maxTouchPoints'] > 0) || //IE >=11
+            (window.navigator.msPointerEnabled && window.navigator.msMaxTouchPoints > 0) || //IE 10
+            (window.navigator.pointerEnabled && window.navigator.maxTouchPoints > 0) || //IE >=11
             false
         ),
         mutationobserver: (window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver || null)

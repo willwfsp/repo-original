@@ -32,8 +32,8 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$state', '$http', 
     };
 
     // Load menu from json file
-    // ----------------------------------- 
-    
+    // -----------------------------------
+
     $scope.getMenuItemPropClasses = function(item) {
       return (item.heading ? 'nav-heading' : '') +
              (isActive(item) ? ' active' : '') ;
@@ -55,7 +55,7 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$state', '$http', 
      $scope.loadSidebarMenu();
 
     // Handle sidebar collapse items
-    // ----------------------------------- 
+    // -----------------------------------
 
     $scope.addCollapse = function($index, item) {
       collapseList[$index] = $rootScope.app.layout.asideHover ? true : !isActive(item);
@@ -81,11 +81,11 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$state', '$http', 
       else if ( isParentItem ) {
         closeAllBut(-1);
       }
-      
+
       $scope.lastEventFromChild = isChild($index);
 
       return true;
-    
+
     };
 
     function closeAllBut(index) {
@@ -97,7 +97,7 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$state', '$http', 
     }
 
     function isChild($index) {
-      return (typeof $index === 'string') && !($index.indexOf('-') < 0);
+      return ((typeof $index === 'string') && (($index.indexOf('-') > 0)));
     }
 
 }]);

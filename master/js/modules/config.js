@@ -30,7 +30,7 @@ App.config(
         controller: 'AppController',
         resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit'),
         data: {
-                access: access.public
+                access: access.user
             }
     })
     .state('app.dashBoard', {

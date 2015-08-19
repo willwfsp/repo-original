@@ -98,20 +98,20 @@ App.controller('HouseDataController',
         	evento.place = $scope.houseEvents[i].key[3];
         	evento.date = $scope.houseEvents[i].key[1];
         	aux.push(evento);
-        };
+        }
 
         $scope.houseEvents = aux;
 
         //parsing committees
         aux = [];
-        for(var i = 0; i < $scope.houseCommittees.length; i++){
+        for(var j = 0; j < $scope.houseCommittees.length; j++){
         	var committee = {};
-        	committee.name = $scope.houseCommittees[i].key[2];
-        	committee.initials = $scope.houseCommittees[i].key[1];
-            committee.house = $scope.houseCommittees[i].key[0];
-            committee.refCode = $scope.houseCommittees[i].key[3];
+        	committee.name = $scope.houseCommittees[j].key[2];
+        	committee.initials = $scope.houseCommittees[j].key[1];
+            committee.house = $scope.houseCommittees[j].key[0];
+            committee.refCode = $scope.houseCommittees[j].key[3];
         	aux.push(committee);
-        };
+        }
 
         $scope.houseCommittees = aux;
 

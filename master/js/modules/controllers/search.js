@@ -25,8 +25,8 @@ App.controller('SearchBillsController',
     $scope.themeSelected = "";
     $scope.subthemeSelected = "";
     $scope.orderedBy = 1;
-    $scope.fetchingStart = true
-    $scope.fetchingMore = false
+    $scope.fetchingStart = true;
+    $scope.fetchingMore = false;
     var _urlParam = $location.search();
     //search variables
     if('q' in _urlParam){
@@ -73,7 +73,7 @@ App.controller('SearchBillsController',
             return true;
         }
         return false;
-    }
+    };
 
     $scope.loadThemes = function(){
         var themesJson = 'server/onthology.json';
@@ -220,7 +220,7 @@ App.controller('SearchBillsController',
         $scope.filters.tipos = [];
         $scope.filters.status = [];
         $scope.filters.ano = "";
-        $scope.filters.subtema = ""
+        $scope.filters.subtema = "";
         $scope.bookmark = "";
 
         //fetch most recent data
@@ -256,7 +256,7 @@ App.controller('SearchBillsController',
         if($scope.fetchingMore){
             for(i = 0; i < aux.rows.length; i++){
                 $scope.bills.push(aux.rows[i]);
-            };
+            }
             $scope.bookmark = aux.bookmark;
             $scope.fetchingMore = false;
         }

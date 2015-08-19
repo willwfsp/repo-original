@@ -1,22 +1,24 @@
-App.directive('loading',   ['$http', '$state' ,function ($http, $state){
-  return {
-    restrict: 'A',
-    link: function (scope, elm, attrs)
-    {
-      scope.isLoading = function () {
-        return $http.pendingRequests.length > 0 && !$state.is('app.searchBills');
-      };
+App.directive('loading',
+  ['$http', '$state',
+    function($http, $state){
+    return {
+        restrict: 'A',
+        link: function(scope, elm, attrs)
+        {
+          scope.isLoading = function () {
+              return $http.pendingRequests.length > 0 && !$state.is('app.searchBills');
+          };
 
-      scope.$watch(scope.isLoading, function (v)
-      {
-        if(v){
-            elm.show();
-        }else{
-            elm.hide();
+          scope.$watch(scope.isLoading,
+            function(v){
+              if(v){
+                  elm.show();
+              }else{
+                  elm.hide();
+              }
+          });
         }
-      });
-    }
-  };
+    };
 }]);
 
 (function() {
@@ -29,12 +31,11 @@ App.directive('loading',   ['$http', '$state' ,function ($http, $state){
 
         var directive = {
             restrict: 'EAC',
-            template: 
-              '<div class="preloader-progress">' +
+            template:
+              ('<div class="preloader-progress">' +
                   '<div class="preloader-progress-bar" ' +
                        'ng-style="{width: loadCounter + \'%\'}"></div>' +
-              '</div>'
-            ,
+              '</div>'),
             link: link
         };
         return directive;
@@ -90,7 +91,7 @@ App.directive('loading',   ['$http', '$state' ,function ($http, $state){
             // a custom event must be used instead
             var off = scope.$on('$viewContentLoaded', function () {
               viewsLoaded ++;
-              // we know there are at least two views to be loaded 
+              // we know there are at least two views to be loaded
               // before the app is ready (1-index.html 2-app*.html)
               if ( viewsLoaded === 2) {
                 // with resolve this fires only once
