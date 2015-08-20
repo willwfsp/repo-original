@@ -223,11 +223,10 @@ App.factory('DataFetcher',
 
     service.fetchBillDoc = function(textURL){
         var url = textURL.replace("http://dadosabertos.almg.gov.br/ws", "");
-
         var defer = $q.defer();
 
         var promiseDoc = $http.get(ApiMgEndPoint + url);
-
+        console.log(promiseDoc);
         $q.all([promiseDoc])
           .then(function(results) {
             defer.resolve(results);
