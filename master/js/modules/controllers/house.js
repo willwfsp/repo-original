@@ -20,7 +20,7 @@ App.controller('HouseDataController',
         for(var i = 0; i < $scope.houseEvents.length; i++){
 
         	var evento = {};
-        	evento.name = $scope.houseEvents[i].key[4];
+        	evento.name = $scope.houseEvents[i].key[2];
         	evento.place = $scope.houseEvents[i].key[3];
         	evento.date = $scope.houseEvents[i].key[1];
         	aux.push(evento);

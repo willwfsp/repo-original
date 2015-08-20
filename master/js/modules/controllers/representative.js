@@ -71,7 +71,6 @@ App.controller('RepresentativeDataController',
     });
 
     DataFetcher.fetchDataRepresentative($stateParams.id, Auth.user.token).then(function(data) {
-        console.log(data);
         $scope.dados = data[0].data;
         $scope.themeData = data[1].data;
         $scope.terms = data[2].data;
