@@ -32,8 +32,19 @@ App.controller('SignupController',
                 $scope.authSucMsg = 'Usuário Criado. Verifique seu email para completar o cadastro';
                 $scope.showLoading = false;
             },function(err) {
+                if (err.error == "postSignup: all fields are necessary."){
+                    $scope.authMsg = 'Todos os campos são necessários.';
+
+                }else if(err.error == "postSignup: unavailable user."){
+                    $scope.authMsg = "Usuário indisponível.";
+                }else if(err.error == "postSignup: unavailable email."){
+                    $scope.authMsg = "E-mail indisponível.";
+                }else if(err.error == "postSignup: invalid email."){
+                    $scope.authMsg = "E-mail ainda não validado.";
+                }else {
+                    $scope.authMsg = 'Erro Interno do Servidor. Tente novamente mais tarde.';
+                }
                 $scope.showLoading = false;
-                $scope.authMsg = err;
             });
 
         } else {

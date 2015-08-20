@@ -25,7 +25,7 @@ App.controller("RecoverPasswordController",
                 }
             }, function(x) {
                 $scope.showLoading = false;
-                $scope.authErrMsg = "Erro na solicitação.";
+                $scope.authErrMsg = "E-mail inválido.";
             });
 
         } else {

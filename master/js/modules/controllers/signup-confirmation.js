@@ -76,20 +76,13 @@ App.controller('SignupConfirmController',
                     $timeout(function(){
                         $state.go("page.login");
                     }, 2000);
-                } else{
-                    $scope.authErrMsg  = 'Token Inválido. Cheque o seu email para recuperar o token correto.';
-                    $scope.showLoading = false;
-                    $scope.showSendAgain = true;
                 }
 
             }, function(x) {
                 $scope.authErrMsg  = 'Token Inválido. Cheque o seu email para recuperar o token correto.';
                 $scope.showLoading = false;
                 $scope.showSendAgain = true;
-            });
+            }
+        );
     }
-
-
-
-
 }]);

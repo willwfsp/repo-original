@@ -20,15 +20,15 @@
             .then(function(response) {
 
                 if (response.status == "200" ) {
-                    $scope.authSucMsg  = 'Senha Resetada. Veja seu email.';
+                    $scope.authSucMsg  = 'A nova senha foi enviada para o seu email.';
                     $scope.showLoading = false;
                     $timeout(function(){
                         $state.go("page.login");
                     }, 2000);
                 }
 
-            }, function(x) {
-                $scope.authErrMsg  = 'Token Inválido. Cheque o seu email para recuperar o token correto.';
+            }, function(err) {
+                $scope.authErrMsg  = 'Token Inválido. Cheque o seu email para recuperar o token correto ou reenvie um novo token.';
                 $scope.showLoading = false;
 
             });
