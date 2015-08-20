@@ -1,1 +1,54 @@
-h3 Dados do usuário
+h3 Dados da Conta
+.row
+  .col-md-6
+    .col-md-12
+      .panel.widget.bill-box
+        .panel-heading
+          h3 Usuário {{user.name}}
+        .panel-body
+          .form-horizontal.m0
+            .form-group.m0
+              .col-sm-3.control-label-sm.m0
+                label Nome:
+              .col-sm-9.form-control-static-sm {{user.firstname}}
+            .form-group.m0
+              .col-sm-3.control-label-sm.m0 
+                label Sobrenome:
+              .col-sm-9.form-control-static-sm {{user.lastname}}
+            .form-group.m0
+              .col-sm-3.control-label-sm.m0 
+                label E-mail:
+              .col-sm-9.form-control-static-sm {{user.email}}
+            .form-group.m0
+              .col-sm-3.control-label-sm.m0 
+                label Organização:
+              .col-sm-9.form-control-static-sm {{user.organization}}
+            .form-group.m0
+              .col-sm-3.control-label-sm.m0 
+                label Indústria:
+              .col-sm-9.form-control-static-sm {{user.industry}}
+            .form-group.m0
+              .col-sm-3.control-label-sm.m0 
+                label Telefone:
+              .col-sm-9.form-control-static-sm {{user.telephone}}
+
+  .col-md-6
+    .col-md-12
+      .panel.widget.bill-box
+        .panel-heading
+          h3 Acessos
+        .panel-body
+          .form-horizontal.m0
+            .form-group.m0
+              .col-sm-3.control-label-sm.m0
+                label Último Acesso:
+              .col-sm-9.form-control-static-sm {{user.previousLoginTime | date:'medium'}}
+            .form-group.m0
+              .col-sm-3.control-label-sm.m0 
+                label IP do acesso:
+              .col-sm-9.form-control-static-sm {{user.previousLoginIp}}
+            .form-group.m0
+              .col-sm-3.control-label-sm.m0 
+                label Acesso atual:
+              .col-sm-9.form-control-static-sm {{user.currentLoginTime | date:'medium'}}
+            .form-group.m0

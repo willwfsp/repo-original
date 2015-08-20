@@ -17,7 +17,7 @@ App.config(
     $locationProvider.html5Mode(false);
 
     // default route
-    $urlRouterProvider.otherwise('/page/login');
+    $urlRouterProvider.otherwise('/app/dashboard');
 
   //
   // Application Routes
@@ -30,7 +30,7 @@ App.config(
         controller: 'AppController',
         resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit'),
         data: {
-                access: access.user
+                access: access.public
             }
     })
     .state('app.dashBoard', {
@@ -52,6 +52,12 @@ App.config(
         templateUrl: helper.basepath('bill.html'),
         resolve: helper.resolveFor('ngTable'),
         controller: 'BillController'
+    })
+    .state('app.viewDocuments', {
+        url: '/viewDocuments/:docUrl',
+        title: 'Visualizar Documento',
+        templateUrl: helper.basepath('viewDocuments.html'),
+        controller: 'ViewDocumentsController'
     })
     .state('app.bill.pollDetails', {
         url: '/pollDetails/:pollID',
@@ -95,7 +101,8 @@ App.config(
     .state('app.profile', {
         url: '/profile',
         title: 'Perfil do Usuário',
-        templateUrl: helper.basepath('profile.html')
+        templateUrl: helper.basepath('profile.html'),
+        controller: 'ProfileController'
     })
     .state('app.reports', {
         url: '/reports',

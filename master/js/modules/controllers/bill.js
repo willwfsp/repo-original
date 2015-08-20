@@ -11,9 +11,16 @@ App.controller('BillController',
 
     $scope.coAuthorsCollapsed = true;
     $scope.dados = {};
-    $scope.viewDoc = function(url){
-        $window.open(url, '_blank');
+
+    $scope.viewDoc = function(url, house){
+        if(!house){
+            $window.open(url, '_blank');
+        }
+        else{
+            $state.go('app.viewDocuments', {docUrl: url});
+        }
     };
+
     $scope.docsTableParams = new ngTableParams({
         page: 1,
         count: 10,

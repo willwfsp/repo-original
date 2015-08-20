@@ -116,7 +116,7 @@ h3 {{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIVIL}}
                   td(data-title=" 'Apresentação' ", sortable="'SLP_DATA_APRESENTACAO'", filter="{ 'SLP_DATA_APRESENTACAO': 'text' }") {{item.SLP_DATA_APRESENTACAO | date:'dd/MM/yyyy'}}
                   td(data-title=" 'Tema' ", sortable="'SLP_SL_SUBTEMA'", filter="{ 'SLP_SL_SUBTEMA': 'text' }") {{item.SLP_SL_SUBTEMA}}
                   td(data-title=" 'Situação' ", sortable="'SLP_STATUS'", filter="{ 'SLP_STATUS': 'text' }") {{item.SLP_STATUS | statusDesc:item.SLP_CASA_SIGLA}}
-                  td(data-title=" 'Ementa' ", sortable="'SLP_EMENTA'", filter="{ 'SLP_EMENTA': 'text' }") {{item.SLP_EMENTA | limitTo: 60}} {{ item.SLP_EMENTA.length > 20? ' ...' : ''}}
+                  td(data-title=" 'Ementa' ", sortable="'SLP_EMENTA'", filter="{ 'SLP_EMENTA': 'text' }") {{item.SLP_EMENTA | limitTo: 120}} {{ item.SLP_EMENTA.length > 120? ' ...' : ''}}
         // Proposicoes END
 
       // Column 2 END

@@ -96,7 +96,7 @@ h3
                       .arrow
                       .popover-content
                         p {{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO || "Sem descrição"}}
-                      a(ng-if="tramitacao.doc.SLT_LINK_INTEIRO_TEOR", href="{{tramitacao.doc.SLT_LINK_INTEIRO_TEOR}}", target="_blank")
+                      a(ng-if="tramitacao.doc.SLT_LINK_INTEIRO_TEOR", ng-click="viewDoc( doc.SLD_LINK , dados.SLP_STATUS.MG)")
                         .popover-footer.text-center
                           em.icon-doc
                           label Inteiro Teor
@@ -169,7 +169,7 @@ h3
                 tbody
                   tr(ng-repeat="doc in $data")
                     td(data-title=" 'Nome' ", sortable="'SLD_TIPO'", filter="{ 'SLD_TIPO': 'text' }")
-                      a(ng-click="viewDoc( doc.SLD_LINK )") {{doc.SLD_TIPO}}
+                      a(ng-click="viewDoc( doc.SLD_LINK , dados.SLP_STATUS.MG)") {{doc.SLD_TIPO}}
                     td.text-center(data-title=" 'Data' ", sortable="'SLD_DATA'", filter="{ 'SLD_DATA': 'text' }") {{doc.SLD_DATA ? (doc.SLD_DATA | date:'dd/MM/yyyy') : "---"}}
       // DOCS END
 

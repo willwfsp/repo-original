@@ -10,6 +10,7 @@ App.factory('DataFetcher',
     // Constants...
     var service = {};
     var baseUrl = "https://sigalei-api.mybluemix.net/v1/";
+    var ApiMgEndPoint = 'http://dadosabertos.almg.gov.br/ws';
 
     // "Private" Variables
     var _billSearchResults = {};
@@ -202,6 +203,38 @@ App.factory('DataFetcher',
         return defer.promise;
     };
 
+    service.fetchUserDetails = function(token){
+        var headers = {
+            headers: {'Authorization': 'Bearer ' + token}
+        };
+        var promiseUserData = $http.get((baseUrl + "profile"), headers);
+
+        var defer = $q.defer();
+
+        $q.all([promiseUserData])
+          .then(function(results) {
+            defer.resolve(results);
+        }, function(reason){
+            $log.log(reason);
+        });
+
+        return defer.promise;
+    };
+
+    service.fetchBillDoc = function(textURL){
+        var url = textURL.replace("http://dadosabertos.almg.gov.br/ws", "");
+
+        var defer = $q.defer();
+
+        var promiseDoc = $http.get(ApiMgEndPoint + url);
+
+        $q.all([promiseDoc])
+          .then(function(results) {
+            defer.resolve(results);
+        });
+
+        return defer.promise;
+    }
     service.getBillSearchResults = function(){
         return _billSearchResults;
     };
