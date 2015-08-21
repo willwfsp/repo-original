@@ -14,12 +14,11 @@ nav.navbar.topnavbar(role='navigation')
 
   // START Nav wrapper
   .collapse.navbar-collapse(collapse="navCollapsed")
-    .nav.navbar-left
+    .nav.navbar-left.col-md-4.col-lg-6
       form.navbar-form(ng-controller="SearchBarController", ng-submit="searchQ()")
         .form-group.has-feedback
           input.form-control(type="text", ng-model="query", placeholder="{{'topbar.search.PLACEHOLDER' | translate }}")
           button.btn-inline.fa.fa-search.form-control-feedback.sigalei-search(type="submit")
-
     .nav.navbar-right
       ul.nav.navbar-nav(ng-controller="SidebarController")
         li(ng-repeat='item in menuItems', ng-class="{'dropdown': item.submenu}", dropdown="!!item.submenu")

@@ -33,7 +33,7 @@
 
   @media @tablet {
     .navbar-header {
-      width: @nav-header-wd;
+      width: 180px;
       text-align: center;
       .navbar-brand {
         width: 100%;
@@ -76,7 +76,7 @@
     }
     .brand-logo {
       display: block;
-      padding: 10px 15px;
+      padding: 10px 10px;
     }
     .brand-logo-collapsed {
       display: none;
@@ -86,6 +86,8 @@
 
   .navbar-nav > li > a,
   .navbar-nav > .open > a {
+    padding-right: 8px;
+    padding-left: 8px;
     color: @nav-top-item-mobile;
     &:hover, &:focus {
       color: @nav-top-item-mobile-active;
@@ -135,8 +137,7 @@
 .topnavbar {
 
   .navbar-form {
-    width: 350px;
-    z-index: 9001;
+    z-index: 1;
     .transition(all .3s);
 
     .form-group {

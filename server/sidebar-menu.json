@@ -5,7 +5,7 @@
     "translate": "sidebar.heading.HEADER"
   },
   {
-    "text": "Projetos Mais Recentes",
+    "text": "Últimos Projetos",
     "sref": "app.searchBills",
     "icon": "fa fa-file-o"
   },

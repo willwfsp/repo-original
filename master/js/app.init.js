@@ -96,6 +96,4 @@ App.run(
       viewAnimation: 'ng-fadeInUp'
     };
     $rootScope.user = {};
-
-
 }]);

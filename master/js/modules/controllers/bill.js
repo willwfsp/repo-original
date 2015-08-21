@@ -17,7 +17,9 @@ App.controller('BillController',
             $window.open(url, '_blank');
         }
         else{
-            $state.go('app.viewDocuments', {docUrl: url});
+            var parsedUrl = url.replace(DataFetcher.getApiMgEndPoint() + '/proposicoes/pesquisa/avancada?expr=', "");
+            console.log(parsedUrl);
+            $state.go('app.viewDocuments', {docUrl: parsedUrl} );
         }
     };
 

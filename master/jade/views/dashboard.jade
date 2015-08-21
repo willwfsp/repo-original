@@ -3,7 +3,7 @@ h3 Painel Principal
     .col-xs-12.col-sm-6.col-md-3(ng-repeat="house in housesNews")
         .panel.widget
             .panel-heading.news-heading
-                h4 Notícias -
+                h4 Notícias -&nbsp;
                     a(ui-sref="app.house({house: house.name})") {{house.name == 'CD' ? 'Câmara' : (house.name | houseFullName) }}
             .panel-body.news-box.scrollable
                     .list-group

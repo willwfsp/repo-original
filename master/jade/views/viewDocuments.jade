@@ -1,2 +1,4 @@
-h3 Visualizar Documento
-div(ng-bind-html="docContent")
+h3 Visualizar Documento {{billName}}
+.col-md-12
+	.panel.widget
+		.panel-body(ng-bind-html="docContent")
