@@ -23,7 +23,7 @@ nav.navbar.topnavbar(role='navigation')
     .nav.navbar-right
       ul.nav.navbar-nav(ng-controller="SidebarController")
         li(ng-repeat='item in menuItems', ng-class="{'dropdown': item.submenu}", dropdown="!!item.submenu")
-          a(ng-if="!item.heading && !item.submenu", ng-href="{{$state.href(item.sref)}}", title="{{item.text}}")
+          a(ng-if="!item.heading && !item.submenu", ng-href="{{$state.href(item.sref)}}", title="{{item.text}}" analytics-on="click" analytics-event="{{item.text}}")
             span {{(item.translate | translate) || item.text}}
           a(dropdown-toggle="", ng-if="item.submenu")
             span {{(item.translate | translate) || item.text}}

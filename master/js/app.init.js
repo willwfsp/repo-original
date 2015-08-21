@@ -26,17 +26,19 @@ var App = angular.module('sigaLeiApp', [
     'ngSanitize',
     'ngResource',
     'ui.utils',
-    'http-auth-interceptor'
+    'http-auth-interceptor',
+    'angulartics',
+    'angulartics.google.analytics'
   ]);
 
 App.run(
   ['$rootScope', '$state', '$stateParams',  '$window', '$templateCache',
    'Auth', '$timeout', 'cfpLoadingBar', '$log',
     function ($rootScope, $state, $stateParams, $window, $templateCache, Auth, $timeout, cfpLoadingBar, $log) {
-
+    ga('create', 'UA-65800611-2', 'none');
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
-
+        console.log("Teste");
         /* Auth */
         if(!('data' in toState) || !('access' in toState.data)){
             $log.error("Access undefined for this state");
