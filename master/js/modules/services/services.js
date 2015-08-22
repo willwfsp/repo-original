@@ -15,10 +15,17 @@ App.factory('DataFetcher',
     // "Private" Variables
     var _billSearchResults = {};
 
+    $http.defaults.headers['Access-Control-Allow-Origin'] = '*';
+    $http.defaults.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, PUT';
+
     service.fetchSearchDataBills = function(termos, filters, token){
         var query = "";
         var headers = {
-            headers: {'Authorization': 'Bearer ' + token}
+            headers: {'Authorization': 'Bearer ' + token,
+                      'Access-Control-Allow-Origin' : '*',
+                        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'}
         };
         var path = "proposicoes";
         var url = "";
@@ -40,7 +47,11 @@ App.factory('DataFetcher',
 
     service.fetchBill = function(nome, token){
         var headers = {
-            headers: {'Authorization': 'Bearer ' + token}
+            headers: {'Authorization': 'Bearer ' + token,
+                      'Access-Control-Allow-Origin' : '*',
+                        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'}
         };
         var promiseBillDetails = $http.get((baseUrl + "proposicoes/" + nome),headers);
         var promiseBillTrack = $http.get((baseUrl + "proposicoes/" + nome + "/tramitacao"), headers);
@@ -60,7 +71,11 @@ App.factory('DataFetcher',
     service.fetchDataPollDetails = function(id, token){
         var result;
         var headers = {
-            headers: {'Authorization': 'Bearer ' + token}
+            headers: {'Authorization': 'Bearer ' + token,
+                      'Access-Control-Allow-Origin' : '*',
+                        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'}
         };
         return $http.get((baseUrl + "proposicoes/votacao/" + id),headers).then(function(result) {
 
@@ -73,7 +88,11 @@ App.factory('DataFetcher',
 
     service.fetchDataRepresentative = function(id, token){
         var headers = {
-            headers: {'Authorization': 'Bearer ' + token}
+            headers: {'Authorization': 'Bearer ' + token,
+                      'Access-Control-Allow-Origin' : '*',
+                        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'}
         };
         var promiseRepresentativeDetails = $http.get((baseUrl + "parlamentares/" + id),headers);
         var promiseRepresentativeTemas = $http.get((baseUrl + "parlamentares/" + id + "/temas"),headers);
@@ -106,7 +125,11 @@ App.factory('DataFetcher',
     service.fetchDataHouseDetails = function(houseId, token){
         var result;
         var headers = {
-            headers: {'Authorization': 'Bearer ' + token}
+            headers: {'Authorization': 'Bearer ' + token,
+                      'Access-Control-Allow-Origin' : '*',
+                        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'}
         };
         var promiseHouseDetails = $http.get((baseUrl + "assembleias/" + houseId),headers);
         var promiseHouseEvents = $http.get((baseUrl + "eventos/" + houseId),headers);
@@ -161,7 +184,11 @@ App.factory('DataFetcher',
     service.fetchHousesNews = function(houseIds, token){
         var result;
         var headers = {
-            headers: {'Authorization': 'Bearer ' + token}
+            headers: {'Authorization': 'Bearer ' + token,
+                      'Access-Control-Allow-Origin' : '*',
+                        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'}
         };
         var promiseCongressNews =   $http.get((baseUrl + "noticias/" + houseIds[0]), headers);
         var promiseSenateNews =     $http.get((baseUrl + "noticias/" + houseIds[1]), headers);
@@ -184,7 +211,11 @@ App.factory('DataFetcher',
 
     service.fetchCommitteeDetails = function(house, committeeID, token){
         var headers = {
-            headers: {'Authorization': 'Bearer ' + token}
+            headers: {'Authorization': 'Bearer ' + token,
+                      'Access-Control-Allow-Origin' : '*',
+                        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'}
         };
         var promiseCommitteeDetails = $http.get((baseUrl + "comissoes/" + house +
             "/" + committeeID),headers);
@@ -205,7 +236,11 @@ App.factory('DataFetcher',
 
     service.fetchUserDetails = function(token){
         var headers = {
-            headers: {'Authorization': 'Bearer ' + token}
+            headers: {'Authorization': 'Bearer ' + token,
+                      'Access-Control-Allow-Origin' : '*',
+                        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'}
         };
         var promiseUserData = $http.get((baseUrl + "profile"), headers);
 
