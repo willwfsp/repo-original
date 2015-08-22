@@ -63,41 +63,43 @@ h3(ng-init="init()") Pesquisa
           tr(ng-repeat="bill in bills")
             td
               .media-box
-                  small.text-muted.pull-right Última atualização: {{toDate(bill.fields.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
                   .media-box-body
-                    a(ui-sref="app.bill({ billName: '{{bill.fields.SLP_NOME}}' })")
-                      h4.media-box-heading {{bill.fields.SLP_NOME}}
-                        small.text-muted(ng-if="bill.fields.SLR_NOME")  ( ou {{bill.fields.SLR_NOME}} )
-                    medium
-                      | {{ (bill.fields.SLP_STATUS_DESC  | capitalize:true) || "-"}}
-                    br
-                    small.text-muted Autor:
+                    .row.row-search
+                      small.text-muted.pull-right Última atualização: {{toDate(bill.fields.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
+                      a(ui-sref="app.bill({ billName: '{{bill.fields.SLP_NOME}}' })")
+                        h4.media-box-heading {{bill.fields.SLP_NOME}}
+                          small.text-muted(ng-if="bill.fields.SLR_NOME")  ( ou {{bill.fields.SLR_NOME}} )
+                      medium
+                        | {{ (bill.fields.SLP_STATUS_DESC  | capitalize:true) || "-"}}
+                      br
+                      small.text-muted Autor:
 
-                      //show main author
-                      span(ng-init = "author = getMainAuthor(bill.fields.SLP_AUTOR)")
-                        //author has no id
-                        strong(ng-if="! author.id") {{author.name}}
+                        //show main author
+                        span(ng-init = "author = getMainAuthor(bill.fields.SLP_AUTOR)")
+                          //author has no id
+                          strong(ng-if="! author.id") {{author.name}}
 
-                        //author has id
-                        strong(ng-if="author.id")
-                          a(ui-sref="app.representative({ id: '{{author.id}}' })") {{author.name}}
+                          //author has id
+                          strong(ng-if="author.id")
+                            a(ui-sref="app.representative({ id: '{{author.id}}' })") {{author.name}}
 
-                      //show coauthors
-                      strong(ng-if="hasCoauthors(bill.fields.SLP_AUTOR)") e&nbsp;
-                        a(ng-click="showOtherAuthors = !showOtherAuthors") {{bill.fields.SLP_AUTOR.length - 1 > 1 ? bill.fields.SLP_AUTOR.length - 1 + ' outros' : '1 outro'}}
-                        div(collapse="!showOtherAuthors")
-                          span(ng-init = "mainAuthor = getMainAuthor(bill.fields.SLP_AUTOR)")
-                            strong(ng-repeat="author in bill.fields.SLP_AUTOR | orderBy", ng-hide="mainAuthor.name == parseAuthor(author).name")
-                              strong(ng-if="! parseAuthor(author).id") {{parseAuthor(author).name}}
+                        //show coauthors
+                        strong(ng-if="hasCoauthors(bill.fields.SLP_AUTOR)") e&nbsp;
+                          a(ng-click="showOtherAuthors = !showOtherAuthors") {{bill.fields.SLP_AUTOR.length - 1 > 1 ? bill.fields.SLP_AUTOR.length - 1 + ' outros' : '1 outro'}}
+                          div(collapse="!showOtherAuthors")
+                            span(ng-init = "mainAuthor = getMainAuthor(bill.fields.SLP_AUTOR)")
+                              strong(ng-repeat="author in bill.fields.SLP_AUTOR | orderBy", ng-hide="mainAuthor.name == parseAuthor(author).name")
+                                strong(ng-if="! parseAuthor(author).id") {{parseAuthor(author).name}}
 
-                              strong(ng-if="parseAuthor(author).id")
-                                a(ui-sref="app.representative({ id: '{{ parseAuthor(author).id}}' })") {{parseAuthor(author).name}}
-                              span(ng-hide="$index == bill.fields.SLP_AUTOR.length - 1 || $first == $last - 1") ,
-                    br
-                    small.text-muted Tema: {{bill.fields.SLP_SL_TEMA || '-'}}
-                    br
-                    small.text-muted SubTema: {{bill.fields.SLP_SL_SUBTEMA}}
-                    p {{bill.fields.SLP_EMENTA}}
+                                strong(ng-if="parseAuthor(author).id")
+                                  a(ui-sref="app.representative({ id: '{{ parseAuthor(author).id}}' })") {{parseAuthor(author).name}}
+                                span(ng-hide="$index == bill.fields.SLP_AUTOR.length - 1 || $first == $last - 1") ,
+                      br
+                      small.text-muted Tema: {{bill.fields.SLP_SL_TEMA || '-'}}
+                      br
+                      small.text-muted SubTema: {{bill.fields.SLP_SL_SUBTEMA}}
+                    .row.row-search
+                      p {{bill.fields.SLP_EMENTA}}
 
           tr(ng-if="fetchingStart || fetchingMore")
             td(align="center")
