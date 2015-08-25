@@ -22,9 +22,7 @@
                 if (response.status == "200" ) {
                     $scope.authSucMsg  = 'A nova senha foi enviada para o seu email.';
                     $scope.showLoading = false;
-                    $timeout(function(){
-                        $state.go("page.login");
-                    }, 2000);
+
                 }
 
             }, function(err) {

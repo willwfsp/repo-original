@@ -17,7 +17,11 @@ App.config(
     $locationProvider.html5Mode(false);
 
     // default route
-    $urlRouterProvider.otherwise('/app/dashboard');
+
+    $urlRouterProvider.otherwise( function($injector, $location) {
+            var $state = $injector.get("$state");
+            $state.go("app.dashBoard");
+        });
 
   //
   // Application Routes
@@ -30,7 +34,7 @@ App.config(
         controller: 'AppController',
         resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit'),
         data: {
-                access: access.public
+                access: access.user
             }
     })
     .state('app.dashBoard', {
@@ -118,7 +122,7 @@ App.config(
             $rootScope.app.layout.isBoxed = false;
         }],
         data: {
-                access: access.public
+                access: access.anon
             }
     })
     .state('page.404', {

@@ -32,10 +32,6 @@ App.controller('SignupConfirmController',
                     }, function(x) {
                         if( x.data.error == "email: already valid"){
                             $scope.authSucMsg = "E-mail já validado.";
-                            $timeout(function(){
-                                $state.go("page.login");
-                            }, 2000);
-
 
                         }else{
                             $scope.authErrMsg = "E-mail Inválido.";
@@ -75,7 +71,7 @@ App.controller('SignupConfirmController',
                     $scope.showLoading = false;
                     $timeout(function(){
                         $state.go("page.login");
-                    }, 2000);
+                    }, 5000);
                 }
 
             }, function(x) {

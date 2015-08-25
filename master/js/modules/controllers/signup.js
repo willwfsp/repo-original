@@ -24,12 +24,15 @@ App.controller('SignupController',
             user.lastname = $scope.registerForm.register_lastname.$modelValue;
             user.organization = $scope.registerForm.register_organization.$modelValue;
             user.industry = $scope.registerForm.register_industry.$modelValue;
-            user.telephone = $scope.registerForm.register_phone.$modelValue;
+            if ( $scope.registerForm.register_phone.$modelValue != ""){
+                user.telephone = $scope.registerForm.register_phone.$modelValue ;
+            }
+
             user.email = $scope.registerForm.register_email.$modelValue;
             user.password = $scope.registerForm.register_password.$modelValue;
 
             Auth.signup(user, function() {
-                $scope.authSucMsg = 'Usuário Criado. Verifique seu email para completar o cadastro';
+                $scope.authSucMsg = 'Usuário criado. Verifique seu email para completar o cadastro.';
                 $scope.showLoading = false;
             },function(err) {
                 if (err.error == "postSignup: all fields are necessary."){
@@ -42,7 +45,7 @@ App.controller('SignupController',
                 }else if(err.error == "postSignup: invalid email."){
                     $scope.authMsg = "E-mail ainda não validado.";
                 }else {
-                    $scope.authMsg = 'Erro Interno do Servidor. Tente novamente mais tarde.';
+                    $scope.authMsg = 'Erro interno do servidor. Tente novamente mais tarde.';
                 }
                 $scope.showLoading = false;
             });
@@ -54,7 +57,6 @@ App.controller('SignupController',
             $scope.registerForm.register_lastname.$dirty = true;
             $scope.registerForm.register_organization.$dirty = true;
             $scope.registerForm.register_industry.$dirty = true;
-            $scope.registerForm.register_phone.$dirty = true;
             $scope.registerForm.register_email.$dirty = true;
             $scope.registerForm.register_password.$dirty = true;
             $scope.registerForm.register_agreed.$dirty = true;

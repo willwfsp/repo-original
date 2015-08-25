@@ -7,6 +7,14 @@ App.controller('HouseDataController',
   ['$scope','$rootScope', '$stateParams', '$filter', 'ngTableParams', '$log', '$http', 'DataFetcher', 'Auth',
     function($scope, $rootScope, $stateParams, $filter, ngTableParams, $log, $http, DataFetcher, Auth){
 
+    $scope.checkHouse = function(){
+        var house = $stateParams.house;
+        if (house == "CD" || house == "SF" || house == "CN"){
+            return true;
+        }else{
+            return false;
+        }
+    };
     DataFetcher.fetchDataHouseDetails($stateParams.house, Auth.user.token).then(function(data){
         $log.log("houseDetails");
         $scope.houseDetails = data[0].data;

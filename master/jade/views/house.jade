@@ -34,8 +34,9 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
               td(data-title=" 'Nome' ", sortable="'nome'", filter="{ 'nome': 'text' }")
                 a(ui-sref="app.representative({ id: '{{representative._id}}' })") {{representative.nome}}
               td(data-title=" 'Legislatura' ", sortable="'legislatura'", filter="{ 'legislatura': 'text' }") {{representative.legislatura | legislature}}
-              td(data-title=" 'Partido' ", sortable="'cargo'", filter="{ 'cargo': 'text' }") {{representative.cargo}}
+              td(data-title=" 'Partido' ", sortable="'partido'", filter="{ 'partido': 'text' }") {{representative.partido}}
               td(data-title=" 'Situação' ", sortable="'status'", filter="{ 'status': 'text' }") {{representative.status}}
+              td(ng-show= "checkHouse()", data-title=" 'Estado' ", sortable="'uf_rep'", filter="{ 'uf_rep': 'text' }") {{representative.uf_rep}}
 
 .row
   .col-lg-6

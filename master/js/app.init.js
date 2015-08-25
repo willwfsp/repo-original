@@ -38,7 +38,6 @@ App.run(
     ga('create', 'UA-65800611-2', 'none');
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
-        console.log("Teste");
         /* Auth */
         if(!('data' in toState) || !('access' in toState.data)){
             $log.error("Access undefined for this state");
@@ -68,12 +67,12 @@ App.run(
     $rootScope.$stateParams = $stateParams;
     $rootScope.$storage = $window.localStorage;
 
-    // Uncomment this to disable template cache
+    /* Uncomment this to disable template cache
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
         if (typeof(toState) !== 'undefined'){
           $templateCache.remove(toState.templateUrl);
         }
-    });
+    });*/
     // Scope Globals
     // -----------------------------------
     $rootScope.app = {

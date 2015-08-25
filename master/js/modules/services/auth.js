@@ -9,7 +9,7 @@ App.factory('Auth',
 
     var accessLevels = routingConfig.accessLevels,
         userRoles = routingConfig.userRoles,
-        currentUser = $cookieStore.get('user') || { username: '', role: userRoles.public };
+        currentUser = $cookieStore.get('user') || { username: '', role: userRoles.public, token: '' };
 
     //$cookieStore.remove('user');
 
@@ -45,7 +45,7 @@ App.factory('Auth',
             }).error(error);
         },
         logout: function(success, error) {
-            changeUser({ username: '', role: userRoles.public });
+            changeUser({ username: '', role: userRoles.public, token: '' });
             $cookieStore.remove('user');
         },
         accessLevels: accessLevels,

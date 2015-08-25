@@ -10,9 +10,11 @@
         .row
           .col-md-12
             .form-group.has-feedback
+
               input.form-control(type='user', name="register_username" placeholder='Usuário', autocomplete="off", ng-model="register_username", required='', username-validation)
               span.fa.fa-user.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_username.$dirty && registerForm.register_username.$error.required") &nbsp;&nbsp;Campo Obrigatório
+
         .row
           .col-md-12
             .form-group.has-feedback
@@ -40,9 +42,9 @@
         .row
           .col-md-12
             .form-group.has-feedback
-              input.form-control(type='text', name="register_phone" , ng-model="register_phone", required='', number-validation, ui-mask="{{'(99) ?99999-9999' }}")
+              input.form-control(type='text', name="register_phone" , ng-model="register_phone", number-validation, ui-mask="{{'(99) ?99999-9999' }}")
               span.fa.fa-phone-square.form-control-feedback.text-muted
-              span.text-danger(ng-show="registerForm.register_phone.$dirty && registerForm.register_phone.$error.required") &nbsp;&nbsp;Campo Obrigatório
+              span.text-info &nbsp;&nbsp;Opcional
 
         .row
           .col-md-12
@@ -57,7 +59,7 @@
               input#id-password.form-control(type='password', name="register_password", ng-model="register_password", ng-pattern="/^[a-zA-Z0-9]{4,18}$/", required='',  placeholder="Senha")
               span.fa.fa-lock.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_password.$dirty && registerForm.register_password.$error.required") Campo Obrigatório
-              span.text-danger(ng-show="registerForm.register_password.$dirty && registerForm.register_password.$error.pattern") Senha pode conter somente os caracteres 'a-zA-Z0-9' e ter o tamanho entre 4-18
+              span.text-danger(ng-show="registerForm.register_password.$dirty && registerForm.register_password.$error.pattern") Senha pode conter somente os caracteres alfanumérico (a-zA-Z0-9) e ter o tamanho entre 4-18
         .row
           .col-md-12
             .form-group.has-feedback
@@ -106,9 +108,9 @@ script(type="text/ng-template", id="modalDialogTermId")
     h3 Termos e Condições de uso da ferramenta SigaLei.
     p Este termo regulamenta o uso da ferramenta SigaLei que é de propriedade da empresa Openlex. A empresa Openlex oferece uma página web no endereço www.openlex.com.br o acesso à ferramenta SigaLei. A ferramenta é atualmente gratuita e seu uso estará sujeito ao seu comprometimento com os termos e condições a seguir.
     p 1. Ao clicar em CONCORDO e realizar o acesso da ferramenta SigaLei, o usuário declara de forma irretratável e irrevogável que leu e está de acordo com os termos e condições de uso e se responsabiliza em garantir que os termos e condições sejam lidos com regularidade;
-    p 2. Não são oferecidas garantias de que o site www.openlex.com.br oferecerá acesso ininterrupto para acesso ao formulário de download da SigaLei;
+    p 2. Não são oferecidas garantias de que o site www.openlex.com.br oferecerá acesso ininterrupto para acesso à SigaLei;
     p 3. Ao solicitar o acesso à SigaLei, o usuário é direcionado para um formulário que deverá ser preenchido, sendo que não são oferecidas garantias de que o formulário de download oferecerá acesso ininterrupto para acesso à SigaLei;
-    p 4. Não são oferecidas garantias de que o servidor no qual a versão de instalação da ferramenta SigaLei está armazenado oferecerá acesso ininterrupto para acesso ao referido arquivo;
+    p 4. Não são oferecidas garantias de que o servidor no qual a versão de instalação da ferramenta SigaLei está armazenado oferecerá acesso ininterrupto aos usuários;
     p 5. A SigaLei trata-se de um software que se encontra em fase experimental e em fase de teste. Por esse motivo, não são oferecidas garantias de que a ferramenta SigaLei está livre de erros/defeitos ou que erros/defeitos na ferramenta serão corrigidos, incluindo neste item todos os possíveis arquivos gerenciados pela ferramenta. Ao encontrar um erro/defeito, o usuário pode reporta-lo enviando um e-mail para contato@openlex.com.br;
     p 6. Não são oferecidas garantias de que a ferramenta SigaLei estará disponível de forma gratuita em todas as suas possíveis versões;
     p 7. Não são oferecidas garantias de suporte ao uso da ferramenta SigaLei. Salienta-se que a SigaLei oferece suporte à condução de estudos que se utilizam do processo de acompanhamento da produção legislativa, sejam eles quais forem, é de inteira responsabilidade do usuário;
