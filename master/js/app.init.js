@@ -77,7 +77,7 @@ App.run(
     // -----------------------------------
     $rootScope.app = {
       name: 'SigaLei',
-      description: 'Busque e acompanhe os projetos de lei em discussão no Congresso Nacional e nas Assembleias Legislativas',
+      description: 'Busque, acompanhe e analise os projetos de lei em discussão no Congresso Nacional e nas Assembleias Legislativas',
       year: ((new Date()).getFullYear()),
       keywords: 'projetos de lei, legislativo, congresso nacional, camara dos deputados, senado',
       layout: {

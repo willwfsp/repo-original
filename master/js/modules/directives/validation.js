@@ -22,10 +22,16 @@ App.directive('usernameValidation', function(){
             modelCtrl.$parsers.push(function (inputValue) {
 
                 inputValue = inputValue.toLowerCase().replace(/\s+/g,'');
-                var transformedInput = /^\d+$/.test(inputValue.slice(-1));
-
                 modelCtrl.$setViewValue(inputValue);
                 modelCtrl.$render();
+
+                var transformedInput = /[a-z]/.test(inputValue.slice(-1));
+                if (!transformedInput) {
+                    modelCtrl.$setViewValue(inputValue.substring(0, inputValue.length - 1));
+                    modelCtrl.$render();
+                }
+
+
                 return inputValue;
 
             });

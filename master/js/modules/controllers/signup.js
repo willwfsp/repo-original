@@ -12,6 +12,7 @@ App.controller('SignupController',
     // place the message if something goes wrong
     $scope.authMsg = '';
     $scope.showLoading = false;
+    $scope.userpassword = '';
     $scope.register = function() {
         $scope.authMsg = '';
         $scope.authSucMsg = '';
@@ -44,6 +45,8 @@ App.controller('SignupController',
                     $scope.authMsg = "E-mail indisponível.";
                 }else if(err.error == "postSignup: invalid email."){
                     $scope.authMsg = "E-mail ainda não validado.";
+                }else if(err.error == "postSignup: user cant have special chars or upper letter."){
+                    $scope.authMsg = "Nome de usuário não pode conter caracteres especiais, espaços ou letras maiúsculas.";
                 }else {
                     $scope.authMsg = 'Erro interno do servidor. Tente novamente mais tarde.';
                 }
