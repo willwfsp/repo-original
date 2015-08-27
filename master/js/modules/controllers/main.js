@@ -9,7 +9,7 @@ App.controller('AppController',
     "use strict";
 
     // Setup the layout mode
-    $rootScope.app.layout.horizontal = true ;
+    // $rootScope.app.layout.horizontal = true ;
 
     // Loading bar transition
     // -----------------------------------

@@ -1,0 +1,24 @@
+h3 Acompanhamento de Proposições 
+.row
+	.col-md-3
+		.panel.widget
+			.panel-heading
+				h4 Pastas
+					span.pull-right(class="fa fa-plus " ng-click="folders.push('Nova Pasta')")
+			.panel-body
+				.list-group
+					a.list-group-item(ng-repeat="folder in folders") 
+						em(class="fa fa-folder-o")&nbsp;
+							span(editable-text="{{folder}}") {{folder}}
+						em.options-icon(class="fa fa-caret-down")
+	.col-md-9
+		.panel.widget
+			.panel-heading
+				h4 Proposições
+			.panel-body
+				.list-group
+					p(ng-if="bills.length == 0") Esta pasta está vazia.
+					a.list-group-item(ng-repeat="bill in bills") 
+						em(class="fa fa-file-text-o")&nbsp;
+							| {{bill}}
+						em.btn.btn-sm.pull-right(class="fa fa-trash" ng-click="deleteBill(bill)")

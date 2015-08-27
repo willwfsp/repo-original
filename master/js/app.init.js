@@ -35,7 +35,6 @@ App.run(
   ['$rootScope', '$state', '$stateParams',  '$window', '$templateCache',
    'Auth', '$timeout', 'cfpLoadingBar', '$log',
     function ($rootScope, $state, $stateParams, $window, $templateCache, Auth, $timeout, cfpLoadingBar, $log) {
-    ga('create', 'UA-65800611-2', 'none');
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
         /* Auth */
@@ -66,6 +65,7 @@ App.run(
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.$storage = $window.localStorage;
+    $rootScope.apiURL = "https://sigalei-dev-api.mybluemix.net/v1/";
 
     /* Uncomment this to disable template cache
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
@@ -82,12 +82,12 @@ App.run(
       keywords: 'projetos de lei, legislativo, congresso nacional, camara dos deputados, senado',
       layout: {
         isFixed: true,
-        isCollapsed: false,
+        isCollapsed: true,
         isBoxed: false,
         isRTL: false,
-        horizontal: true,
+        horizontal: false,
         isFloat: false,
-        asideHover: false,
+        asideHover: true,
         theme: "app/css/theme-sigalei.css"
       },
       useFullLayout: false,

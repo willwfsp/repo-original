@@ -20,7 +20,7 @@ html(lang="pt-br", data-ng-app="sigaLeiApp")
 
     // Favicons
     link(rel='icon', href='app/img/favicon-32.png', sizes='32x32')
-  body(data-ng-class="{'layout-h': true}")
+  body(data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : true, 'layout-boxed' : app.layout.isBoxed, 'layout-fs': app.useFullLayout, 'hidden-footer': app.hiddenFooter, 'layout-h': false, 'aside-float': app.layout.isFloat}")
     div(data-preloader)
     .wrapper(data-ui-view="", data-autoscroll='false')
 

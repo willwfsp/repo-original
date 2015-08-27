@@ -108,6 +108,12 @@ App.config(
         templateUrl: helper.basepath('profile.html'),
         controller: 'ProfileController'
     })
+    .state('app.favorites', {
+        url: '/favorites',
+        title: 'Tela de Acompanhamento',
+        templateUrl: helper.basepath('favorite-bills.html'),
+        controller: 'FavoriteBillsController'
+    })
     .state('app.reports', {
         url: '/reports',
         title: 'Relatórios',
