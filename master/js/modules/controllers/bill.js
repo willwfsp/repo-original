@@ -5,9 +5,9 @@
 
 App.controller('BillController',
   ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter', '$window',
-   'ngTableParams', 'DataFetcher', 'Auth',
+   'ngTableParams', 'DataFetcher', 'Auth', 'ngDialog',
     function($location,$scope, $state, $stateParams, $log, $http, $filter, $window,
-        ngTableParams, DataFetcher, Auth){
+        ngTableParams, DataFetcher, Auth, ngDialog){
 
     $scope.coAuthorsCollapsed = true;
     $scope.dados = {};
@@ -53,6 +53,19 @@ App.controller('BillController',
        $scope.docsTableParams.reload();
    });
 
+    $scope.follow = function(){
+        ngDialog.open({
+              template: '<h2>Notice that there is no overlay!</h2>',
+              className: 'ngdialog-theme-default',
+              plain: true,
+              overlay: false
+            });
+        if($scope.dados.hasOwnProperty('following')){
+            $scope.dados.following = !$scope.dados.following
+        }else{
+            $scope.dados.following = true;
+        }
+    }
 
 }]);
 

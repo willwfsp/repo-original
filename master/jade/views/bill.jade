@@ -1,6 +1,10 @@
 h3
-  span(ng-if="dados.SLP_TIPO_DESC") {{dados.SLP_TIPO_DESC}}&nbsp;
-  | {{dados.SLP_NOME}}
+  .container-fluid.row
+    .col-xs-10
+      span(ng-if="dados.SLP_TIPO_DESC") {{dados.SLP_TIPO_DESC}}&nbsp;
+      span {{dados.SLP_NOME}}
+    .col-xs-2.text-right
+      button.fa.fa-tag.btn.btn-default(id="follow", ng-click="follow()")
 
 .container-fluid
   //FIRST COLUMN
@@ -12,6 +16,7 @@ h3
           .panel-heading
             h3 Informações Gerais
 
+
           .panel-body
             .form-horizontal
               .form-group.m0.custom-stripe
@@ -22,7 +27,7 @@ h3
                   p(ng-if="! dados.SLP_AUTORES[0]._id") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
                   //author has id
                   a(ui-sref="app.representative({ id: '{{dados.SLP_AUTORES[0]._id}}' })", ng-if="dados.SLP_AUTORES[0]._id") {{dados.SLP_AUTORES[0].SLPa_NOME_FANTASIA}}
-                  
+
                   //icon to show coauthors
                   span(ng-show="dados.SLP_AUTORES.length > 1 && coAuthorsCollapsed", ng-click="coAuthorsCollapsed = !coAuthorsCollapsed")
                     em.fa.fa-plus-circle.sigalei-color(ng-show="coAuthorsCollapsed" alt="Mostrar co-autores")
@@ -37,7 +42,7 @@ h3
                   div(ng-show="!$first" ng-repeat="coauthor in dados.SLP_AUTORES")
                     span(ng-if="!coauthor._id") {{coauthor.SLPa_NOME_FANTASIA}}
                     a(ui-sref="app.representative({ id: '{{coauthor._id}}' })", ng-if="coauthor._id") {{coauthor.SLPa_NOME_FANTASIA}}
-              
+
               .form-group.m0
                 .col-sm-3.control-label-sm.m0
                   label Apreciação:
@@ -61,7 +66,7 @@ h3
                   label Subtema:
                 .col-sm-9.form-control-static-sm.m0
                   p {{dados.SLP_SL_SUBTEMA}}
-                  
+
               .form-group.m0
                 .col-sm-3.control-label-sm.m0
                   label Ementa:
@@ -128,14 +133,14 @@ h3
                   p {{dados.SLP_DATA_ATUALIZACAO | date:'dd/MM/yyyy'}}
 
             div(ng-repeat="(house, data) in dados.SLP_STATUS", ng-show="data.FASE != -1")
-              
+
               h4 {{ house | houseFullName}}
               .form-horizontal
                 .form-group.custom-stripe.m0(ng-if="data.ORG_DESC")
                   .col-sm-3.control-label-sm.m0
                     label Órgão Responsável:
                   .col-sm-9.form-control-static-sm.m0
-                    p 
+                    p
                       span(ng-if="data.ORGAO") {{data.ORGAO}} - &nbsp;
                       | {{data.ORG_DESC}}
 
@@ -180,7 +185,7 @@ h3
             h3 Votações
           .panel-body
             p(ng-if="billVotingList.length == 0") Não há votações para este projeto de lei.
-            
+
             .p-sm(ng-repeat="poll in billVotingList" ng-init="resultado = poll.SLV_RESULTADO" ng-class="$even ? 'custom-stripe' : ''")
               .form-horizontal.m0
                 .form-group.m0
@@ -188,7 +193,7 @@ h3
                     label Data:
                   .col-sm-9.form-control-static-sm {{poll.SLV_DATA_HORA.replace(" ", "T") | date:"dd/MM/yyyy 'às' HH:mm"}}
                 .form-group.m0
-                  .col-sm-3.control-label-sm.m0 
+                  .col-sm-3.control-label-sm.m0
                     label Objeto:
                   .col-sm-9.form-control-static-sm {{poll.SLV_OBJETO_VOTACAO}}
                 .form-group.m0

@@ -16,7 +16,7 @@ App.controller("RecoverPasswordController",
             $scope.showLoading = true;
             var email = {};
             email.email = $scope.recoverForm.email.$modelValue;
-            $http.post('https://sigalei-api.mybluemix.net/v1/accounts/forgot', email)
+            $http.post('https://sigalei-dev-api.mybluemix.net/v1/accounts/forgot', email)
               .then(function(response) {
 
                 if ( response.status == "200" ) {

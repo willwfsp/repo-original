@@ -13,13 +13,13 @@ h3(ng-init="init()") Pesquisa
             em.icon-close
             |   &nbsp;Filtros
 
-      .panel-body(collapse="isCollapsed")
+      .panel-body(ng-show="!isCollapsed")
         .form-group
           .col-md-2.col-sm-2
-            ui-select(multiple='', ng-model='checkedHouses.list', on-select='changeFilterHouses()',
-              on-remove='changeFilterHouses()')
-              ui-select-match(placeholder='Casas') {{$item.houseName}}
-              ui-select-choices(repeat='house.initials as house in availableHouses') {{house.houseName}}
+            div
+              ui-select(multiple='', ng-model='checkedHouses.list', on-select='changeFilterHouses()', on-remove='changeFilterHouses()')
+                ui-select-match(placeholder='Casas') {{$item.houseName}}
+                ui-select-choices(repeat='house.initials as house in availableHouses') {{house.houseName}}
           .col-md-2.col-sm-2
             ui-select(multiple='', ng-model='statusBill.list', on-select='changeFilterStatus()',
               on-remove='changeFilterStatus()')
@@ -48,66 +48,94 @@ h3(ng-init="init()") Pesquisa
     // START panel
     .panel
       .panel-heading.clearfix
-        label.pull-right.col-md-3.col-sm-3 Ordernar por:
-          select.form-control(ng-model="orderedBy", ng-change="changeOrder()")
-            option(value="1") Data de Atualização
-            option(value="2") Relevância
-        h2 Resultados
-          small(ng-if="query != \"\" ") por "{{query}}"
-        p(ng-if="!fetching") {{total_results}} projetos de lei encontrados
-
+        .container-fluid.row
+          .col-xs-6
+            h2 Resultados
+              medium(ng-if="query != \"\" ") por "{{query}}"
+            p(ng-if="!fetching") {{total_results}} projetos de lei encontrados
+          .col-xs-6.text-right
+            label Ordernar por:
+              select.form-control(ng-model="orderedBy", ng-change="changeOrder()")
+                option(value="1") Data de Atualização
+                option(value="2") Relevância
 
       // START table-responsive
       table.table.table-striped.table-bordered.table-hover
+
         tbody
-          tr(ng-repeat="bill in bills")
-            td
-              .media-box
-                  .media-box-body
-                    .row.row-search
-                      small.text-muted.pull-right Última atualização: {{toDate(bill.fields.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
-                      a(ui-sref="app.bill({ billName: '{{bill.fields.SLP_NOME}}' })")
-                        h4.media-box-heading {{bill.fields.SLP_NOME}}
-                          small.text-muted(ng-if="bill.fields.SLR_NOME")  ( ou {{bill.fields.SLR_NOME}} )
-                      medium
-                        | {{ (bill.fields.SLP_STATUS_DESC  | capitalize:true) || "-"}}
-                      br
-                      small.text-muted Autor:
+          div
+            tr(ng-repeat="bill in bills")
+              td
+                .container-fluid.row
+                  .col-xs-4.text-left.col-md-4
+                    a(ui-sref="app.bill({ billName: '{{bill.fields.SLP_NOME}}' })")
+                      h4.media-box-heading {{bill.fields.SLP_NOME}}
+                        small.text-muted(ng-if="bill.fields.SLR_NOME")  ( ou {{bill.fields.SLR_NOME}} )
+                  .col-xs-4.text-center.col-md-4
+                    | Atualização: {{toDate(bill.fields.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
+                  .col-xs-4.text-right.col-md-4
+                    div.dropdown
+                      button.fa.fa-tag.btn.btn-primary(dropdown-toggle="")
+                      ul.dropdown-menu
+                        li
+                          a(href='#') Action
+                        li
+                          a(href='#') Another action
+                        li
+                          a(href='#') Something else here
+                        li
+                          a(href='#') Separated link
+                .container-fluid.row
+                  .col-xs-12
+                    p {{bill.fields.SLP_EMENTA}}
+                    span.small.text-muted.text-bold Tema:
+                    span.small.text-muted {{bill.fields.SLP_SL_TEMA || '-'}}
+                    br
+                    span.small.text-muted.text-bold SubTema:
+                    span.small.text-muted {{bill.fields.SLP_SL_SUBTEMA}}
+                    br
+                    span.fa.fa-exchange
+                    span.small.text-muted
+                      |&nbsp; {{ (bill.fields.SLP_STATUS_DESC | capitalize:true) || "-" }}
+                    br
+                    //show main author
+                    small.span.fa.fa-user(ng-if="!(hasCoauthors(bill.fields.SLP_AUTOR))")
+                      |&nbsp;
+                    small.span.fa.fa-users(ng-if="hasCoauthors(bill.fields.SLP_AUTOR)")
+                      |&nbsp;
+                    small.span(ng-init = "author = getMainAuthor(bill.fields.SLP_AUTOR)")
+                      //author has no id
+                      strong(ng-if="! author.id") {{author.name}}
 
-                        //show main author
-                        span(ng-init = "author = getMainAuthor(bill.fields.SLP_AUTOR)")
-                          //author has no id
-                          strong(ng-if="! author.id") {{author.name}}
+                      //author has id
+                      strong(ng-if="author.id")
+                        a(ui-sref="app.representative({ id: '{{author.id}}' })") {{author.name}}
 
-                          //author has id
-                          strong(ng-if="author.id")
-                            a(ui-sref="app.representative({ id: '{{author.id}}' })") {{author.name}}
+                      //show coauthors
+                      strong(ng-if="hasCoauthors(bill.fields.SLP_AUTOR)") e&nbsp;
+                        a(ng-click="showOtherAuthors = !showOtherAuthors") {{bill.fields.SLP_AUTOR.length - 1 > 1 ? bill.fields.SLP_AUTOR.length - 1 + ' outros' : '1 outro'}}
+                        div(collapse="!showOtherAuthors")
+                          span(ng-init = "mainAuthor = getMainAuthor(bill.fields.SLP_AUTOR)")
+                            strong(ng-repeat="author in bill.fields.SLP_AUTOR | orderBy", ng-hide="mainAuthor.name == parseAuthor(author).name")
+                              strong(ng-if="! parseAuthor(author).id") {{parseAuthor(author).name}}
 
-                        //show coauthors
-                        strong(ng-if="hasCoauthors(bill.fields.SLP_AUTOR)") e&nbsp;
-                          a(ng-click="showOtherAuthors = !showOtherAuthors") {{bill.fields.SLP_AUTOR.length - 1 > 1 ? bill.fields.SLP_AUTOR.length - 1 + ' outros' : '1 outro'}}
-                          div(collapse="!showOtherAuthors")
-                            span(ng-init = "mainAuthor = getMainAuthor(bill.fields.SLP_AUTOR)")
-                              strong(ng-repeat="author in bill.fields.SLP_AUTOR | orderBy", ng-hide="mainAuthor.name == parseAuthor(author).name")
-                                strong(ng-if="! parseAuthor(author).id") {{parseAuthor(author).name}}
+                              strong(ng-if="parseAuthor(author).id")
+                                a(ui-sref="app.representative({ id: '{{ parseAuthor(author).id}}' })") {{parseAuthor(author).name}}
+                              span(ng-hide="$index == bill.fields.SLP_AUTOR.length - 1 || $first == $last - 1") ,
 
-                                strong(ng-if="parseAuthor(author).id")
-                                  a(ui-sref="app.representative({ id: '{{ parseAuthor(author).id}}' })") {{parseAuthor(author).name}}
-                                span(ng-hide="$index == bill.fields.SLP_AUTOR.length - 1 || $first == $last - 1") ,
-                      br
-                      small.text-muted Tema: {{bill.fields.SLP_SL_TEMA || '-'}}
-                      br
-                      small.text-muted SubTema: {{bill.fields.SLP_SL_SUBTEMA}}
-                    .row.row-search
-                      p {{bill.fields.SLP_EMENTA}}
+
+
+
 
           tr(ng-if="fetchingStart || fetchingMore")
-            td(align="center")
+            td(colspan = "2", align="center")
               .ball-clip-rotate
                 div
               p Carregando...
           tr
-            td
+            td(colspan = "2").container-fluid.row.row-search
+
               button.btn.btn-block.btn-default(ng-click="moreResults()" ng-show="bills.length < total_results") Carregar Mais resultados
+
       // END table-responsive
     // END panel

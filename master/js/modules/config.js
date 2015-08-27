@@ -32,7 +32,7 @@ App.config(
         abstract: true,
         templateUrl: helper.basepath('app.html'),
         controller: 'AppController',
-        resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit'),
+        resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit','ngDialog'),
         data: {
                 access: access.user
             }
@@ -47,7 +47,7 @@ App.config(
         url: '/searchBills?q',
         title: 'Pesquisar Proposições',
         templateUrl: helper.basepath('searchBills.html'),
-        resolve: helper.resolveFor('ui.select'),
+        resolve: helper.resolveFor('ui.select', 'ngSticky'),
         controller: 'SearchBillsController'
     })
     .state('app.bill', {

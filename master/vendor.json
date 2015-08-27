@@ -13,5 +13,6 @@
   "bower_components/ng-table/dist/ng-table.min.css",
   "bower_components/ngDialog/js/ngDialog.min.js",
   "bower_components/ngDialog/css/ngDialog.min.css",
-  "bower_components/ngDialog/css/ngDialog-theme-default.min.css"
+  "bower_components/ngDialog/css/ngDialog-theme-default.min.css",
+  "bower_components/ngSticky/dist/sticky.min.js"
 ]

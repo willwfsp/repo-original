@@ -15,9 +15,9 @@ App.controller('SearchBarController',
 
 App.controller('SearchBillsController',
   ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal',
-  'DataFetcher', 'Auth',
+  'DataFetcher', 'Auth', 'ngDialog',
     function($http, $stateParams, $location, $scope, $log, $state, $modal,
-        DataFetcher, Auth) {
+        DataFetcher, Auth, ngDialog) {
 
     $scope.isCollapsed = false;
     $scope.showOtherAuthors = false;
@@ -241,6 +241,20 @@ App.controller('SearchBillsController',
         $scope.fetchingMore = true;
         DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
     };
+
+    $scope.follow = function(index){
+        ngDialog.open({
+              template: '<h2>Notice that there is no overlay!</h2>',
+              className: 'ngdialog-theme-default',
+              plain: true,
+              overlay: false
+            });
+        if($scope.bills[index].hasOwnProperty('following')){
+            $scope.bills[index].following = !$scope.bills[index].following
+        }else{
+            $scope.bills[index].following = true;
+        }
+    }
 
     // Listeners
     $scope.$on('fetch billSearchResults:completed', function(event) {

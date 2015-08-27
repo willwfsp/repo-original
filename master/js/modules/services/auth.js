@@ -32,12 +32,12 @@ App.factory('Auth',
             return user.role.title === userRoles.user.title || user.role.title === userRoles.admin.title;
         },
         signup: function(user, success, error) {
-            $http.post('https://sigalei-api.mybluemix.net/v1/accounts/signup', user)
+            $http.post('https://sigalei-dev-api.mybluemix.net/v1/accounts/signup', user)
             .success(function(res) { success();})
             .error(error);
         },
         login: function(user, success, error) {
-            $http.post('https://sigalei-api.mybluemix.net/v1/accounts/login', user)
+            $http.post('https://sigalei-dev-api.mybluemix.net/v1/accounts/login', user)
             .success(function(user){
                 changeUser(user);
                 success(user);

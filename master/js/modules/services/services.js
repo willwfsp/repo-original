@@ -9,7 +9,7 @@ App.factory('DataFetcher',
     function($q, $http, $log, $rootScope, Auth){
     // Constants...
     var service = {};
-    var baseUrl = "https://sigalei-api.mybluemix.net/v1/";
+    var baseUrl = "https://sigalei-dev-api.mybluemix.net/v1/";
     var ApiMgEndPoint = 'http://dadosabertos.almg.gov.br/ws';
     var MGDocUrl = "";
     // "Private" Variables
