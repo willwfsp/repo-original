@@ -290,3 +290,32 @@ App.factory('DataFetcher',
     return service;
 
 }]);
+
+App.factory('UserFolders', ['$resource', '$rootScope', 'Auth', function ($resource, $rootScope, Auth) {
+    return $resource($rootScope.apiURL + 'usuarios/favoritos/pastas', {}, {
+            get: {
+                method:"GET",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            create: {
+                method:"POST",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            }
+        });
+}]);
+
+App.factory('FoldersBills', ['$resource', '$rootScope', 'Auth', '$http',
+    function ($resource, $rootScope, Auth, $http) {
+    $http.defaults.headers['Access-Control-Allow-Origin'] = '*';
+    $http.defaults.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, PUT';
+    return $resource($rootScope.apiURL + 'usuarios/favoritos/:pasta/proposicoes', {}, {
+            get: {
+                method:"GET",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            save: {
+                method:"POST",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            }
+        });
+}]);

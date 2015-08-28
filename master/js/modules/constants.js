@@ -46,7 +46,7 @@ App
       {name: 'ngDialog',                  files: ['vendor/ngDialog/js/ngDialog.min.js',
                                                  'vendor/ngDialog/css/ngDialog.min.css',
                                                  'vendor/ngDialog/css/ngDialog-theme-default.min.css'] },
-      {name: 'ngSticky',                   files: ['vendor/ngSticky/dist/sticky.min.js']}
+      {name: 'ngSticky',                  files: ['vendor/ngSticky/dist/sticky.min.js']}
     ]
 
   })

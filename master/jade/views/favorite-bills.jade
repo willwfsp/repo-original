@@ -1,24 +1,80 @@
+// new tag modal template 
+script(type='text/ng-template', id="myModalContent.html")
+    .modal-header
+        h3.modal-title Criar nova etiqueta:
+    .modal-body
+        label Digite o nome da nova etiqueta: &nbsp;
+            input.form-control.col-sm-12.col-md-12.col-lg-12(type="text", ng-model="newName", value="Segurança", placeholder="Saúde, Tributação, Maioridade...")
+    .modal-footer
+        .pull-left
+            button.btn.btn-success(ng-click="create()") Criar
+            button.btn.btn-danger(ng-click="cancel()") Cancelar
+
+// folders
 h3 Acompanhamento de Proposições 
 .row
-	.col-md-3
-		.panel.widget
-			.panel-heading
-				h4 Pastas
-					span.pull-right(class="fa fa-plus " ng-click="folders.push('Nova Pasta')")
-			.panel-body
-				.list-group
-					a.list-group-item(ng-repeat="folder in folders") 
-						em(class="fa fa-folder-o")&nbsp;
-							span(editable-text="{{folder}}") {{folder}}
-						em.options-icon(class="fa fa-caret-down")
-	.col-md-9
-		.panel.widget
-			.panel-heading
-				h4 Proposições
-			.panel-body
-				.list-group
-					p(ng-if="bills.length == 0") Esta pasta está vazia.
-					a.list-group-item(ng-repeat="bill in bills") 
-						em(class="fa fa-file-text-o")&nbsp;
-							| {{bill}}
-						em.btn.btn-sm.pull-right(class="fa fa-trash" ng-click="deleteBill(bill)")
+    .panel.widget.col-md-3
+        .panel-heading
+            h4 Etiquetas
+                span.pull-right(class="fa fa-plus " ng-click="newFolder()")
+        .panel-body
+            .list-group
+                a.list-group-item(ng-repeat="folder in folders", ng-click="selectFolder(folder)") 
+                    em(class="fa fa-tag") &nbsp;
+                    span {{folder}}
+
+
+    .panel.widget.col-md-9(ng-if="currentFolder")
+        .panel-heading
+            h4 Proposições com a etiqueta "{{currentFolder}}"
+                em.pull-right(class="icon-settings")
+        .panel-body
+            // START table-responsive
+            table.table.table-striped.table-bordered.table-hover
+              tbody
+                  tr(ng-repeat="bill in bills")
+                    td
+                      .container-fluid.row
+                        .col-xs-4.text-left.col-md-4
+                          a(ui-sref="app.bill({ billName: '{{bill.SLP_NOME}}' })")
+                            h4.media-box-heading {{bill.SLP_NOME}}
+                              small.text-muted(ng-if="bill.SLR_NOME")  ( ou {{bill.SLR_NOME}} )
+                        .col-xs-4.text-center.col-md-4
+                          | Atualização: {{toDate(bill.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
+                      .container-fluid.row
+                        .col-xs-12
+                          p {{bill.SLP_EMENTA}}
+                          span.small.text-muted.text-bold Tema:
+                          span.small.text-muted {{bill.SLP_SL_TEMA || '-'}}
+                          br
+                          span.small.text-muted.text-bold SubTema:
+                          span.small.text-muted {{bill.SLP_SL_SUBTEMA}}
+                          br
+                          span.fa.fa-exchange
+                          span.small.text-muted
+                            |&nbsp; {{ (bill.SLP_STATUS_DESC | capitalize:true) || "-" }}
+                          br
+                          //show main author
+                          small.span.fa.fa-user(ng-if="!(hasCoauthors(bill.SLP_AUTOR))")
+                            |&nbsp;
+                          small.span.fa.fa-users(ng-if="hasCoauthors(bill.SLP_AUTOR)")
+                            |&nbsp;
+                          small.span(ng-init = "author = getMainAuthor(bill.SLP_AUTOR)")
+                            //author has no id
+                            strong(ng-if="! author.id") {{author.name}}
+
+                            //author has id
+                            strong(ng-if="author.id")
+                              a(ui-sref="app.representative({ id: '{{author.id}}' })") {{author.name}}
+
+                            //show coauthors
+                            strong(ng-if="hasCoauthors(bill.SLP_AUTOR)") e&nbsp;
+                              a(ng-click="showOtherAuthors = !showOtherAuthors") {{bill.SLP_AUTOR.length - 1 > 1 ? bill.SLP_AUTOR.length - 1 + ' outros' : '1 outro'}}
+                              div(collapse="!showOtherAuthors")
+                                span(ng-init = "mainAuthor = getMainAuthor(bill.SLP_AUTOR)")
+                                  strong(ng-repeat="author in bill.SLP_AUTOR | orderBy", ng-hide="mainAuthor.name == parseAuthor(author).name")
+                                    strong(ng-if="! parseAuthor(author).id") {{parseAuthor(author).name}}
+
+                                    strong(ng-if="parseAuthor(author).id")
+                                      a(ui-sref="app.representative({ id: '{{ parseAuthor(author).id}}' })") {{parseAuthor(author).name}}
+                                    span(ng-hide="$index == bill.SLP_AUTOR.length - 1 || $first == $last - 1") ,

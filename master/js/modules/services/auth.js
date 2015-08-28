@@ -53,13 +53,3 @@ App.factory('Auth',
         user: currentUser
     };
 }]);
-
-App.factory('Users',
-  ['$http',
-    function($http) {
-        return {
-            getAll: function(success, error) {
-                $http.get('/users').success(success).error(error);
-            }
-        };
-}]);

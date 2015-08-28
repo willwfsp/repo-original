@@ -25,7 +25,7 @@ App.controller('SignupController',
             user.lastname = $scope.registerForm.register_lastname.$modelValue;
             user.organization = $scope.registerForm.register_organization.$modelValue;
             user.industry = $scope.registerForm.register_industry.$modelValue;
-            if ( $scope.registerForm.register_phone.$modelValue != ""){
+            if ( $scope.registerForm.register_phone.$modelValue !== ""){
                 user.telephone = $scope.registerForm.register_phone.$modelValue ;
             }
 
