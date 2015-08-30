@@ -299,13 +299,21 @@ App.factory('DataFetcher',
 }]);
 
 App.factory('UserFolders', ['$resource', '$rootScope', 'Auth', function ($resource, $rootScope, Auth) {
-    return $resource($rootScope.apiURL + 'usuarios/favoritos/pastas', {}, {
+    return $resource($rootScope.apiURL + 'usuarios/favoritos/pastas/:pasta', {}, {
             get: {
                 method:"GET",
                 headers: {'Authorization': 'Bearer ' + Auth.user.token}
             },
             create: {
                 method:"POST",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            rename: {
+                method:"PUT",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            delete: {
+                method:"DELETE",
                 headers: {'Authorization': 'Bearer ' + Auth.user.token}
             }
         });

@@ -6,7 +6,7 @@ App.directive('loading',
         link: function(scope, elm, attrs)
         {
           scope.isLoading = function () {
-              return $http.pendingRequests.length > 0 && !$state.is('app.searchBills');
+              return $http.pendingRequests.length > 0 && !$state.is('app.searchBills') && !$state.is('app.favorites');
           };
 
           scope.$watch(scope.isLoading,
