@@ -47,7 +47,7 @@ App.config(
         url: '/searchBills?q',
         title: 'Pesquisar Proposições',
         templateUrl: helper.basepath('searchBills.html'),
-        resolve: helper.resolveFor('ui.select', 'ngSticky'),
+        resolve: helper.resolveFor('ui.select'),
         controller: 'SearchBillsController'
     })
     .state('app.bill', {

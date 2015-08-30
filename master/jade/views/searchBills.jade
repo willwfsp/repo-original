@@ -43,7 +43,7 @@ h3(ng-init="init()") Pesquisa
             | Limpar
 
 //END Filters
-.row
+.row(ng-init="initVariables()")
   .col-lg-12
     // START panel
     .panel
@@ -74,20 +74,25 @@ h3(ng-init="init()") Pesquisa
                   .col-xs-4.text-center.col-md-4
                     | Atualização: {{toDate(bill.fields.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
                   .col-xs-4.text-right.col-md-4
-                    div.dropdown
-                      button.fa.fa-tag.btn.btn-primary(dropdown-toggle="")
-                      ul.dropdown-menu
-                        li
-                          a(href='#') Action
-                        li
-                          a(href='#') Another action
-                        li
-                          a(href='#') Something else here
-                        li
-                          a(href='#') Separated link
+                    div.multiselect-parent.btn-group.dropdown-multiselect
+                      button.dropdown-toggle.btn.btn-default(type="button", ng-click="toggleDropdown($index)")
+                        span.fa.fa-tag
+                      ul.dropdown-menu.dropdown-menu-form.dropdown-menu-right(ng-style="{display: open[$index] ? \'block\' : \'none\', height : 200 }", style="overflow: auto")
+                        li.dropdown-header
+                          input.form-control(type="text", style="width:, 100%;", ng-model="searchFilter", placeholder="Buscar...")
+                        li.divider
+                        li(role="presentation", ng-repeat="tag in tagsData[$index].data | filter: searchFilter")
+                          a(role="menuitem" tabindex="-1" ng-click="setSelectedItem(getPropertyForObject(tag,'id'), true, $parent.$index)")
+                            span(data-ng-class="{'fa fa-check': isChecked(getPropertyForObject(tag,'id'), $parent.$index)}") {{getPropertyForObject(tag, 'id')}}
+                        li.divider(ng-show="searchFilter")
+                        li(ng-show="searchFilter")
+                          a(role="menuitem" tabindex="-1" ng-click="createTag(searchFilter)") Criar {{searchFilter}}
+
                 .container-fluid.row
                   .col-xs-12
                     p {{bill.fields.SLP_EMENTA}}
+                .container-fluid.row
+                  .col-xs-6
                     span.small.text-muted.text-bold Tema:
                     span.small.text-muted {{bill.fields.SLP_SL_TEMA || '-'}}
                     br
@@ -122,8 +127,13 @@ h3(ng-init="init()") Pesquisa
                               strong(ng-if="parseAuthor(author).id")
                                 a(ui-sref="app.representative({ id: '{{ parseAuthor(author).id}}' })") {{parseAuthor(author).name}}
                               span(ng-hide="$index == bill.fields.SLP_AUTOR.length - 1 || $first == $last - 1") ,
-
-
+                  .col-xs-6
+                    ul.tags
+                      li(ng-repeat="tag in tagsModel[$index].data")
+                        div
+                          a(ui-sref= "app.favorites") {{tag.id}}
+                          a(ng-click="removeTag()")
+                            span.fa.fa-close
 
 
 

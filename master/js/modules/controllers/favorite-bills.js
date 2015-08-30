@@ -1,6 +1,6 @@
-App.controller('FavoriteBillsController', ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'Auth', '$rootScope', 'UserFolders', '$modal', 'FoldersBills', 
+App.controller('FavoriteBillsController', ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'Auth', '$rootScope', 'UserFolders', '$modal', 'FoldersBills',
     function($scope, $log, DataFetcher, $filter, $stateParams, Auth, $rootScope, UserFolders, $modal, FoldersBills) {
-    
+
     UserFolders.get(function(data){
         $scope.folders = data.pastas;
     });

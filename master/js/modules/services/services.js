@@ -15,6 +15,7 @@ App.factory('DataFetcher',
     // "Private" Variables
     var _billSearchResults = {};
 
+
     $http.defaults.headers['Access-Control-Allow-Origin'] = '*';
     $http.defaults.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, PUT';
 
@@ -34,15 +35,21 @@ App.factory('DataFetcher',
         }
 
         url = baseUrl + path + query;
+        promiseBillSeach = $http.post(url, filters, headers);
 
+        var defer = $q.defer();
 
-        return $http.post(url, filters, headers).then(function(result) {
-            _billSearchResults = result.data;
+        $q.all([promiseBillSeach])
+          .then(function(results) {
+            _billSearchResults = results[0].data;
             $rootScope.$broadcast("fetch billSearchResults:completed");
-        },
-        function(reason){
-            $log.error(reason);
+
+            defer.resolve(results);
+
         });
+
+        return defer.promise;
+
     };
 
     service.fetchBill = function(nome, token){
