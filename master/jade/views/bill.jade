@@ -1,10 +1,32 @@
-h3
+h3(ng-init='initVariables()')
   .container-fluid.row
-    .col-xs-10
+    .col-xs-6.col-sm-8.col-lg-6
       span(ng-if="dados.SLP_TIPO_DESC") {{dados.SLP_TIPO_DESC}}&nbsp;
       span {{dados.SLP_NOME}}
-    .col-xs-2.text-right
-      button.fa.fa-tag.btn.btn-default(id="follow", ng-click="follow()")
+
+    .col-xs-4.col-sm-2.col-lg-5.text-right
+      ul.tags
+        li(ng-repeat="tag in tagsModel.data")
+          div
+            a(ui-sref= "app.favorites({folderName:'{{tag.id}}'})") {{tag.id}}
+            | &nbsp&nbsp&nbsp
+            a(ng-click="removeTag(tag.id, dados.SLP_NOME)")
+              span.fa.fa-close
+    .col-xs-2.col-sm-2.col-lg-1.text-right
+      div.multiselect-parent.btn-group.dropdown-multiselect(id="DropdownTagsList")
+        button.dropdown-toggle.btn.btn-default(type="button", ng-click="toggleDropdown()")
+          span.fa.fa-tag
+        ul.dropdown-menu.dropdown-menu-form.dropdown-menu-right(ng-style="{display: open ? \'block\' : \'none\', height : 200 }", style="overflow: auto")
+          li.dropdown-header
+            input.form-control(type="text", style="width:, 100%;", ng-model="searchFilter", placeholder="Buscar...")
+          li.divider
+          li(role="presentation", ng-repeat="tag in tagsData.data | filter: searchFilter")
+            a(role="menuitem" tabindex="-1" ng-click="setSelectedItem(getPropertyForObject(tag,'id'), dados.SLP_NOME)")
+              span(data-ng-class="{'fa fa-check': isChecked(getPropertyForObject(tag,'id'))}") {{getPropertyForObject(tag, 'id')}}
+          li.divider(ng-show="searchFilter")
+          li(ng-show="searchFilter")
+            a(role="menuitem" tabindex="-1" ng-click="createTag(searchFilter, dados.SLP_NOME)") Criar {{searchFilter}}
+
 
 .container-fluid
   //FIRST COLUMN
@@ -202,3 +224,14 @@ h3
                   .col-sm-9.form-control-static-sm.m0
                     a.btn(ui-sref="app.bill.pollDetails({pollID: poll.id})", ng-class="resultado == 'Aprovado' ? 'bg-success' : 'bg-danger' ") {{poll.SLV_RESULTADO}}
       //POLL VIEW END
+
+div.container-fluid
+  spinner(name="ActionLoading")
+    div.overlay
+    div.spinner
+      div.sk-three-bounce
+        div.sk-child.sk-bounce1
+        div.sk-child.sk-bounce2
+        div.sk-child.sk-bounce3
+      // END table-responsive
+    // END panel

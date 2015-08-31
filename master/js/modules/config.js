@@ -109,11 +109,18 @@ App.config(
         controller: 'ProfileController'
     })
     .state('app.favorites', {
-        url: '/favorites/:folderName',
-        title: 'Tela de Acompanhamento',
-        templateUrl: helper.basepath('favorite-bills.html'),
-        controller: 'FavoriteBillsController',
+        url: '/favorites',
+        title: 'Favoritos',
+        abstract: true,
+        controller: 'FavoriteController',
+        templateUrl: helper.basepath('favorite.html'),
         resolve: angular.extend(helper.resolveFor('ngDialog'))
+    })
+    .state('app.favorites.folder', {
+        url: '/favorites/:folderName',
+        title: 'Favoritos',
+        templateUrl: helper.basepath('favorite-bills.html'),
+        controller: 'FavoriteBillsController'
     })
     .state('app.reports', {
         url: '/reports',

@@ -1,15 +1,18 @@
-App.controller('FavoriteBillsController', ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'Auth', '$rootScope', 'UserFolders', '$modal', 'FoldersBills', 'ngDialog', '$state', '$stateParams',
+/**=========================================================
+ * Module: favorite-bills.js
+ *
+ =========================================================*/
+
+ App.controller('FavoriteController',
+  ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'Auth', '$rootScope', 'UserFolders', '$modal', 'FoldersBills', 'ngDialog', '$state', '$stateParams',
     function($scope, $log, DataFetcher, $filter, $stateParams, Auth, $rootScope, UserFolders, $modal, FoldersBills, ngDialog, $state, $stateParams) {
 
-    $scope.currentFolder = $stateParams.folderName;
 
     UserFolders.get(function(data){
         $scope.folders = data.pastas;
     });
 
-    FoldersBills.get({pasta: $scope.currentFolder}, function(data){
-        $scope.bills = data.SL_PROPOSICOES;
-    });
+
 
     $scope.selectFolder = function(folder){
         $scope.currentFolder = folder;
@@ -39,6 +42,95 @@ App.controller('FavoriteBillsController', ['$scope', '$log', 'DataFetcher', '$fi
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
+}]);
+
+App.controller('CreateFolderController',
+  ['$scope', '$log', '$modalInstance', 'folders', 'UserFolders',
+    function ($scope, $log, $modalInstance, folders, UserFolders) {
+
+    $scope.foldersList = folders;
+    $scope.newName = "";
+
+    $scope.create = function () {
+        if($scope.foldersList.indexOf($scope.newName) == -1){
+            UserFolders.create({"pasta":$scope.newName}).$promise.then(function(){
+                $scope.foldersList.push($scope.newName);
+                $scope.foldersList.sort();
+                $modalInstance.close($scope.newName);
+            }, function(reason){
+                $log.log(reason);
+            });
+        }
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+}]);
+
+App.controller('RenameFolderController',
+  ['$scope', '$log', '$modalInstance', 'UserFolders', 'folders', 'folderName' ,
+    function ($scope, $log, $modalInstance, UserFolders, folders, folderName) {
+
+    $scope.foldersList = folders;
+    $scope.newName = "";
+
+    $scope.rename = function () {
+        if($scope.foldersList.indexOf($scope.newName) == -1){
+            UserFolders.rename({"oldName":folderName, "newName":$scope.newName}).$promise.then(function(){
+                var index = folders.indexOf(folderName);
+                folders.splice(index, 1);
+
+                $scope.foldersList.push($scope.newName);
+                $scope.foldersList.sort();
+                $modalInstance.close($scope.newName);
+            }, function(reason){
+                $log.error(reason);
+            });
+        }
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+}]);
+
+App.controller('DeleteFolderController',
+  ['$scope', '$log', '$modalInstance', 'UserFolders', 'folders', 'folderName',
+    function ($scope, $log, $modalInstance, UserFolders, folders, folderName) {
+    $scope.folderName = folderName;
+    $scope.delete = function () {
+        UserFolders.delete({pasta: folderName}).$promise.then(function(){
+            //delete folder in view
+            var index = folders.indexOf(folderName);
+            folders.splice(index, 1);
+            $modalInstance.close();
+        }, function(reason){
+                $log.error(reason);
+        });
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+}]);
+
+
+App.controller('FavoriteBillsController',
+  ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'Auth', '$rootScope', 'UserFolders', '$modal', 'FoldersBills', 'ngDialog', '$state', '$stateParams',
+    function($scope, $log, DataFetcher, $filter, $stateParams, Auth, $rootScope, UserFolders, $modal, FoldersBills, ngDialog, $state, $stateParams) {
+
+    $scope.showDefault = true;
+    if($stateParams.folderName){
+        FoldersBills.get({pasta: $stateParams.folderName}, function(data){
+            $scope.bills = data.SL_PROPOSICOES;
+        });
+        $scope.currentFolder = $stateParams.folderName;
+        $scope.showDefault = false;
+    }else{
+        $scope.showDefault = true;
+    }
+
 
     $scope.renameFolder = function () {
         var modalInstance = $modal.open({
@@ -56,13 +148,7 @@ App.controller('FavoriteBillsController', ['$scope', '$log', 'DataFetcher', '$fi
         });
         //resolve modal
         modalInstance.result.then(function (folderName) {
-            $scope.currentFolder = folderName;
-
-            FoldersBills.get({pasta: folderName}, function(data){
-                $scope.bills = data.SL_PROPOSICOES;
-            });
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
+            $state.go('app.favorites.folder', {'folderName': folderName })
         });
     };
 
@@ -82,7 +168,9 @@ App.controller('FavoriteBillsController', ['$scope', '$log', 'DataFetcher', '$fi
         });
         //resolve modal
         modalInstance.result.then(function (selectedItem) {
-            $scope.currentFolder = "";
+
+            $scope.currentFolder = '';
+            $scope.showDefault = true;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -92,78 +180,55 @@ App.controller('FavoriteBillsController', ['$scope', '$log', 'DataFetcher', '$fi
         var index = $scope.bills.indexOf(name);
         $scope.bills.splice(index, 1);
     };
-    $scope.status = {
-        isopen: false
+
+    /* Author Filter*/
+    $scope.parseAuthor = function(authorString){
+        var author = {};
+            try{
+                author = authorString.split(",#");
+            }
+            catch(err){
+                return authorString;
+            }
+            return {"name": author[0], "id": author[1]};
     };
-    $scope.toggleDropdown = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.status.isopen = !$scope.status.isopen;
-    };
-}]);
 
-App.controller('CreateFolderController', function ($scope, $log, $modalInstance, folders, UserFolders) {
-
-  $scope.foldersList = folders;
-  $scope.newName = "";
-
-    $scope.create = function () {
-        if($scope.foldersList.indexOf($scope.newName) == -1){
-            UserFolders.create({"pasta":$scope.newName}).$promise.then(function(){
-                $scope.foldersList.push($scope.newName);
-                $scope.foldersList.sort();
-                $modalInstance.close($scope.newName);
-            }, function(reason){
-                $log.log(reason);
-            });
+    $scope.getMainAuthor = function(data){
+        //if only one author
+        if (typeof(data) == "string"){
+            return $scope.parseAuthor(data);
+        }
+        //if array, return last author in array, who is the main author
+        else if (data instanceof Array){
+            return $scope.parseAuthor(data[data.length - 1]);
+        }
+        else{
+            return "";
         }
     };
 
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-});
+    $scope.hasCoauthors = function(billMainAuthor){
+        if(billMainAuthor instanceof Array){
+            if(billMainAuthor.length > 1){
+               return true;
+            }
 
-App.controller('RenameFolderController', function ($scope, $log, $modalInstance, UserFolders, folders, folderName) {
-
-    $scope.foldersList = folders;
-    $scope.newName = "";
-
-    $scope.rename = function () {
-        if($scope.foldersList.indexOf($scope.newName) == -1){
-            UserFolders.rename({"oldName":folderName, "newName":$scope.newName}).$promise.then(function(){
-                var index = folders.indexOf(folderName);
-                folders.splice(index, 1);
-
-                $scope.foldersList.push($scope.newName);
-                $scope.foldersList.sort();
-                $modalInstance.close($scope.newName);
-            }, function(reason){
-                $log.log(reason);
-            });
         }
+        return false;
     };
 
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-});
+    $scope.removeBill = function(bill){
+        console.log("ok");
+        findObj = {};
+        findObj.SLP_NOME = bill;
+        var myObject = {};
+        myObject.proposicoesNovas = [];
+        myObject.proposicoesVelhas = [];
+        myObject.proposicoesVelhas.push(bill)
+        FoldersBills.update({pasta: $scope.currentFolder}, myObject, function(data){
+            $scope.bills.splice(_.findIndex($scope.bills, findObj), 1);
 
-App.controller('DeleteFolderController', function ($scope, $log, $modalInstance, UserFolders, folders, folderName) {
-    $scope.folderName = folderName;
-    $scope.delete = function () {
-        UserFolders.delete({pasta: folderName}).$promise.then(function(){
-            //delete folder in view
-            var index = folders.indexOf(folderName);
-            folders.splice(index, 1);
-            $modalInstance.close();
-        }, function(reason){
-                $log.log(reason);
         });
     };
-
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-});
+}]);
 

@@ -1,13 +1,3 @@
-// Inline template with sidebar items markup and ng-directives
-script(type='text/ng-template', id="sidebar-renderer.html")
-  span(ng-if="item.heading") {{item.text || (item.translate | translate)}}
-  a(ng-if="!item.heading", ng-href="{{$state.href(item.sref, item.params)}}", title="{{item.text}}")
-    em(class="{{item.icon}}", ng-if="item.icon")
-    .pull-right(ng-if="item.alert", ng-class="item.label || 'label label-success'") {{item.alert}}
-    span {{item.text || (item.translate | translate)}}
-  ul(class="nav sidebar-subnav", ng-if="item.submenu", collapse="isCollapse(pIndex)",  ng-init="addCollapse(pIndex, item)")
-    li.sidebar-subnav-header {{item.text || (item.translate | translate)}}
-    li(ng-repeat='item in item.submenu', ng-include="'sidebar-renderer.html'", ng-class="getMenuItemPropClasses(item)", ng-init="pIndex=(pIndex+'-'+$index); inSubmenu = true", ng-click="toggleCollapse(pIndex)")
 
 // START Sidebar (left)
 .aside-inner
@@ -15,10 +5,8 @@ script(type='text/ng-template', id="sidebar-renderer.html")
     // START sidebar nav
     ul.nav
       li
-        a(ui-sref="app.favorites")
+        a(ui-sref="app.favorites.folder")
           em(class="fa fa-bookmark")
-      // Iterates over all sidebar items
-      //li(ng-class="getMenuItemPropClasses(item)", ng-repeat='item in menuItems', ng-init="pIndex = $index", ng-include="'sidebar-renderer.html'", ng-click="toggleCollapse(pIndex, true)")
     // END sidebar nav
 
 // END Sidebar (left)

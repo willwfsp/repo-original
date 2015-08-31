@@ -21,6 +21,29 @@ App.directive('loading',
     };
 }]);
 
+App.directive('loadingSection',
+  ['$http', '$state',
+    function($http, $state){
+    return {
+        restrict: 'A',
+        link: function(scope, elm, attrs)
+        {
+          scope.isLoading = function () {
+              return $http.pendingRequests.length > 0 && !$state.is('app.searchBills') && !$state.is('app.favorites');
+          };
+
+          scope.$watch(scope.isLoading,
+            function(v){
+              if(v){
+                  elm.show();
+              }else{
+                  elm.hide();
+              }
+          });
+        }
+    };
+}]);
+
 
 
 App.directive('preloader',

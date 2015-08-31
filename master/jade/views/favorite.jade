@@ -1,0 +1,51 @@
+// Create tag modal template
+script(type='text/ng-template', id="createTagModal.html")
+    .modal-header
+        h3.modal-title Criar etiqueta
+    .modal-body
+        label Digite o nome da nova etiqueta: &nbsp;
+            input.form-control.col-sm-12.col-md-12.col-lg-12(type="text", ng-model="newName", placeholder="Saúde, Tributação, Maioridade...")
+    .modal-footer
+        .pull-left
+            button.btn.btn-success(ng-click="create()") Criar
+            button.btn.btn-danger(ng-click="cancel()") Cancelar
+
+// Rename tag modal template
+script(type='text/ng-template', id="renameTagModal.html")
+  .modal-header
+      h3.modal-title Renomear etiqueta
+  .modal-body
+      label Digite um novo nome para a etiqueta: &nbsp;
+          input.form-control.col-sm-12.col-md-12.col-lg-12(type="text", ng-model="newName", placeholder="Ex: PECs, Saúde, Uber...")
+  .modal-footer
+      .pull-left
+          button.btn.btn-success(ng-click="rename()") Renomear
+          button.btn.btn-danger(ng-click="cancel()") Cancelar
+
+// Delete tag modal template
+script(type='text/ng-template', id="deleteTagModal.html")
+    .modal-header
+        h3.modal-title Apagar Etiqueta {{folderName}}
+    .modal-body
+        label Deseja realmente apagar a etiqueta {{folderName}}?
+    .modal-footer
+        .pull-left
+            button.btn.btn-success(ng-click="delete()") Apagar
+            button.btn.btn-danger(ng-click="cancel()") Cancelar
+
+// folders
+h3 Acompanhamento de Proposições
+.row
+  .col-md-3.pr0
+    .well.wd-wide
+      h4
+        em(class="fa fa-tags")&nbsp;
+        span Etiquetas
+        span.pull-right(class="fa fa-plus " ng-click="createFolder()")
+      br
+      .list-group
+          a.list-group-item(ng-repeat="folder in folders", ui-sref="app.favorites.folder({folderName: folder})")
+              em(class="fa fa-tag") &nbsp;
+              span {{folder}}
+
+  .col-md-9.pl0(ui-view="")

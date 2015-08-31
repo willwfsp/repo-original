@@ -15,9 +15,9 @@ App.controller('SearchBarController',
 
 App.controller('SearchBillsController',
   ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal',
-  'DataFetcher', 'Auth', 'ngDialog', 'UserFolders',
+  'DataFetcher', 'Auth', 'ngDialog', 'UserFolders','FoldersBills', 'spinnerService','$document',
     function($http, $stateParams, $location, $scope, $log, $state, $modal,
-        DataFetcher, Auth, ngDialog, UserFolders) {
+        DataFetcher, Auth, ngDialog, UserFolders, FoldersBills, spinnerService, $document) {
 
     $scope.isCollapsed = false;
     $scope.showOtherAuthors = false;
@@ -242,20 +242,6 @@ App.controller('SearchBillsController',
         DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
     };
 
-    $scope.follow = function(index){
-        ngDialog.open({
-              template: '<h2>Notice that there is no overlay!</h2>',
-              className: 'ngdialog-theme-default',
-              plain: true,
-              overlay: false
-            });
-        if($scope.bills[index].hasOwnProperty('following')){
-            $scope.bills[index].following = !$scope.bills[index].following
-        }else{
-            $scope.bills[index].following = true;
-        }
-    }
-
     // Listeners
     $scope.$on('fetch billSearchResults:completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
@@ -293,11 +279,34 @@ App.controller('SearchBillsController',
             $scope.fetchingMore = false;
         }
 
-        //bill.fields.USER_TAGS
-
 
 
     });
+
+    $document.on('click', function (e) {
+        var target = e.target.parentElement;
+        var parentFound = false;
+
+        while (angular.isDefined(target) && target !== null && !parentFound) {
+            if (_.contains(target.className.split(' '), 'multiselect-parent') && !parentFound) {
+                $dropdownTrigger = angular.element("#DropdownTagsList")[0]
+                if(target.id === $dropdownTrigger.id) {
+                    parentFound = true;
+                }
+            }
+            target = target.parentElement;
+        }
+
+        if (!parentFound) {
+            $scope.$apply(function () {
+                for(i = 0; i<$scope.listDropdownsOpened.length; i++){
+                    $scope.open[$scope.listDropdownsOpened[i]] = false;
+                }
+
+            });
+        }
+    });
+
     $scope.open = [];
 
     function getFindObj(id) {
@@ -315,7 +324,7 @@ App.controller('SearchBillsController',
     }
 
     $scope.toggleDropdown = function(index){
-        console.log("OK");
+        spinnerService.show("ActionLoading");
         $scope.tagsData[index] = {};
         if(!$scope.open[index]){
             $scope.tagsData[index].data = [];
@@ -324,13 +333,25 @@ App.controller('SearchBillsController',
                     var AuxObject = {};
                     AuxObject.id = item;
                     $scope.tagsData[index].data.push(AuxObject)
+
                 });
+                spinnerService.hide("ActionLoading");
+                $scope.open[index] = !$scope.open[index];
+                $scope.listDropdownsOpened.push(index);
             });
 
+        }else{
+            spinnerService.hide("ActionLoading");
+            $scope.open[index] = !$scope.open[index];
+            indexDropdown = $scope.listDropdownsOpened.indexOf(index);
+            if (indexDropdown > -1) {
+                $scope.listDropdownsOpened.splice(indexDropdown, 1);
+            }
         }
 
-        $scope.open[index] = !$scope.open[index];
+
     }
+
     $scope.getPropertyForObject = function (object, property) {
         if (angular.isDefined(object) && object.hasOwnProperty(property)) {
             return object[property];
@@ -339,7 +360,8 @@ App.controller('SearchBillsController',
         return '';
     };
 
-    $scope.setSelectedItem = function (id, dontRemove, index) {
+    $scope.setSelectedItem = function (id, index, bill, dontRemove) {
+        spinnerService.show("ActionLoading");
         var findObj = getFindObj(id);
         var finalObj = null;
 
@@ -350,26 +372,69 @@ App.controller('SearchBillsController',
         var exists = _.findIndex($scope.tagsModel[index].data, findObj) !== -1;
 
         if (!dontRemove && exists) {
-            $scope.tagsModel[index].data.splice(_.findIndex($scope.tagsModel[index].data, findObj), 1);
-            $scope.externalEvents.onItemDeselect(findObj);
+            var myObject = {};
+            myObject.proposicoesNovas = [];
+            myObject.proposicoesVelhas = [];
+            myObject.proposicoesVelhas.push(bill)
+            FoldersBills.update({pasta: id}, myObject, function(data){
+                $scope.tagsModel[index].data.splice(_.findIndex($scope.tagsModel[index].data, findObj), 1);
+                $scope.externalEvents.onItemDeselect(findObj);
+                spinnerService.hide("ActionLoading");
+            });
+
+
         } else if (!exists) {
-            $scope.tagsModel[index].data.push(finalObj);
-            $scope.externalEvents.onItemSelect(finalObj);
+            var myObject = {};
+            myObject.proposicoesNovas = [];
+            myObject.proposicoesVelhas = [];
+            myObject.proposicoesNovas.push(bill)
+            FoldersBills.update({pasta: id}, myObject, function(data){
+                $scope.tagsModel[index].data.push(finalObj);
+                $scope.externalEvents.onItemSelect(finalObj);
+                spinnerService.hide("ActionLoading");
+            });
+
         }
+
     };
     $scope.isChecked = function (id, index) {
         return _.findIndex($scope.tagsModel[index].data, getFindObj(id)) !== -1;
     };
 
-    $scope.createTag = function(tag){
-        console.log(tag);
+    $scope.createTag = function(tag, index, bill){
+        spinnerService.show("ActionLoading");
+        var myObject = {};
+        myObject.proposicoes = [];
+        myObject.proposicoes.push(bill)
+        FoldersBills.save({pasta: tag}, myObject, function(data){
+            var AuxObject = {};
+            AuxObject.id = tag;
+            $scope.tagsData[index].data.push(AuxObject);
+            $scope.tagsModel[index].data.push({id:tag});
+            $scope.externalEvents.onItemSelect({id:tag});
+            spinnerService.hide("ActionLoading");
+        });
+
     }
     $scope.initVariables = function(){
+        spinnerService._unregisterAll();
         $scope.tagsModel = [];
         $scope.tagsData = [];
+        $scope.listDropdownsOpened = [];
+
     }
-    $scope.removeTag = function(){
-        console.log("Remover Tag");
+    $scope.removeTag = function(id, index, bill){
+        spinnerService.show("ActionLoading");
+        var findObj = getFindObj(id);
+        var myObject = {};
+        myObject.proposicoesNovas = [];
+        myObject.proposicoesVelhas = [];
+        myObject.proposicoesVelhas.push(bill)
+        FoldersBills.update({pasta: id}, myObject, function(data){
+            $scope.tagsModel[index].data.splice(_.findIndex($scope.tagsModel[index].data, findObj), 1);
+            spinnerService.hide("ActionLoading");
+        });
+
     }
 
     $scope.externalEvents = {

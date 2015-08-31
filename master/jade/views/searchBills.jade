@@ -16,28 +16,32 @@ h3(ng-init="init()") Pesquisa
       .panel-body(ng-show="!isCollapsed")
         .form-group
           .col-md-2.col-sm-2
-            div
+            div.filterSearch
               ui-select(multiple='', ng-model='checkedHouses.list', on-select='changeFilterHouses()', on-remove='changeFilterHouses()')
                 ui-select-match(placeholder='Casas') {{$item.houseName}}
                 ui-select-choices(repeat='house.initials as house in availableHouses') {{house.houseName}}
           .col-md-2.col-sm-2
-            ui-select(multiple='', ng-model='statusBill.list', on-select='changeFilterStatus()',
-              on-remove='changeFilterStatus()')
-              ui-select-match(placeholder='Situação') {{$item | capitalize}}
-              ui-select-choices(repeat='status in statusBillAvailable') {{status | capitalize}}
+            div.filterSearch
+              ui-select(multiple='', ng-model='statusBill.list', on-select='changeFilterStatus()',
+                on-remove='changeFilterStatus()')
+                ui-select-match(placeholder='Situação') {{$item | capitalize}}
+                ui-select-choices(repeat='status in statusBillAvailable') {{status | capitalize}}
 
           .col-md-2.col-sm-2
-            ui-select(multiple='', ng-model='typeBill.list', on-select='changeFilterBillTypes()',
-              on-remove='changeFilterBillTypes()')
-              ui-select-match(placeholder='Tipo') {{$item.billTypeName}}
-              ui-select-choices(repeat='type.initials as type in billTypesAvailable') {{type.billTypeName}}
+            div.filterSearch
+              ui-select(multiple='', ng-model='typeBill.list', on-select='changeFilterBillTypes()',
+                on-remove='changeFilterBillTypes()')
+                ui-select-match(placeholder='Tipo') {{$item.billTypeName}}
+                ui-select-choices(repeat='type.initials as type in billTypesAvailable') {{type.billTypeName}}
 
           .col-md-3.col-sm-3
-            select.form-control(ng-model="themeSelected", ng-options="item.subtema group by item.tema for item in themesAndSubthemes", ng-change="changeFilterTheme()")
-              option(value="") Tema
+            div.filterSearch
+              select.form-control(ng-model="themeSelected", ng-options="item.subtema group by item.tema for item in themesAndSubthemes", ng-change="changeFilterTheme()")
+                option(value="") Tema
 
           .col-md-2.col-sm-2
-            input.form-control.input-md(type="number", min="1980", max="2015", ng-model="year" ng-change="changeFilterYear()",placeholder='Ano')
+            div.filterSearch
+              input.form-control.input-md(type="number", min="1980", max="2015", ng-model="year" ng-change="changeFilterYear()",placeholder='Ano')
 
           .col-md-1.col-sm-1.btn.btn-md.btn-default.dropdown-menu-right.pull-right(ng-click="cleanFilters()")
             | Limpar
@@ -74,7 +78,7 @@ h3(ng-init="init()") Pesquisa
                   .col-xs-4.text-center.col-md-4
                     | Atualização: {{toDate(bill.fields.SLP_DATA_ATUALIZACAO) | date:"dd/MM/yyyy"}}
                   .col-xs-4.text-right.col-md-4
-                    div.multiselect-parent.btn-group.dropdown-multiselect
+                    div.multiselect-parent.btn-group.dropdown-multiselect(id="DropdownTagsList")
                       button.dropdown-toggle.btn.btn-default(type="button", ng-click="toggleDropdown($index)")
                         span.fa.fa-tag
                       ul.dropdown-menu.dropdown-menu-form.dropdown-menu-right(ng-style="{display: open[$index] ? \'block\' : \'none\', height : 200 }", style="overflow: auto")
@@ -82,11 +86,11 @@ h3(ng-init="init()") Pesquisa
                           input.form-control(type="text", style="width:, 100%;", ng-model="searchFilter", placeholder="Buscar...")
                         li.divider
                         li(role="presentation", ng-repeat="tag in tagsData[$index].data | filter: searchFilter")
-                          a(role="menuitem" tabindex="-1" ng-click="setSelectedItem(getPropertyForObject(tag,'id'), true, $parent.$index)")
+                          a(role="menuitem" tabindex="-1" ng-click="setSelectedItem(getPropertyForObject(tag,'id'), $parent.$index, bill.fields.SLP_NOME)")
                             span(data-ng-class="{'fa fa-check': isChecked(getPropertyForObject(tag,'id'), $parent.$index)}") {{getPropertyForObject(tag, 'id')}}
                         li.divider(ng-show="searchFilter")
                         li(ng-show="searchFilter")
-                          a(role="menuitem" tabindex="-1" ng-click="createTag(searchFilter)") Criar {{searchFilter}}
+                          a(role="menuitem" tabindex="-1" ng-click="createTag(searchFilter, $index, bill.fields.SLP_NOME)") Criar {{searchFilter}}
 
                 .container-fluid.row
                   .col-xs-12
@@ -121,7 +125,7 @@ h3(ng-init="init()") Pesquisa
                         a(ng-click="showOtherAuthors = !showOtherAuthors") {{bill.fields.SLP_AUTOR.length - 1 > 1 ? bill.fields.SLP_AUTOR.length - 1 + ' outros' : '1 outro'}}
                         div(collapse="!showOtherAuthors")
                           span(ng-init = "mainAuthor = getMainAuthor(bill.fields.SLP_AUTOR)")
-                            strong(ng-repeat="author in bill.fields.SLP_AUTOR | orderBy", ng-hide="mainAuthor.name == parseAuthor(author).name")
+                            strong(ng-repeat="author in bill.fields.SLP_AUTOR | orderBy track by $index", ng-hide="mainAuthor.name == parseAuthor(author).name")
                               strong(ng-if="! parseAuthor(author).id") {{parseAuthor(author).name}}
 
                               strong(ng-if="parseAuthor(author).id")
@@ -131,8 +135,9 @@ h3(ng-init="init()") Pesquisa
                     ul.tags
                       li(ng-repeat="tag in tagsModel[$index].data")
                         div
-                          a(ui-sref= "app.favorites") {{tag.id}}
-                          a(ng-click="removeTag()")
+                          a(ui-sref= "app.favorites.folder({folderName:'{{tag.id}}'})") {{tag.id}}
+                          | &nbsp&nbsp&nbsp
+                          a(ng-click="removeTag(tag.id, $parent.$index, bill.fields.SLP_NOME)")
                             span.fa.fa-close
 
 
@@ -146,6 +151,13 @@ h3(ng-init="init()") Pesquisa
             td(colspan = "2").container-fluid.row.row-search
 
               button.btn.btn-block.btn-default(ng-click="moreResults()" ng-show="bills.length < total_results") Carregar Mais resultados
-
+div
+  spinner(name="ActionLoading")
+    div.overlay
+    div.spinner
+      div.sk-three-bounce
+        div.sk-child.sk-bounce1
+        div.sk-child.sk-bounce2
+        div.sk-child.sk-bounce3
       // END table-responsive
     // END panel

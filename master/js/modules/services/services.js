@@ -331,6 +331,10 @@ App.factory('FoldersBills', ['$resource', '$rootScope', 'Auth', '$http',
             save: {
                 method:"POST",
                 headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            update:{
+                method:"PUT",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
             }
         });
 }]);
