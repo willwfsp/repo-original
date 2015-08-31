@@ -117,7 +117,7 @@ App.config(
         resolve: angular.extend(helper.resolveFor('ngDialog'))
     })
     .state('app.favorites.folder', {
-        url: '/favorites/:folderName',
+        url: '/:folderName',
         title: 'Favoritos',
         templateUrl: helper.basepath('favorite-bills.html'),
         controller: 'FavoriteBillsController'

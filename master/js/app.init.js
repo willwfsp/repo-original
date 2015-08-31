@@ -81,17 +81,19 @@ App.run(
       year: ((new Date()).getFullYear()),
       keywords: 'projetos de lei, legislativo, congresso nacional, camara dos deputados, senado',
       layout: {
-        isFixed: true,
+        isFixed: false,
         isCollapsed: true,
         isBoxed: false,
         isRTL: false,
         horizontal: false,
         isFloat: false,
-        asideHover: true,
+        asideHover: false,
         theme: "app/css/theme-sigalei.css"
       },
-      useFullLayout: false,
-      hiddenFooter: false,
+        useFullLayout: false,
+        hiddenFooter: false,
+        offsidebarOpen: false,
+        asideToggled: false,
       viewAnimation: 'ng-fadeInUp'
     };
     $rootScope.user = {};

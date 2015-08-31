@@ -249,7 +249,7 @@ App.factory('DataFetcher',
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'}
         };
-        var promiseUserData = $http.get((baseUrl + "profile"), headers);
+        var promiseUserData = $http.get((baseUrl + "usuarios/perfil"), headers);
 
         var defer = $q.defer();
 
