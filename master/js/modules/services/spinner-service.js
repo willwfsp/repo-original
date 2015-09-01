@@ -1,4 +1,9 @@
-App.factory('spinnerService', function () {
+/**=========================================================
+ * Module: spinner-service.js
+ *
+ =========================================================*/
+
+ App.factory('spinnerService', function () {
     var spinners = {};
     return {
         _register: function (data) {

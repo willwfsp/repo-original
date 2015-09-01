@@ -33,10 +33,10 @@
               input.form-control(type='text', name="register_organization", placeholder='Organização (Empresa, Ong, Associação...)', ng-model="register_organization", required='', ng-trim='false')
               span.fa.fa-building-o.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_organization.$dirty && registerForm.register_organization.$error.required") &nbsp;&nbsp;Campo Obrigatório
-        .row
+        .row(ng-hide="true")
           .col-md-12
             .form-group.has-feedback
-              select.form-control(ng-model="register_industry", name="register_industry", ng-options="value for value in industryOptions", required='')
+              select.form-control(ng-model="register_industry", name="register_industry", ng-options="value for value in industryOptions")
                 option.text-muted(value='') -- Área de Interesse --
               span.text-danger(ng-show="registerForm.register_industry.$dirty && registerForm.register_industry.$error.required") &nbsp;&nbsp;Campo Obrigatório
         .row

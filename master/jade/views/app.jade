@@ -3,16 +3,26 @@ header.topnavbar-wrapper(ng-include="'app/views/partials/top-navbar.html'")
 
 // sidebar
 aside.aside(ng-include="'app/views/partials/sidebar.html'", ng-controller="SidebarController")
- 
+
 // Main section
 section
-   
-    // Page content
-    .content-wrapper(ui-view="", autoscroll="false", ng-class="app.viewAnimation")
-    .overlay(loading)
-        .ball-clip-rotate-multiple.load-icon-position
-            div
-            div
+  spinner(name="ScreenLoading")
+    div.overlayView
+    div.spinnerScreen
+      div.sk-three-bounce
+        div.sk-child.sk-bounce1
+        div.sk-child.sk-bounce2
+        div.sk-child.sk-bounce3
+  // Page content
+  .content-wrapper(ui-view="", autoscroll="false", ng-class="app.viewAnimation")
+  div
+    spinner(name="ActionLoading")
+      div.overlay
+      div.spinner
+        div.sk-three-bounce
+          div.sk-child.sk-bounce1
+          div.sk-child.sk-bounce2
+          div.sk-child.sk-bounce3
 // Page footer
 footer(ng-include="'app/views/partials/footer.html'")
 

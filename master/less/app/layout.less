@@ -48,7 +48,7 @@ html, body {
 .wrapper {
   position: relative;
   width: 100%;
-  height: auto;
+  height: 100%;
   min-height: 100%;
   overflow-x: hidden;
   &.ng-leave {
@@ -94,12 +94,12 @@ html, body {
   // Contains the main content
   > section {
     position: relative;
-    height: 100%;
+    min-height: 80%;
     margin-left: 0;
     // overflow: hidden;
     z-index: @z-index-main-section;
     background-color: @content-bg;
-    margin-bottom: @footer-hg !important; // ensure a space for the footer
+    //margin-bottom: @footer-hg !important; // ensure a space for the footer
   }
 
   // Page Footer

@@ -417,7 +417,6 @@ App.controller('SearchBillsController',
 
     }
     $scope.initVariables = function(){
-        spinnerService._unregisterAll();
         $scope.tagsModel = [];
         $scope.tagsData = [];
         $scope.listDropdownsOpened = [];

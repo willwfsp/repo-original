@@ -8,7 +8,7 @@ h3(ng-init='initVariables()')
       ul.tags
         li(ng-repeat="tag in tagsModel.data")
           div
-            a(ui-sref= "app.favorites({folderName:'{{tag.id}}'})") {{tag.id}}
+            a(ui-sref= "app.favorites.folder({folderName:'{{tag.id}}'})") {{tag.id}}
             | &nbsp&nbsp&nbsp
             a(ng-click="removeTag(tag.id, dados.SLP_NOME)")
               span.fa.fa-close
@@ -224,14 +224,5 @@ h3(ng-init='initVariables()')
                   .col-sm-9.form-control-static-sm.m0
                     a.btn(ui-sref="app.bill.pollDetails({pollID: poll.id})", ng-class="resultado == 'Aprovado' ? 'bg-success' : 'bg-danger' ") {{poll.SLV_RESULTADO}}
       //POLL VIEW END
-
-div.container-fluid
-  spinner(name="ActionLoading")
-    div.overlay
-    div.spinner
-      div.sk-three-bounce
-        div.sk-child.sk-bounce1
-        div.sk-child.sk-bounce2
-        div.sk-child.sk-bounce3
       // END table-responsive
     // END panel

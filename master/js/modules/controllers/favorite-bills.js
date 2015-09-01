@@ -7,9 +7,11 @@
   ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'Auth', '$rootScope', 'UserFolders', '$modal', 'FoldersBills', 'ngDialog', '$state', '$stateParams',
     function($scope, $log, DataFetcher, $filter, $stateParams, Auth, $rootScope, UserFolders, $modal, FoldersBills, ngDialog, $state, $stateParams) {
 
+    $rootScope.$broadcast("event:show-loading");
 
     UserFolders.get(function(data){
         $scope.folders = data.pastas;
+        $rootScope.$broadcast("event:dismiss-loading");
     });
 
 

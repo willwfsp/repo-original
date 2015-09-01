@@ -6,7 +6,7 @@
 App.controller('HouseDataController',
   ['$scope','$rootScope', '$stateParams', '$filter', 'ngTableParams', '$log', '$http', 'DataFetcher', 'Auth',
     function($scope, $rootScope, $stateParams, $filter, ngTableParams, $log, $http, DataFetcher, Auth){
-
+    $rootScope.$broadcast("event:show-loading");
     $scope.checkHouse = function(){
         var house = $stateParams.house;
         if (house == "CD" || house == "SF" || house == "CN"){
@@ -118,6 +118,8 @@ App.controller('HouseDataController',
                 $defer.resolve(orderedData.slice( (params.page() - 1) * params.count(), params.page() * params.count() ) );
             }
         });
+
+        $rootScope.$broadcast("event:dismiss-loading");
     });
 
 }]);

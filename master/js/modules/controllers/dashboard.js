@@ -7,6 +7,8 @@ App.controller('DashboardController',
   ['$scope','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', 'Auth',
     function($scope, $rootScope, $stateParams, $log, $http, DataFetcher, Auth){
 
+
+    $rootScope.$broadcast("event:show-loading");
     $scope.houses = ['CD', 'SF', 'SP', 'MG'];
     $scope.housesNews = [];
 
@@ -19,6 +21,7 @@ App.controller('DashboardController',
         for(var i = 0; i < 4; i++){
             $scope.housesNews[i].name = $scope.houses[i];
         }
+        $rootScope.$broadcast("event:dismiss-loading");
 
     });
 }]);

@@ -4,11 +4,14 @@
  =========================================================*/
 
  App.controller('CommitteesController',
-  ['$scope', '$log', '$stateParams', '$filter', 'ngTableParams', 'DataFetcher', 'Auth',
-    function($scope, $log, $stateParams, $filter, ngTableParams, DataFetcher, Auth){
+  ['$scope', '$log', '$stateParams', '$filter', 'ngTableParams',
+   'DataFetcher', 'Auth', '$rootScope',
+    function($scope, $log, $stateParams, $filter, ngTableParams, DataFetcher,
+    Auth, $rootScope){
+
     $scope.committeesMembers = [];
     $scope.membersJson = [];
-
+    $rootScope.$broadcast("event:show-loading");
     $scope.membersTableParams = new ngTableParams({
             page: 1,
             count: 10,
@@ -49,6 +52,7 @@
             $scope.membersJson.push(parsedMember);
         }
         $scope.membersTableParams.reload();
+        $rootScope.$broadcast("event:dismiss-loading");
     });
 }]);
 

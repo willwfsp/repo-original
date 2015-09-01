@@ -24,7 +24,7 @@ App.controller('SignupController',
             user.firstname = $scope.registerForm.register_firstname.$modelValue;
             user.lastname = $scope.registerForm.register_lastname.$modelValue;
             user.organization = $scope.registerForm.register_organization.$modelValue;
-            user.industry = $scope.registerForm.register_industry.$modelValue;
+            //user.industry = $scope.registerForm.register_industry.$modelValue;
             if ( $scope.registerForm.register_phone.$modelValue !== ""){
                 user.telephone = $scope.registerForm.register_phone.$modelValue ;
             }
@@ -59,14 +59,14 @@ App.controller('SignupController',
             $scope.registerForm.register_firstname.$dirty = true;
             $scope.registerForm.register_lastname.$dirty = true;
             $scope.registerForm.register_organization.$dirty = true;
-            $scope.registerForm.register_industry.$dirty = true;
+            //$scope.registerForm.register_industry.$dirty = true;
             $scope.registerForm.register_email.$dirty = true;
             $scope.registerForm.register_password.$dirty = true;
             $scope.registerForm.register_agreed.$dirty = true;
         }
     };
     $scope.industryOptions = [
-      "Acordos Internacionais", "Agricultura", "Agrotóxico", "Alimentício", "Automotivo", "Aviação", "Bancário", "Bebidas", "Bens de consumo", "Biotecnologia", "Comércio", "Comunicação", "Conglomerados empresariais", "Construção", "Consultoria", "Cosmético", "Eletrônicos", "Energia", "Engenharia", "Entretenimento", "Farmacêutico", "Federações e Associações", "Finanças", "Fumo", "Governamental", "Máquinas", "Mineração", "Naval", "Óleo e Gás", "ONGs (Terceiro Setor)", "Outros", "Químico", "Saúde", "Seguros", "Sindicatos", "Tecnologia", "Telecomunicações", "Transportes", "Tributário"
+      "Acordos Internacionais", "Agricultura", "Agrotóxico", "Alimentício", "Automotivo", "Aviação", "Bancário", "Bebidas", "Bens de consumo", "Biotecnologia", "Comércio", "Comunicação", "Conglomerados empresariais", "Construção", "Consultoria", "Cosmético", "Eletrônicos", "Energia", "Engenharia", "Entretenimento", "Farmacêutico", "Federações e Associações", "Finanças", "Fumo", "Governamental", "Máquinas", "Mineração", "Naval", "Óleo e Gás", "ONGs (Terceiro Setor)", "Químico", "Saúde", "Seguros", "Sindicatos", "Tecnologia", "Telecomunicações", "Transportes", "Tributário", "Outros"
     ];
 
     $scope.openTerms = function () {

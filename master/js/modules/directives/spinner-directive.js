@@ -1,4 +1,9 @@
-App.directive('spinner', function () {
+/**=========================================================
+ * Module: spinner-directive.js
+ *
+ =========================================================*/
+
+ App.directive('spinner', function () {
     return {
         restrict: 'EA',
         replace: true,

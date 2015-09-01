@@ -5,13 +5,13 @@
 
 App.controller('BillController',
   ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter', '$window',
-   'ngTableParams', 'DataFetcher', 'Auth', 'ngDialog', '$document', 'spinnerService','UserFolders','FoldersBills',
+   'ngTableParams', 'DataFetcher', 'Auth', 'ngDialog', '$document', 'spinnerService','UserFolders','FoldersBills', '$rootScope',
     function($location,$scope, $state, $stateParams, $log, $http, $filter, $window,
-        ngTableParams, DataFetcher, Auth, ngDialog, $document, spinnerService, UserFolders,FoldersBills){
+        ngTableParams, DataFetcher, Auth, ngDialog, $document, spinnerService, UserFolders,FoldersBills, $rootScope){
 
     $scope.coAuthorsCollapsed = true;
     $scope.dados = {};
-
+    $rootScope.$broadcast("event:show-loading");
     $scope.viewDoc = function(url, house){
         if(!house){
             $window.open(url, '_blank');
@@ -59,6 +59,7 @@ App.controller('BillController',
                 $scope.tagsModel.data.push({id:item})
             });
         }
+        $rootScope.$broadcast("event:dismiss-loading");
 
 
    });
@@ -206,7 +207,6 @@ App.controller('BillController',
     }
     $scope.initVariables = function(){
         $scope.open = false;
-        spinnerService._unregisterAll();
         $scope.tagsModel = {};
         $scope.tagsData = {};
     }

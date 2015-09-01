@@ -33,8 +33,8 @@ var App = angular.module('sigaLeiApp', [
 
 App.run(
   ['$rootScope', '$state', '$stateParams',  '$window', '$templateCache',
-   'Auth', '$timeout', 'cfpLoadingBar', '$log',
-    function ($rootScope, $state, $stateParams, $window, $templateCache, Auth, $timeout, cfpLoadingBar, $log) {
+   'Auth', '$timeout', 'cfpLoadingBar', '$log', 'spinnerService',
+    function ($rootScope, $state, $stateParams, $window, $templateCache, Auth, $timeout, cfpLoadingBar, $log, spinnerService) {
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
         /* Auth */
@@ -55,10 +55,12 @@ App.run(
                 }
             }
         }
-        if($('.wrapper > section').length) // check if bar container exists
-          thBar = $timeout(function() {
-            cfpLoadingBar.start();
-          }, 0); // sets a latency Threshold
+
+
+        // display new view from top
+        if(toState.name != 'app.bill.pollDetails'){
+            $window.scrollTo(0, 0);
+        }
     });
     // Set reference to access them from any scope
     //$window.localStorage.clear();

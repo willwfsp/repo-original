@@ -12,7 +12,7 @@ h3(ng-init="init()") Pesquisa
           span(ng-show="!isCollapsed")
             em.icon-close
             |   &nbsp;Filtros
-
+        button.btn.btn-default(type="button", notify="", data-message="OK", data-options="{status: success, pos: bottom-center}") Notify!!
       .panel-body(ng-show="!isCollapsed")
         .form-group
           .col-md-2.col-sm-2
@@ -151,13 +151,6 @@ h3(ng-init="init()") Pesquisa
             td(colspan = "2").container-fluid.row.row-search
 
               button.btn.btn-block.btn-default(ng-click="moreResults()" ng-show="bills.length < total_results") Carregar Mais resultados
-div
-  spinner(name="ActionLoading")
-    div.overlay
-    div.spinner
-      div.sk-three-bounce
-        div.sk-child.sk-bounce1
-        div.sk-child.sk-bounce2
-        div.sk-child.sk-bounce3
+
       // END table-responsive
     // END panel
