@@ -3,8 +3,10 @@ script(type='text/ng-template', id="createTagModal.html")
     .modal-header
         h3.modal-title Criar etiqueta
     .modal-body
-        label Digite o nome da nova etiqueta: &nbsp;
-            input.form-control.col-sm-12.col-md-12.col-lg-12(type="text", ng-model="newName", placeholder="Saúde, Tributação, Maioridade...")
+      label Digite o nome da nova etiqueta: &nbsp;
+      form.has-feedback(name="createForm", novalidate='')
+        input.form-control(type='text', name="newName", placeholder='Saúde, Tributação, Segurança...', autocomplete="off", ng-model="data.newName", required='')
+        span.text-danger(ng-show="createForm.newName.$dirty && createForm.newName.$error.required") &nbsp;&nbsp;Campo Obrigatório
     .modal-footer
         .pull-left
             button.btn.btn-success(ng-click="create()") Criar
@@ -13,10 +15,13 @@ script(type='text/ng-template', id="createTagModal.html")
 // Rename tag modal template
 script(type='text/ng-template', id="renameTagModal.html")
   .modal-header
-      h3.modal-title Renomear etiqueta
+      h3.modal-title Renomear etiqueta '{{folderName}}'
   .modal-body
       label Digite um novo nome para a etiqueta: &nbsp;
-          input.form-control.col-sm-12.col-md-12.col-lg-12(type="text", ng-model="newName", placeholder="Ex: PECs, Saúde, Uber...")
+      form.has-feedback(name="renameForm", novalidate='')
+        input.form-control(type='text', name="newName", placeholder='Novo nome...', autocomplete="off", ng-model="data.newName", required='')
+        span.text-danger(ng-show="renameForm.newName.$dirty && renameForm.newName.$error.required") &nbsp;&nbsp;Campo Obrigatório
+
   .modal-footer
       .pull-left
           button.btn.btn-success(ng-click="rename()") Renomear
@@ -25,7 +30,7 @@ script(type='text/ng-template', id="renameTagModal.html")
 // Delete tag modal template
 script(type='text/ng-template', id="deleteTagModal.html")
     .modal-header
-        h3.modal-title Apagar Etiqueta {{folderName}}
+        h3.modal-title Apagar Etiqueta '{{folderName}}'
     .modal-body
         label Deseja realmente apagar a etiqueta {{folderName}}?
     .modal-footer
@@ -39,7 +44,7 @@ h3 Acompanhamento de Projetos de Lei
   .col-md-3.pr0
     .well.wd-wide
       h4
-        em(class="fa fa-tags")&nbsp;
+        em(class="fa fa-tags") &nbsp;
         span Etiquetas
         span.pull-right(class="fa fa-plus " ng-click="createFolder()")
       br

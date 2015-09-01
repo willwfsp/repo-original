@@ -69,6 +69,13 @@ App.run(
     $rootScope.$storage = $window.localStorage;
     $rootScope.apiURL = "https://sigalei-dev-api.mybluemix.net/v1/";
 
+    $rootScope.notificationSettings = {
+        message: '',
+        positionY: 'bottom',
+        positionX: 'center',
+        delay:1000
+    }
+
     /* Uncomment this to disable template cache
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
         if (typeof(toState) !== 'undefined'){

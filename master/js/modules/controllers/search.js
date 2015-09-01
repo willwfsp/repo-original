@@ -15,9 +15,9 @@ App.controller('SearchBarController',
 
 App.controller('SearchBillsController',
   ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal',
-  'DataFetcher', 'Auth', 'ngDialog', 'UserFolders','FoldersBills', 'spinnerService','$document',
+  'DataFetcher', 'Auth', 'ngDialog', 'UserFolders','FoldersBills', 'spinnerService','$document', 'Notification', '$rootScope',
     function($http, $stateParams, $location, $scope, $log, $state, $modal,
-        DataFetcher, Auth, ngDialog, UserFolders, FoldersBills, spinnerService, $document) {
+        DataFetcher, Auth, ngDialog, UserFolders, FoldersBills, spinnerService, $document, Notification, $rootScope) {
 
     $scope.isCollapsed = false;
     $scope.showOtherAuthors = false;
@@ -336,6 +336,7 @@ App.controller('SearchBillsController',
 
                 });
                 spinnerService.hide("ActionLoading");
+
                 $scope.open[index] = !$scope.open[index];
                 $scope.listDropdownsOpened.push(index);
             });
@@ -380,6 +381,14 @@ App.controller('SearchBillsController',
                 $scope.tagsModel[index].data.splice(_.findIndex($scope.tagsModel[index].data, findObj), 1);
                 $scope.externalEvents.onItemDeselect(findObj);
                 spinnerService.hide("ActionLoading");
+                notify = $rootScope.notificationSettings;
+                notify.message = 'Etiqueta Removida';
+                Notification.success(notify);
+            }, function(error) {
+                spinnerService.hide("ActionLoading");
+                notify = $rootScope.notificationSettings;
+                notify.message = 'Tente novamente.';
+                Notification.error(notify);
             });
 
 
@@ -392,6 +401,14 @@ App.controller('SearchBillsController',
                 $scope.tagsModel[index].data.push(finalObj);
                 $scope.externalEvents.onItemSelect(finalObj);
                 spinnerService.hide("ActionLoading");
+                notify = $rootScope.notificationSettings;
+                notify.message = 'Etiqueta Adicionada';
+                Notification.success(notify);
+            }, function(error) {
+                spinnerService.hide("ActionLoading");
+                notify = $rootScope.notificationSettings;
+                notify.message = 'Tente novamente.';
+                Notification.error(notify);
             });
 
         }
@@ -413,6 +430,14 @@ App.controller('SearchBillsController',
             $scope.tagsModel[index].data.push({id:tag});
             $scope.externalEvents.onItemSelect({id:tag});
             spinnerService.hide("ActionLoading");
+            notify = $rootScope.notificationSettings;
+            notify.message = 'Nova etiqueta Adicionada';
+            Notification.success(notify);
+        }, function(error) {
+            spinnerService.hide("ActionLoading");
+            notify = $rootScope.notificationSettings;
+            notify.message = 'Etiqueta já existe. Tente outro nome.';
+            Notification.error(notify);
         });
 
     }
@@ -432,6 +457,14 @@ App.controller('SearchBillsController',
         FoldersBills.update({pasta: id}, myObject, function(data){
             $scope.tagsModel[index].data.splice(_.findIndex($scope.tagsModel[index].data, findObj), 1);
             spinnerService.hide("ActionLoading");
+            notify = $rootScope.notificationSettings;
+            notify.message = 'Etiqueta removida';
+            Notification.success(notify);
+        }, function(error) {
+            spinnerService.hide("ActionLoading");
+            notify = $rootScope.notificationSettings;
+            notify.message = 'Tente novamente.';
+            Notification.error(notify);
         });
 
     }

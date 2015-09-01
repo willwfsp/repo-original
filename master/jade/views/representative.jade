@@ -86,10 +86,10 @@ h3 {{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIVIL}}
                 h3 Área de Atuação
               .col-md-6
                 a(ng-click="isSubtitleCollapsed = !isSubtitleCollapsed")
-                  span(ng-show="isSubtitleCollapsed")
+                  span(ng-show="!isSubtitleCollapsed")
                     em.icon-close
                     |   &nbsp;Legenda
-                  span(ng-show="!isSubtitleCollapsed")
+                  span(ng-show="isSubtitleCollapsed")
                     em.icon-plus
                     |   &nbsp;Legenda
           .panel-body
@@ -97,7 +97,7 @@ h3 {{dados.SLPa_NOME_FANTASIA || dados.SLPa_NOME_CIVIL}}
               .col-md-4
                 canvas(doughnutchart='', options='pieOptions', data='pieData', height='160', responsive='true')
               .col-md-offset-1.col-md-6
-                table( ng-show="isSubtitleCollapsed")
+                table( ng-show="!isSubtitleCollapsed")
                   tr(ng-repeat="item in themeData | orderObjectBy:'value'")
                     td {{item.key}}
                     td {{item.value}}

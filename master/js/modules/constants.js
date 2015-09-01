@@ -45,7 +45,12 @@ App
                                                   'vendor/ng-table/dist/ng-table.min.css']},
       {name: 'ngDialog',                  files: ['vendor/ngDialog/js/ngDialog.min.js',
                                                  'vendor/ngDialog/css/ngDialog.min.css',
-                                                 'vendor/ngDialog/css/ngDialog-theme-default.min.css'] }
+                                                 'vendor/ngDialog/css/ngDialog-theme-default.min.css'] },
+      {name: 'ngNotification',                  files: [
+        'vendor/angular-ui-notification/dist/angular-ui-notification.min.js',
+        'vendor/angular-ui-notification/dist/angular-ui-notification.min.css'] }
+
+
 
     ]
 

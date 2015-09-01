@@ -32,7 +32,7 @@ App.config(
         abstract: true,
         templateUrl: helper.basepath('app.html'),
         controller: 'AppController',
-        resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit','ngDialog'),
+        resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit','ngDialog','ngNotification'),
         data: {
                 access: access.user
             }
