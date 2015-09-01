@@ -9,7 +9,7 @@ App.controller('AppController',
     "use strict";
 
     // Setup the layout mode
-     $rootScope.app.layout.isCollapsed = true ;
+    //$rootScope.app.layout.isCollapsed = true ;
 
     // Loading bar transition
     // -----------------------------------
@@ -79,6 +79,7 @@ App.controller('AppController',
     });
 
     // Restore layout settings
+    /*
     if( angular.isDefined($localStorage.layout) )
       $scope.app.layout = $localStorage.layout;
     else
@@ -87,8 +88,9 @@ App.controller('AppController',
     $rootScope.$watch("app.layout", function () {
       $localStorage.layout = $scope.app.layout;
     }, true);
-
-
+    */
+    if($localStorage.layout)
+      delete $localStorage.layout;
     // Allows to use branding color with interpolation
     // {{ colorByName('primary') }}
     $scope.colorByName = colors.byName;
