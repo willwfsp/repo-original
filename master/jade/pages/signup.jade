@@ -10,10 +10,10 @@
         .row
           .col-md-12
             .form-group.has-feedback
-
-              input.form-control(type='user', name="register_username" placeholder='Usuário', autocomplete="off", ng-model="register_username", required='', username-validation)
+              input.form-control(type='user', name="register_username" placeholder='Usuário', autocomplete="off", ng-model="register_username", required='', username-validation, ng-pattern="/^[a-z]+$/")
               span.fa.fa-user.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_username.$dirty && registerForm.register_username.$error.required") &nbsp;&nbsp;Campo Obrigatório
+              span.text-danger(ng-show="registerForm.register_username.$dirty && registerForm.register_username.$error.pattern") &nbsp;&nbsp;Campo não pode conter caracteres especiais
 
         .row
           .col-md-12
@@ -33,10 +33,10 @@
               input.form-control(type='text', name="register_organization", placeholder='Organização (Empresa, Ong, Associação...)', ng-model="register_organization", required='', ng-trim='false')
               span.fa.fa-building-o.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_organization.$dirty && registerForm.register_organization.$error.required") &nbsp;&nbsp;Campo Obrigatório
-        .row
+        .row(ng-hide="true")
           .col-md-12
             .form-group.has-feedback
-              select.form-control(ng-model="register_industry", name="register_industry", ng-options="value for value in industryOptions", required='')
+              select.form-control(ng-model="register_industry", name="register_industry", ng-options="value for value in industryOptions")
                 option.text-muted(value='') -- Área de Interesse --
               span.text-danger(ng-show="registerForm.register_industry.$dirty && registerForm.register_industry.$error.required") &nbsp;&nbsp;Campo Obrigatório
         .row
@@ -63,7 +63,7 @@
         .row
           .col-md-12
             .form-group.has-feedback
-              input.form-control(type='password', name="register_password_confirm", ng-model="register_password_confirm", ui-validate="'$value==register_password'" ui-validate-watch="'password'", placeholder="Confirme a senha")
+              input.form-control(type='password', name="register_password_confirm", ng-model="register_password_confirm", ui-validate="'$value==register_password'" ui-validate-watch="'register_password'", placeholder="Confirme a senha")
               span.fa.fa-lock.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_password_confirm.$dirty && registerForm.register_password_confirm.$error.validator") Senhas digitadas são diferentes
         .clearfix

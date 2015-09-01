@@ -1,45 +1,70 @@
 [
   {
-    "text": "Menu Heading",
+    "text": "Navegação Principal",
     "heading": "true",
     "translate": "sidebar.heading.HEADER"
   },
   {
+    "text": "Painel Principal",
+    "sref": "app.dashBoard",
+    "icon": "fa icon-feed"
+  },
+  {
+    "text": "Etiquetas",
+    "sref": "app.favorites.folder",
+    "icon": "fa fa-tags"
+  },
+  {
     "text": "Últimos Projetos",
     "sref": "app.searchBills",
-    "icon": "fa fa-file-o"
+    "icon": "fa icon-hourglass"
   },
   {
     "text": "Calendários",
     "sref": "app.calendar",
-    "icon": "fa fa-file-o"
+    "icon": "fa icon-calendar"
   },
   {
     "text": "Casas Legislativas",
     "sref": "#",
-    "icon": "icon-folder",
+    "icon": "fa fa-institution",
     "submenu": [
       { "text": "Congresso Nacional",
         "code": "CN",
+        "sref": "app.house",
+        "params": {"house": "CN"},
         "translate": "sidebar.nav.menu.CN"
       },
       { "text": "Câmara dos Deputados",
         "code": "CD",
+        "sref": "app.house",
+        "params": {"house": "CD"},
         "translate": "sidebar.nav.menu.CD"
       },
       { "text": "Senado Federal",
         "code": "SF",
+        "sref": "app.house",
+        "params": {"house": "SF"},
         "translate": "sidebar.nav.menu.SF"
       },
       { "text": "Minas Gerais",
         "code": "MG",
+        "sref": "app.house",
+        "params": {"house": "MG"},
         "translate": "sidebar.nav.menu.MG"
       },
       { "text": "São Paulo",
         "code": "SP",
+        "sref": "app.house",
+        "params": {"house": "SP"},
         "translate": "sidebar.nav.menu.SP"
       }
     ],
     "translate": "sidebar.nav.menu.CASAS"
+  },
+  {
+    "text": "Conta",
+    "sref": "app.profile",
+    "icon": "icon-user"
   }
 ]

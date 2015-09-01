@@ -1,18 +1,18 @@
 h3 Painel Principal
 .row
-    .col-xs-12.col-sm-6.col-md-3(ng-repeat="house in housesNews")
-        .panel.widget
-            .panel-heading.news-heading
-                h4 Notícias -&nbsp;
-                    a(ui-sref="app.house({house: house.name})") {{house.name == 'CD' ? 'Câmara' : (house.name | houseFullName) }}
-            .panel-body.news-box.scrollable
-                    .list-group
-                        .list-group-item(ng-repeat="news in house.item")
-                            .media-box
-                                .media-box-body.clearfix
-                                    a(href="{{news.link}}", target="_blank")
-                                        strong {{news.titulo}}
-                                    p(ng-if="news.desc") {{news.desc | limitTo: 80}} {{news.desc.length > 80 ? "..." : ""}}
-            .panel-footer
-                a(ng-href="{{house.linkMore}}", target="_blank")
-                    | + Mais Notícias
+  .col-xs-12.col-sm-6.col-md-3(ng-repeat="house in housesNews")
+    .panel.widget
+      .panel-heading.news-heading
+        h4 Notícias -&nbsp;
+          a(ui-sref="app.house({house: house.name})") {{house.name == 'CD' ? 'Câmara' : (house.name | houseFullName) }}
+      .panel-body.news-box.scrollable
+        .list-group
+          .list-group-item(ng-repeat="news in house.item")
+            .media-box
+              .media-box-body.clearfix
+                a(href="{{news.link}}", target="_blank")
+                    strong {{news.titulo}}
+                p(ng-if="news.desc") {{news.desc | limitTo: 120}} {{news.desc.length > 120 ? "..." : ""}}
+      .panel-footer
+        a(ng-href="{{house.linkMore}}", target="_blank")
+          | + Mais Notícias

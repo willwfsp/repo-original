@@ -2,47 +2,36 @@
 nav.navbar.topnavbar(role='navigation')
   // START navbar header
   .navbar-header
-    button.navbar-toggle.collapsed(type='button', ng-init="navCollapsed = true", ng-click="navCollapsed = !navCollapsed")
-      span.sr-only Toggle navigation
-      span.icon-bar
-      span.icon-bar
-      span.icon-bar
     a.navbar-brand(href='#/app/dashboard')
-      img.img-responsive(src="app/img/logo_3x.png", alt="Sigalei")
+      .brand-logo
+        img.img-responsive(src="app/img/logo_3x.png", alt="SigaLei")
+      .brand-logo-collapsed
+        img.img-responsive(src="app/img/logo_small_3x.png", alt="SigaLei")
 
   // END navbar header
 
   // START Nav wrapper
-  .collapse.navbar-collapse(collapse="navCollapsed")
-    .nav.navbar-left.col-md-4.col-lg-6
-      form.navbar-form(ng-controller="SearchBarController", ng-submit="searchQ()")
-        .form-group.has-feedback
-          input.form-control(type="text", ng-model="query", placeholder="{{'topbar.search.PLACEHOLDER' | translate }}")
-          button.btn-inline.fa.fa-search.form-control-feedback.sigalei-search(type="submit")
-    .nav.navbar-right
-      ul.nav.navbar-nav(ng-controller="SidebarController")
-        li(ng-repeat='item in menuItems', ng-class="{'dropdown': item.submenu}", dropdown="!!item.submenu")
-          a(ng-if="!item.heading && !item.submenu", ng-href="{{$state.href(item.sref)}}", title="{{item.text}}" analytics-on="click" analytics-event="{{item.text}}")
-            span {{(item.translate | translate) || item.text}}
-          a(dropdown-toggle="", ng-if="item.submenu")
-            span {{(item.translate | translate) || item.text}}
-          // START Dropdown menu
-          ul.dropdown-menu(class="animated fadeInUp")
-            li(ng-repeat="subitem in item.submenu")
-              a(ui-sref="app.house({ house: '{{subitem.code}}' })" title="{{subitem.text}}")
-                span {{(subitem.translate | translate) || subitem.text}}
-        li.dropdown.dropdown-list(dropdown="")
-          a(dropdown-toggle="")
-            em.icon-user
-          ul.dropdown-menu(class="animated fadeInUp")
-            li
-              a(title="Perfil" ng-click="profile()")
-                span Perfil
-            li
-              a(title="Logout" ng-click="logout()")
-                span Sair
+  .nav-wrapper
+    // START Left navbar
+    ul.nav.navbar-nav
+      li
+        // Button used to collapse the left sidebar. Only visible on tablet and desktops
+          a(trigger-resize="", ng-click="app.layout.isCollapsed = !app.layout.isCollapsed").hidden-xs
+            em.fa.fa-navicon
+        // Button to show/hide the sidebar on mobile. Visible on mobile only.
+        a(ng-click="app.asideToggled = !app.asideToggled; navCollapsed = !navCollapsed").visible-xs.sidebar-toggle
+          em.fa.fa-navicon
+    // END left navbar
+
+    .collapse.navbar-collapse(collapse="navCollapsed" ng-init="navCollapsed = true")
+      .nav.navbar-left.col-md-6.col-lg-8
+        form.navbar-form(ng-controller="SearchBarController", ng-submit="searchQ(); navCollapsed = !navCollapsed")
+          .form-group.has-feedback
+            input.form-control(type="text", ng-model="query", placeholder="{{'topbar.search.PLACEHOLDER' | translate }}")
+            button.btn-inline.fa.fa-search.form-control-feedback.sigalei-search(type="submit")
 
   // END Nav wrapper
 
 
 // END Top Navbar
+

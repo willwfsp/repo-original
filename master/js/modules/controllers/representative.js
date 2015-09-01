@@ -6,6 +6,8 @@
 App.controller('RepresentativeDataController',
   ['$scope','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', 'colors', '$filter', 'ngTableParams', 'Auth',
     function($scope, $rootScope, $stateParams, $log, $http, DataFetcher, colors, $filter, ngTableParams, Auth){
+
+    $rootScope.$broadcast("event:show-loading");
     $scope.dados = {};
     $scope.dados._id = $stateParams.id;
     $scope.pieData =[];
@@ -110,5 +112,7 @@ App.controller('RepresentativeDataController',
 
         var b64 = btoa(raw);
         $scope.RepresentativePhoto = b64;
+
+        $rootScope.$broadcast("event:dismiss-loading");
     });
 }]);

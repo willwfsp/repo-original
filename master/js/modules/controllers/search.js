@@ -15,9 +15,9 @@ App.controller('SearchBarController',
 
 App.controller('SearchBillsController',
   ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal',
-  'DataFetcher', 'Auth',
+  'DataFetcher', 'Auth', 'ngDialog', 'UserFolders','FoldersBills', 'spinnerService','$document', 'Notification', '$rootScope',
     function($http, $stateParams, $location, $scope, $log, $state, $modal,
-        DataFetcher, Auth) {
+        DataFetcher, Auth, ngDialog, UserFolders, FoldersBills, spinnerService, $document, Notification, $rootScope) {
 
     $scope.isCollapsed = false;
     $scope.showOtherAuthors = false;
@@ -246,7 +246,25 @@ App.controller('SearchBillsController',
     $scope.$on('fetch billSearchResults:completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
         var aux = DataFetcher.getBillSearchResults();
+        if ($scope.bills.length == 0){
+            index = 0;
+        }else{
+            index = $scope.bills.length;
+        }
+        var count = 0;
+        for (i = index; i < (index + aux.rows.length); i++) {
 
+            $scope.tagsModel[i] = {};
+            $scope.tagsModel[i].data = [];
+
+            if (aux.rows[count].fields.hasOwnProperty('USER_TAGS')){
+                aux.rows[count].fields.USER_TAGS.forEach(function(item){
+                    $scope.tagsModel[i].data.push({id:item});
+                })
+            }
+            count ++;
+
+        }
         if ($scope.fetchingStart){
             $scope.total_results = aux.total_rows;
             $scope.bookmark = aux.bookmark;
@@ -262,7 +280,213 @@ App.controller('SearchBillsController',
         }
 
 
+
     });
 
+    $document.on('click', function (e) {
+        var target = e.target.parentElement;
+        var parentFound = false;
+
+        while (angular.isDefined(target) && target !== null && !parentFound) {
+            if (_.contains(target.className.split(' '), 'multiselect-parent') && !parentFound) {
+                $dropdownTrigger = angular.element("#DropdownTagsList")[0]
+                if(target.id === $dropdownTrigger.id) {
+                    parentFound = true;
+                }
+            }
+            target = target.parentElement;
+        }
+
+        if (!parentFound) {
+            $scope.$apply(function () {
+                for(i = 0; i<$scope.listDropdownsOpened.length; i++){
+                    $scope.open[$scope.listDropdownsOpened[i]] = false;
+                }
+
+            });
+        }
+    });
+
+    $scope.open = [];
+
+    function getFindObj(id) {
+        var findObj = {};
+
+        findObj[$scope.tagsSettings.idProp] = id;
+
+        return findObj;
+    }
+
+    function clearObject(object) {
+        for (var prop in object) {
+            delete object[prop];
+        }
+    }
+
+    $scope.toggleDropdown = function(index){
+        spinnerService.show("ActionLoading");
+        $scope.tagsData[index] = {};
+        if(!$scope.open[index]){
+            $scope.tagsData[index].data = [];
+            UserFolders.get(function(data){
+                data.pastas.forEach(function(item){
+                    var AuxObject = {};
+                    AuxObject.id = item;
+                    $scope.tagsData[index].data.push(AuxObject)
+
+                });
+                spinnerService.hide("ActionLoading");
+
+                $scope.open[index] = !$scope.open[index];
+                $scope.listDropdownsOpened.push(index);
+            });
+
+        }else{
+            spinnerService.hide("ActionLoading");
+            $scope.open[index] = !$scope.open[index];
+            indexDropdown = $scope.listDropdownsOpened.indexOf(index);
+            if (indexDropdown > -1) {
+                $scope.listDropdownsOpened.splice(indexDropdown, 1);
+            }
+        }
+
+
+    }
+
+    $scope.getPropertyForObject = function (object, property) {
+        if (angular.isDefined(object) && object.hasOwnProperty(property)) {
+            return object[property];
+        }
+
+        return '';
+    };
+
+    $scope.setSelectedItem = function (id, index, bill, dontRemove) {
+        spinnerService.show("ActionLoading");
+        var findObj = getFindObj(id);
+        var finalObj = null;
+
+        finalObj = _.find($scope.tagsData[index].data, findObj);
+
+        dontRemove = dontRemove || false;
+
+        var exists = _.findIndex($scope.tagsModel[index].data, findObj) !== -1;
+
+        if (!dontRemove && exists) {
+            var myObject = {};
+            myObject.proposicoesNovas = [];
+            myObject.proposicoesVelhas = [];
+            myObject.proposicoesVelhas.push(bill)
+            FoldersBills.update({pasta: id}, myObject, function(data){
+                $scope.tagsModel[index].data.splice(_.findIndex($scope.tagsModel[index].data, findObj), 1);
+                $scope.externalEvents.onItemDeselect(findObj);
+                spinnerService.hide("ActionLoading");
+                notify = $rootScope.notificationSettings;
+                notify.message = 'Etiqueta Removida';
+                Notification.success(notify);
+            }, function(error) {
+                spinnerService.hide("ActionLoading");
+                notify = $rootScope.notificationSettings;
+                notify.message = 'Tente novamente.';
+                Notification.error(notify);
+            });
+
+
+        } else if (!exists) {
+            var myObject = {};
+            myObject.proposicoesNovas = [];
+            myObject.proposicoesVelhas = [];
+            myObject.proposicoesNovas.push(bill)
+            FoldersBills.update({pasta: id}, myObject, function(data){
+                $scope.tagsModel[index].data.push(finalObj);
+                $scope.externalEvents.onItemSelect(finalObj);
+                spinnerService.hide("ActionLoading");
+                notify = $rootScope.notificationSettings;
+                notify.message = 'Etiqueta Adicionada';
+                Notification.success(notify);
+            }, function(error) {
+                spinnerService.hide("ActionLoading");
+                notify = $rootScope.notificationSettings;
+                notify.message = 'Tente novamente.';
+                Notification.error(notify);
+            });
+
+        }
+
+    };
+    $scope.isChecked = function (id, index) {
+        return _.findIndex($scope.tagsModel[index].data, getFindObj(id)) !== -1;
+    };
+
+    $scope.createTag = function(tag, index, bill){
+        spinnerService.show("ActionLoading");
+        var myObject = {};
+        myObject.proposicoes = [];
+        myObject.proposicoes.push(bill)
+        FoldersBills.save({pasta: tag}, myObject, function(data){
+            var AuxObject = {};
+            AuxObject.id = tag;
+            $scope.tagsData[index].data.push(AuxObject);
+            $scope.tagsModel[index].data.push({id:tag});
+            $scope.externalEvents.onItemSelect({id:tag});
+            spinnerService.hide("ActionLoading");
+            notify = $rootScope.notificationSettings;
+            notify.message = 'Nova etiqueta Adicionada';
+            Notification.success(notify);
+        }, function(error) {
+            spinnerService.hide("ActionLoading");
+            notify = $rootScope.notificationSettings;
+            notify.message = 'Etiqueta já existe. Tente outro nome.';
+            Notification.error(notify);
+        });
+
+    }
+    $scope.initVariables = function(){
+        $scope.tagsModel = [];
+        $scope.tagsData = [];
+        $scope.listDropdownsOpened = [];
+
+    }
+    $scope.removeTag = function(id, index, bill){
+        spinnerService.show("ActionLoading");
+        var findObj = getFindObj(id);
+        var myObject = {};
+        myObject.proposicoesNovas = [];
+        myObject.proposicoesVelhas = [];
+        myObject.proposicoesVelhas.push(bill)
+        FoldersBills.update({pasta: id}, myObject, function(data){
+            $scope.tagsModel[index].data.splice(_.findIndex($scope.tagsModel[index].data, findObj), 1);
+            spinnerService.hide("ActionLoading");
+            notify = $rootScope.notificationSettings;
+            notify.message = 'Etiqueta removida';
+            Notification.success(notify);
+        }, function(error) {
+            spinnerService.hide("ActionLoading");
+            notify = $rootScope.notificationSettings;
+            notify.message = 'Tente novamente.';
+            Notification.error(notify);
+        });
+
+    }
+
+    $scope.externalEvents = {
+        onItemSelect: angular.noop,
+        onItemDeselect: angular.noop,
+        onSelectAll: angular.noop,
+        onDeselectAll: angular.noop,
+        onInitDone: angular.noop,
+        onMaxSelectionReached: angular.noop
+    };
+
+    $scope.tagsSettings = {
+        dynamicTitle: false,
+        displayProp: 'label',
+        idProp: 'id',
+        enableSearch: true,
+        showCheckAll: false,
+        showUncheckAll: false,
+        scrollableHeight: '200',
+        smartButtonMaxItems: 1,
+    };
 
 }]);

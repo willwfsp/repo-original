@@ -33,9 +33,8 @@ var App = angular.module('sigaLeiApp', [
 
 App.run(
   ['$rootScope', '$state', '$stateParams',  '$window', '$templateCache',
-   'Auth', '$timeout', 'cfpLoadingBar', '$log',
-    function ($rootScope, $state, $stateParams, $window, $templateCache, Auth, $timeout, cfpLoadingBar, $log) {
-    ga('create', 'UA-65800611-2', 'none');
+   'Auth', '$timeout', 'cfpLoadingBar', '$log', 'spinnerService',
+    function ($rootScope, $state, $stateParams, $window, $templateCache, Auth, $timeout, cfpLoadingBar, $log, spinnerService) {
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
         /* Auth */
@@ -56,16 +55,26 @@ App.run(
                 }
             }
         }
-        if($('.wrapper > section').length) // check if bar container exists
-          thBar = $timeout(function() {
-            cfpLoadingBar.start();
-          }, 0); // sets a latency Threshold
+
+
+        // display new view from top
+        if(toState.name != 'app.bill.pollDetails'){
+            $window.scrollTo(0, 0);
+        }
     });
     // Set reference to access them from any scope
     //$window.localStorage.clear();
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.$storage = $window.localStorage;
+    $rootScope.apiURL = "https://sigalei-api.mybluemix.net/v1/";
+
+    $rootScope.notificationSettings = {
+        message: '',
+        positionY: 'bottom',
+        positionX: 'center',
+        delay:1000
+    }
 
     /* Uncomment this to disable template cache
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
@@ -77,21 +86,23 @@ App.run(
     // -----------------------------------
     $rootScope.app = {
       name: 'SigaLei',
-      description: 'Busque e acompanhe os projetos de lei em discussão no Congresso Nacional e nas Assembleias Legislativas',
+      description: 'Busque, acompanhe e analise os projetos de lei em discussão no Congresso Nacional e nas Assembleias Legislativas',
       year: ((new Date()).getFullYear()),
       keywords: 'projetos de lei, legislativo, congresso nacional, camara dos deputados, senado',
       layout: {
         isFixed: true,
-        isCollapsed: false,
+        isCollapsed: true,
         isBoxed: false,
         isRTL: false,
-        horizontal: true,
+        horizontal: false,
         isFloat: false,
         asideHover: false,
         theme: "app/css/theme-sigalei.css"
       },
-      useFullLayout: false,
-      hiddenFooter: false,
+        useFullLayout: false,
+        hiddenFooter: false,
+        offsidebarOpen: false,
+        asideToggled: false,
       viewAnimation: 'ng-fadeInUp'
     };
     $rootScope.user = {};

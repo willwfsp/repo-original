@@ -1,0 +1,73 @@
+.col-md-12.pl0
+  .well.wd-wide
+    div(ng-if="!showDefault")
+      h4
+        span Proposições com a etiqueta "{{currentFolder}}"
+          .btn-group.pull-right(dropdown is-open="status.isopen")
+            button#single-button.btn.btn-default(dropdown-toggle)
+              em(class="icon-settings")
+            ul.dropdown-menu(role="menu" aria-labelledby="single-button")
+              li(role="menuitem" ng-click="renameFolder(currentFolder)")
+                a Renomear Etiqueta
+              li(role="menuitem" ng-click="deleteFolder(currentFolder)")
+                a Apagar Etiqueta
+    div(ng-if="showDefault")
+      h4
+        span Selecione uma etiqueta.
+    br
+    // START table-responsive
+    p(ng-if="bills.length == 0") Sem projetos de lei.
+    table.table.table-striped.table-bordered.table-hover
+      tbody
+          tr(ng-repeat="bill in bills")
+            td
+              .container-fluid.row
+                .col-xs-4.text-left.col-md-4
+                  a(ui-sref="app.bill({ billName: '{{bill.SLP_NOME}}' })")
+                    h4.media-box-heading {{bill.SLP_NOME}}
+                      small.text-muted(ng-if="bill.SLR_NOME")  ( ou {{bill.SLR_NOME}} )
+                .col-xs-4.text-center.col-md-4
+                  | Atualização: {{bill.SLP_DATA_ATUALIZACAO | date:"dd/MM/yyyy"}}
+                .col-xs-4.text-right.col-md-4
+                  a(ng-click="removeBill(bill.SLP_NOME)")
+                    span.fa.fa-close
+              .container-fluid.row
+                .col-xs-12
+                  p {{bill.SLP_EMENTA}}
+              .container-fluid.row
+                .col-xs-6
+                  span.small.text-muted.text-bold Tema:
+                  span.small.text-muted {{bill.SLP_SL_TEMA || '-'}}
+                  br
+                  span.small.text-muted.text-bold SubTema:
+                  span.small.text-muted {{bill.SLP_SL_SUBTEMA}}
+                  br
+                  span.fa.fa-exchange
+                  span.small.text-muted
+                    |&nbsp; {{ (bill.SLP_STATUS_DESC | capitalize:true) || "-" }}
+                  br
+                  //show main author
+                  small.span.fa.fa-user(ng-if="!(hasCoauthors(bill.SLP_AUTOR))")
+                    |&nbsp;
+                  small.span.fa.fa-users(ng-if="hasCoauthors(bill.SLP_AUTOR)")
+                    |&nbsp;
+                  small.span(ng-init = "author = getMainAuthor(bill.SLP_AUTOR)")
+                    //author has no id
+                    strong(ng-if="! author.id") {{author.name}}
+
+                    //author has id
+                    strong(ng-if="author.id")
+                      a(ui-sref="app.representative({ id: '{{author.id}}' })") {{author.name}}
+
+                    //show coauthors
+                    strong(ng-if="hasCoauthors(bill.SLP_AUTOR)") e&nbsp;
+                      a(ng-click="showOtherAuthors = !showOtherAuthors") {{bill.SLP_AUTOR.length - 1 > 1 ? bill.SLP_AUTOR.length - 1 + ' outros' : '1 outro'}}
+                      div(collapse="!showOtherAuthors")
+                        span(ng-init = "mainAuthor = getMainAuthor(bill.SLP_AUTOR)")
+                          strong(ng-repeat="author in bill.SLP_AUTOR | orderBy", ng-hide="mainAuthor.name == parseAuthor(author).name")
+                            strong(ng-if="! parseAuthor(author).id") {{parseAuthor(author).name}}
+
+                            strong(ng-if="parseAuthor(author).id")
+                              a(ui-sref="app.representative({ id: '{{ parseAuthor(author).id}}' })") {{parseAuthor(author).name}}
+                            span(ng-hide="$index == bill.SLP_AUTOR.length - 1 || $first == $last - 1") ,
+

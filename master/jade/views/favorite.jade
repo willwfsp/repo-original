@@ -1,0 +1,56 @@
+// Create tag modal template
+script(type='text/ng-template', id="createTagModal.html")
+    .modal-header
+        h3.modal-title Criar etiqueta
+    .modal-body
+      label Digite o nome da nova etiqueta: &nbsp;
+      form.has-feedback(name="createForm", novalidate='')
+        input.form-control(type='text', name="newName", placeholder='Saúde, Tributação, Segurança...', autocomplete="off", ng-model="data.newName", required='')
+        span.text-danger(ng-show="createForm.newName.$dirty && createForm.newName.$error.required") &nbsp;&nbsp;Campo Obrigatório
+    .modal-footer
+        .pull-left
+            button.btn.btn-success(ng-click="create()") Criar
+            button.btn.btn-danger(ng-click="cancel()") Cancelar
+
+// Rename tag modal template
+script(type='text/ng-template', id="renameTagModal.html")
+  .modal-header
+      h3.modal-title Renomear etiqueta '{{folderName}}'
+  .modal-body
+      label Digite um novo nome para a etiqueta: &nbsp;
+      form.has-feedback(name="renameForm", novalidate='')
+        input.form-control(type='text', name="newName", placeholder='Novo nome...', autocomplete="off", ng-model="data.newName", required='')
+        span.text-danger(ng-show="renameForm.newName.$dirty && renameForm.newName.$error.required") &nbsp;&nbsp;Campo Obrigatório
+
+  .modal-footer
+      .pull-left
+          button.btn.btn-success(ng-click="rename()") Renomear
+          button.btn.btn-danger(ng-click="cancel()") Cancelar
+
+// Delete tag modal template
+script(type='text/ng-template', id="deleteTagModal.html")
+    .modal-header
+        h3.modal-title Apagar Etiqueta '{{folderName}}'
+    .modal-body
+        label Deseja realmente apagar a etiqueta {{folderName}}?
+    .modal-footer
+        .pull-left
+            button.btn.btn-success(ng-click="delete()") Apagar
+            button.btn.btn-danger(ng-click="cancel()") Cancelar
+
+// folders
+h3 Acompanhamento de Projetos de Lei
+.row
+  .col-md-3.pr0
+    .well.wd-wide
+      h4
+        em(class="fa fa-tags") &nbsp;
+        span Etiquetas
+        span.pull-right(class="fa fa-plus " ng-click="createFolder()")
+      br
+      .list-group
+          a.list-group-item(ng-repeat="folder in folders", ui-sref="app.favorites.folder({folderName: folder})")
+              em(class="fa fa-tag") &nbsp;
+              span {{folder}}
+
+  .col-md-9.pl0(ui-view="")

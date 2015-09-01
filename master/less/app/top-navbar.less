@@ -29,11 +29,10 @@
   border-radius: 0;
   background-color: #fff;
   z-index: 1050;
-  border-bottom: 1px solid rgba(0,0,0,.15);
 
   @media @tablet {
     .navbar-header {
-      width: 180px;
+      width: @aside-wd;
       text-align: center;
       .navbar-brand {
         width: 100%;
@@ -76,11 +75,9 @@
     }
     .brand-logo {
       display: block;
-      padding: 10px 10px;
     }
     .brand-logo-collapsed {
       display: none;
-      padding: 6px 15px;
     }
   }
 
@@ -141,7 +138,7 @@
     .transition(all .3s);
 
     .form-group {
-      height: 100%;
+      //height: 100%;
       width: 100%;
     }
 
@@ -250,10 +247,10 @@
   .aside-collapsed {
     .topnavbar {
       .navbar-header {
-        .brand-logo { display: none; }
-        .brand-logo-collapsed { display: block; }
+        .brand-logo { display: block; }
+        .brand-logo-collapsed { display: none; }
       }
-
+      /*
       .navbar-header {
         width: @nav-header-wd-toggled;
       }
@@ -261,6 +258,7 @@
       .navbar-form {
         left: @nav-header-wd-toggled;
       }
+      */
     }
   }
 }

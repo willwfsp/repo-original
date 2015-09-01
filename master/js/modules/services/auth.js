@@ -4,8 +4,8 @@
  =========================================================*/
 
 App.factory('Auth',
-  ['$http','$cookieStore',
-    function($http, $cookieStore){
+  ['$http','$cookieStore', '$rootScope', 
+    function($http, $cookieStore, $rootScope){
 
     var accessLevels = routingConfig.accessLevels,
         userRoles = routingConfig.userRoles,
@@ -32,12 +32,12 @@ App.factory('Auth',
             return user.role.title === userRoles.user.title || user.role.title === userRoles.admin.title;
         },
         signup: function(user, success, error) {
-            $http.post('https://sigalei-api.mybluemix.net/v1/accounts/signup', user)
+            $http.post($rootScope.apiURL + 'accounts/signup', user)
             .success(function(res) { success();})
             .error(error);
         },
         login: function(user, success, error) {
-            $http.post('https://sigalei-api.mybluemix.net/v1/accounts/login', user)
+            $http.post($rootScope.apiURL + 'accounts/login', user)
             .success(function(user){
                 changeUser(user);
                 success(user);
@@ -52,14 +52,4 @@ App.factory('Auth',
         userRoles: userRoles,
         user: currentUser
     };
-}]);
-
-App.factory('Users',
-  ['$http',
-    function($http) {
-        return {
-            getAll: function(success, error) {
-                $http.get('/users').success(success).error(error);
-            }
-        };
 }]);

@@ -9,11 +9,12 @@ App.factory('DataFetcher',
     function($q, $http, $log, $rootScope, Auth){
     // Constants...
     var service = {};
-    var baseUrl = "https://sigalei-api.mybluemix.net/v1/";
+    var baseUrl = $rootScope.apiURL;
     var ApiMgEndPoint = 'http://dadosabertos.almg.gov.br/ws';
     var MGDocUrl = "";
     // "Private" Variables
     var _billSearchResults = {};
+
 
     $http.defaults.headers['Access-Control-Allow-Origin'] = '*';
     $http.defaults.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, PUT';
@@ -34,15 +35,21 @@ App.factory('DataFetcher',
         }
 
         url = baseUrl + path + query;
+        promiseBillSeach = $http.post(url, filters, headers);
 
+        var defer = $q.defer();
 
-        return $http.post(url, filters, headers).then(function(result) {
-            _billSearchResults = result.data;
+        $q.all([promiseBillSeach])
+          .then(function(results) {
+            _billSearchResults = results[0].data;
             $rootScope.$broadcast("fetch billSearchResults:completed");
-        },
-        function(reason){
-            $log.error(reason);
+
+            defer.resolve(results);
+
         });
+
+        return defer.promise;
+
     };
 
     service.fetchBill = function(nome, token){
@@ -242,7 +249,7 @@ App.factory('DataFetcher',
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'}
         };
-        var promiseUserData = $http.get((baseUrl + "profile"), headers);
+        var promiseUserData = $http.get((baseUrl + "usuarios/perfil"), headers);
 
         var defer = $q.defer();
 
@@ -289,4 +296,45 @@ App.factory('DataFetcher',
 
     return service;
 
+}]);
+
+App.factory('UserFolders', ['$resource', '$rootScope', 'Auth', function ($resource, $rootScope, Auth) {
+    return $resource($rootScope.apiURL + 'usuarios/favoritos/pastas/:pasta', {}, {
+            get: {
+                method:"GET",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            create: {
+                method:"POST",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            rename: {
+                method:"PUT",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            delete: {
+                method:"DELETE",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            }
+        });
+}]);
+
+App.factory('FoldersBills', ['$resource', '$rootScope', 'Auth', '$http',
+    function ($resource, $rootScope, Auth, $http) {
+    $http.defaults.headers['Access-Control-Allow-Origin'] = '*';
+    $http.defaults.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, PUT';
+    return $resource($rootScope.apiURL + 'usuarios/favoritos/:pasta/proposicoes', {}, {
+            get: {
+                method:"GET",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            save: {
+                method:"POST",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            update:{
+                method:"PUT",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            }
+        });
 }]);

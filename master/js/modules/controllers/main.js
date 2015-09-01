@@ -4,29 +4,49 @@
  =========================================================*/
 
 App.controller('AppController',
-  ['$rootScope', '$scope', '$state', '$translate', '$window', '$localStorage', '$timeout', 'toggleStateService', 'colors', 'browser', 'cfpLoadingBar', 'Auth',
-  function($rootScope, $scope, $state, $translate, $window, $localStorage, $timeout, toggle, colors, browser, cfpLoadingBar, Auth) {
+  ['$rootScope', '$scope', '$state', '$translate', '$window', '$localStorage', '$timeout', 'toggleStateService', 'colors', 'browser', 'cfpLoadingBar', 'Auth', 'spinnerService',
+  function($rootScope, $scope, $state, $translate, $window, $localStorage, $timeout, toggle, colors, browser, cfpLoadingBar, Auth, spinnerService) {
     "use strict";
 
     // Setup the layout mode
-    $rootScope.app.layout.horizontal = true ;
+     $rootScope.app.layout.isCollapsed = true ;
 
     // Loading bar transition
     // -----------------------------------
     var thBar;
 
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+
+
+        if($('.wrapper > section').length) // check if bar container exists
+          thBar = $timeout(function() {
+            cfpLoadingBar.start();
+        }, 0); // sets a latency Threshold
+        // Save the route title
         event.targetScope.$watch("$viewContentLoaded", function () {
-          $timeout.cancel(thBar);
-          cfpLoadingBar.complete();
+            $timeout.cancel(thBar);
+            cfpLoadingBar.complete();
+            $rootScope.currTitle = $state.current.title;
+            $rootScope.pageTitle();
         });
     });
 
-    // Hook not found
+    $rootScope.$on('event:dismiss-loading', function(event, toState, toParams, fromState, fromParams) {
+        spinnerService.hide("ScreenLoading");
+    });
+
+    $rootScope.$on('event:show-loading', function(event, toState, toParams, fromState, fromParams) {
+        spinnerService.show("ScreenLoading");
+    });
+
+
+
+
+    /* Hook not found
     $rootScope.$on('$stateNotFound',
       function(event) {
-          $state.go('page.404');
-      });
+        $state.go('page.404');
+    });*/
     /* Hook not found - Exemplo...
     $rootScope.$on('$stateNotFound',
       function(event, unfoundState, fromState, fromParams) {
@@ -38,17 +58,6 @@ App.controller('AppController',
     $rootScope.$on('$stateChangeError',
       function(event, toState, toParams, fromState, fromParams, error){
         console.log(error);
-      });
-    // Hook success
-    $rootScope.$on('$stateChangeSuccess',
-      function(event, toState, toParams, fromState, fromParams) {
-        // display new view from top
-        if(toState.name != 'app.bill.pollDetails'){
-
-          $window.scrollTo(0, 0);
-        }
-        // Save the route title
-        $rootScope.currTitle = $state.current.title;
       });
 
     $rootScope.currTitle = $state.current.title;
@@ -121,6 +130,7 @@ App.controller('AppController',
     };
 
     $scope.logout = function(){
+      spinnerService._unregisterAll();
       Auth.logout();
       $state.go("page.login");
     };

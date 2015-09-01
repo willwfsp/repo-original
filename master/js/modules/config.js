@@ -32,7 +32,7 @@ App.config(
         abstract: true,
         templateUrl: helper.basepath('app.html'),
         controller: 'AppController',
-        resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit'),
+        resolve: helper.resolveFor('modernizr', 'icons', 'loaders.css', 'spinkit','ngDialog','ngNotification'),
         data: {
                 access: access.user
             }
@@ -107,6 +107,20 @@ App.config(
         title: 'Perfil do Usuário',
         templateUrl: helper.basepath('profile.html'),
         controller: 'ProfileController'
+    })
+    .state('app.favorites', {
+        url: '/favorites',
+        title: 'Favoritos',
+        abstract: true,
+        controller: 'FavoriteController',
+        templateUrl: helper.basepath('favorite.html'),
+        resolve: angular.extend(helper.resolveFor('ngDialog'))
+    })
+    .state('app.favorites.folder', {
+        url: '/:folderName',
+        title: 'Favoritos',
+        templateUrl: helper.basepath('favorite-bills.html'),
+        controller: 'FavoriteBillsController'
     })
     .state('app.reports', {
         url: '/reports',
