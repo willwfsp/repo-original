@@ -16,7 +16,7 @@ App.controller("RecoverPasswordController",
             $scope.showLoading = true;
             var email = {};
             email.email = $scope.recoverForm.email.$modelValue;
-            $http.post($rootScope.apiURL + 'v1/accounts/forgot', email)
+            $http.post($rootScope.apiURL + 'accounts/forgot', email)
               .then(function(response) {
 
                 if ( response.status == "200" ) {
