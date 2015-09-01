@@ -3,8 +3,8 @@
  * Recover password
  =========================================================*/
 App.controller("RecoverPasswordController",
-  ["$scope", "$log", '$state', '$http',
-    function($scope, $log, $state, $http){
+  ["$scope", "$log", '$state', '$http', '$rootScope', 
+    function($scope, $log, $state, $http, $rootScope){
 
     $scope.showLoading = false;
 
@@ -16,7 +16,7 @@ App.controller("RecoverPasswordController",
             $scope.showLoading = true;
             var email = {};
             email.email = $scope.recoverForm.email.$modelValue;
-            $http.post('https://sigalei-api.mybluemix.net/v1/accounts/forgot', email)
+            $http.post($rootScope.apiURL + 'v1/accounts/forgot', email)
               .then(function(response) {
 
                 if ( response.status == "200" ) {

@@ -4,8 +4,8 @@
  =========================================================*/
 
  App.controller('FavoriteController',
-  ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'Auth', '$rootScope', 'UserFolders', '$modal', 'FoldersBills', 'ngDialog', '$state', '$stateParams', 'Notification','spinnerService',
-    function($scope, $log, DataFetcher, $filter, $stateParams, Auth, $rootScope, UserFolders, $modal, FoldersBills, ngDialog, $state, $stateParams, Notification, spinnerService) {
+  ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'Auth', '$rootScope', 'UserFolders', '$modal', 'FoldersBills', 'ngDialog', 'Notification','spinnerService',
+    function($scope, $log, DataFetcher, $filter, $stateParams, Auth, $rootScope, UserFolders, $modal, FoldersBills, ngDialog, Notification, spinnerService) {
 
     $rootScope.$broadcast("event:show-loading");
 
@@ -125,8 +125,8 @@ App.controller('DeleteFolderController',
 
 
 App.controller('FavoriteBillsController',
-  ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'Auth', '$rootScope', 'UserFolders', '$modal', 'FoldersBills', 'ngDialog', '$state', '$stateParams', 'spinnerService', 'Notification',
-    function($scope, $log, DataFetcher, $filter, $stateParams, Auth, $rootScope, UserFolders, $modal, FoldersBills, ngDialog, $state, $stateParams, spinnerService, Notification) {
+  ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'Auth', '$rootScope', 'UserFolders', '$modal', 'FoldersBills', 'ngDialog', '$state', 'spinnerService', 'Notification',
+    function($scope, $log, DataFetcher, $filter, $stateParams, Auth, $rootScope, UserFolders, $modal, FoldersBills, ngDialog, $state, spinnerService, Notification) {
 
     spinnerService.show("ActionLoading");
     $scope.showDefault = true;
@@ -161,7 +161,7 @@ App.controller('FavoriteBillsController',
         //resolve modal
         modalInstance.result.then(function (folderName) {
             spinnerService.hide("ActionLoading");
-            $state.go('app.favorites.folder', {'folderName': folderName })
+            $state.go('app.favorites.folder', {'folderName': folderName });
             notify = $rootScope.notificationSettings;
             notify.message = 'Etiqueta renomeada';
             Notification.success(notify);
@@ -237,7 +237,7 @@ App.controller('FavoriteBillsController',
         var myObject = {};
         myObject.proposicoesNovas = [];
         myObject.proposicoesVelhas = [];
-        myObject.proposicoesVelhas.push(bill)
+        myObject.proposicoesVelhas.push(bill);
         FoldersBills.update({pasta: $scope.currentFolder}, myObject, function(data){
             $scope.bills.splice(_.findIndex($scope.bills, findObj), 1);
             spinnerService.hide("ActionLoading");

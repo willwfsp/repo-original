@@ -56,7 +56,7 @@
                 }
             }
             if (!groupExists) {
-                throw new Error("No spinners found with group '" + group + "'.")
+                throw new Error("No spinners found with group '" + group + "'.");
             }
         },
         hideGroup: function (group) {
@@ -69,7 +69,7 @@
               }
           }
           if (!groupExists) {
-              throw new Error("No spinners found with group '" + group + "'.")
+              throw new Error("No spinners found with group '" + group + "'.");
           }
         },
         showAll: function () {

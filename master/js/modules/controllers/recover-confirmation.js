@@ -4,8 +4,8 @@
  =========================================================*/
 
  App.controller("RecoverPasswordConfirmController",
-  ["$scope", "$log", '$state', '$stateParams', '$http',
-    function($scope, $log, $state, $stateParams, $http){
+  ["$scope", "$log", '$state', '$stateParams', '$http', '$rootScope',
+    function($scope, $log, $state, $stateParams, $http, $rootScope){
 
     var token = $stateParams.token;
     $scope.showLoading = true;
@@ -14,8 +14,7 @@
         $scope.authErrMsg  = 'Token Inválido';
         $scope.showLoading = false;
     } else{
-
-        var url = 'https://sigalei-api.mybluemix.net/v1/accounts/forgot/' + token;
+        var url = $rootScope.apiURL + 'v1/accounts/forgot/' + token;
         $http.get(url)
             .then(function(response) {
 
