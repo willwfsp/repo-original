@@ -17,7 +17,7 @@ App.controller('AppController',
 
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
 
-
+        spinnerService.hide("ScreenLoading");
         if($('.wrapper > section').length) // check if bar container exists
           thBar = $timeout(function() {
             cfpLoadingBar.start();

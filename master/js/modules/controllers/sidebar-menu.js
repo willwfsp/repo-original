@@ -97,7 +97,7 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$state', '$http', 
     }
 
     function isChild($index) {
-      return (typeof $index === 'string') && !($index.indexOf('-') < 0);
+      return (typeof $index === 'string') && ($index.indexOf('-') >= 0);
     }
 
 }]);

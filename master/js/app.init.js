@@ -67,7 +67,7 @@ App.run(
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.$storage = $window.localStorage;
-    $rootScope.apiURL = "https://sigalei-dev-api.mybluemix.net/v1/";
+    $rootScope.apiURL = "https://sigalei-api.mybluemix.net/v1/";
 
     $rootScope.notificationSettings = {
         message: '',
