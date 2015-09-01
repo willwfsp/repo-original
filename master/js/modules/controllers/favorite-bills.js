@@ -71,13 +71,14 @@ App.controller('CreateFolderController',
 }]);
 
 App.controller('RenameFolderController',
-  ['$scope', '$log', '$modalInstance', 'UserFolders', 'folders', 'folderName',
-    function ($scope, $log, $modalInstance, UserFolders, folders, folderName) {
+  ['$scope', '$log', '$modalInstance', 'UserFolders', 'folders', 'folderName','spinnerService',
+    function ($scope, $log, $modalInstance, UserFolders, folders, folderName, spinnerService) {
 
     $scope.foldersList = folders;
     $scope.folderName = folderName;
     $scope.rename = function() {
         if($scope.renameForm.$valid) {
+            spinnerService.show("ActionLoading");
             if($scope.foldersList.indexOf($scope.data.newName) == -1){
                 UserFolders.rename({"oldName":folderName, "newName":$scope.data.newName}).$promise.then(function(){
                     var index = folders.indexOf(folderName);
@@ -129,6 +130,7 @@ App.controller('FavoriteBillsController',
 
     spinnerService.show("ActionLoading");
     $scope.showDefault = true;
+
     if($stateParams.folderName){
         FoldersBills.get({pasta: $stateParams.folderName}, function(data){
             $scope.bills = data.SL_PROPOSICOES;
@@ -158,6 +160,7 @@ App.controller('FavoriteBillsController',
         });
         //resolve modal
         modalInstance.result.then(function (folderName) {
+            spinnerService.hide("ActionLoading");
             $state.go('app.favorites.folder', {'folderName': folderName })
             notify = $rootScope.notificationSettings;
             notify.message = 'Etiqueta renomeada';

@@ -1,15 +1,19 @@
 .col-md-12.pl0
-  .well.wd-wide(ng-if="!showDefault")
-    h4
-      span Proposições com a etiqueta "{{currentFolder}}"
-        .btn-group.pull-right(dropdown is-open="status.isopen")
-          button#single-button.btn.btn-default(dropdown-toggle)
-            em(class="icon-settings")
-          ul.dropdown-menu(role="menu" aria-labelledby="single-button")
-            li(role="menuitem" ng-click="renameFolder(currentFolder)")
-              a Renomear Etiqueta
-            li(role="menuitem" ng-click="deleteFolder(currentFolder)")
-              a Apagar Etiqueta
+  .well.wd-wide
+    div(ng-if="!showDefault")
+      h4
+        span Proposições com a etiqueta "{{currentFolder}}"
+          .btn-group.pull-right(dropdown is-open="status.isopen")
+            button#single-button.btn.btn-default(dropdown-toggle)
+              em(class="icon-settings")
+            ul.dropdown-menu(role="menu" aria-labelledby="single-button")
+              li(role="menuitem" ng-click="renameFolder(currentFolder)")
+                a Renomear Etiqueta
+              li(role="menuitem" ng-click="deleteFolder(currentFolder)")
+                a Apagar Etiqueta
+    div(ng-if="showDefault")
+      h4
+        span Selecione uma etiqueta.
     br
     // START table-responsive
     p(ng-if="bills.length == 0") Sem projetos de lei.
@@ -66,6 +70,4 @@
                             strong(ng-if="parseAuthor(author).id")
                               a(ui-sref="app.representative({ id: '{{ parseAuthor(author).id}}' })") {{parseAuthor(author).name}}
                             span(ng-hide="$index == bill.SLP_AUTOR.length - 1 || $first == $last - 1") ,
-  .well.wd-wide(ng-if="showDefault")
-    h4
-      span Selecione uma etiqueta.
+

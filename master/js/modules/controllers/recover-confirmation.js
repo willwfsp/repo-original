@@ -15,7 +15,7 @@
         $scope.showLoading = false;
     } else{
 
-        var url = 'https://sigalei-dev-api.mybluemix.net/v1/accounts/forgot/' + token;
+        var url = 'https://sigalei-api.mybluemix.net/v1/accounts/forgot/' + token;
         $http.get(url)
             .then(function(response) {
 
