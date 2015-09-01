@@ -90,7 +90,7 @@ App.run(
       year: ((new Date()).getFullYear()),
       keywords: 'projetos de lei, legislativo, congresso nacional, camara dos deputados, senado',
       layout: {
-        isFixed: false,
+        isFixed: true,
         isCollapsed: true,
         isBoxed: false,
         isRTL: false,

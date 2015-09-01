@@ -23,7 +23,7 @@ nav.navbar.topnavbar(role='navigation')
           em.fa.fa-navicon
     // END left navbar
 
-    .collapse.navbar-collapse(collapse="navCollapsed" ng-init="navCollapsed = true")
+    .navbar-collapse(collapse="navCollapsed" ng-init="navCollapsed = true")
       .nav.navbar-left.col-md-4.col-lg-6
         form.navbar-form(ng-controller="SearchBarController", ng-submit="searchQ(); navCollapsed = !navCollapsed")
           .form-group.has-feedback
