@@ -63,11 +63,7 @@ App.controller('SignupConfirmController',
         }
         $scope.showLoading = false;
     } else{
-<<<<<<< HEAD
-        var url = 'https://sigalei-api.mybluemix.net/v1/accounts/signup/' + token;
-=======
         var url = $rootScope.apiURL + 'v1/accounts/signup/' + token;
->>>>>>> gulp linted, closed #54
         $http.get(url)
             .then(function(response) {
 
