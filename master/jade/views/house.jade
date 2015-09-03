@@ -39,18 +39,7 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
               td(ng-show= "checkHouse()", data-title=" 'Estado' ", sortable="'uf_rep'", filter="{ 'uf_rep': 'text' }") {{representative.uf_rep}}
 
 .row
-  .col-lg-6
-    .panel
-      .panel-heading
-        h3 Eventos
-      .panel-body
-        table.table.table-bordered.table-striped.text-center(ng-table='eventsTableParams', show-filter="true")
-          tbody
-            tr(ng-repeat="event in $data")
-              td(data-title=" 'Data' ", sortable="'date'", filter="{ 'date': 'text' }") {{event.date.replace(" ", "T") | date:"dd/MM/yyyy 'às' HH:mm" || "Não Disponível"}}
-              td(data-title=" 'Evento' ", sortable="'name'", filter="{ 'name': 'text' }") {{event.name}}
-              td(data-title=" 'Local' ", sortable="'place'", filter="{ 'place': 'text' }") {{event.place}}
-  .col-lg-6
+  .col-lg-12
     .panel
       .panel-heading
         h3 Comissões
@@ -61,3 +50,35 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
               td(data-title=" 'Sigla' ", sortable="'initials'", filter="{ 'initials': 'text' }") {{committee.initials}}
               td(data-title=" 'Nome' ", sortable="'name'", filter="{ 'name': 'text' }")
                 a(ui-sref="app.committee({ house:committee.house, committeeID: committee.refCode })") {{committee.name}}
+.row
+  .col-lg-12
+    .panel
+      .panel-heading
+        h3 Eventos
+      .panel-body
+        table.table.table-striped.table-bordered.table-hover
+          tbody
+            div
+              tr(ng-repeat="event in houseEvents | orderBy: 'date' | limitTo: 10")
+                td
+                  .media-box
+                    .media-box-heading
+                    h4.media-box-heading {{event.name}}
+                    .media-box-body
+                      .form-group
+                        .control-label-sm.m0
+                          label Data: &nbsp;
+                          | {{event.date.replace(" ", "T") | date:"dd/MM/yyyy" || "Não Disponível"}}
+                        .control-label-sm.m0
+                          label Horário: &nbsp;
+                          | {{event.date.replace(" ", "T") | date:"HH:mm" || "Não Disponível"}}
+                        .control-label-sm.m0
+                          label Local: &nbsp;
+                          | {{event.place}}
+
+        table.table.table-bordered.table-striped.text-center(ng-table='eventsTableParams', show-filter="true")
+          tbody
+            tr(ng-repeat="event in $data")
+              td(data-title=" 'Data' ", sortable="'date'", filter="{ 'date': 'text' }") {{event.date.replace(" ", "T") | date:"dd/MM/yyyy 'às' HH:mm" || "Não Disponível"}}
+              td(data-title=" 'Evento' ", sortable="'name'", filter="{ 'name': 'text' }") {{event.name}}
+              td(data-title=" 'Local' ", sortable="'place'", filter="{ 'place': 'text' }") {{event.place}}

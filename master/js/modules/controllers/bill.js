@@ -9,6 +9,25 @@ App.controller('BillController',
     function($location,$scope, $state, $stateParams, $log, $http, $filter, $window,
         ngTableParams, DataFetcher, Auth, ngDialog, $document, spinnerService, UserFolders,FoldersBills, $rootScope, Notification){
 
+    $scope.notes = [
+        {'date': '2015-09-03T14:20',
+         'content': 'Hi!'
+        }
+    ];
+    $scope.pushNote = function(){
+        if($scope.noteForm.$valid){
+            var note = {};
+            note.date = Date.now();
+            var breakLine = '\\n';
+            note.content = $scope.noteContent.replace(new RegExp(breakLine, 'g'),'<br>');
+            $scope.notes.push(note);
+            $scope.noteContent = "";
+        }
+        else{
+            $log.log('hi!');    
+        }
+    };
+
     $scope.coAuthorsCollapsed = true;
     $rootScope.$broadcast("event:show-loading");
     $scope.viewDoc = function(url, house){

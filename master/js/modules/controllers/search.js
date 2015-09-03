@@ -9,6 +9,7 @@ App.controller('SearchBarController',
 
     $scope.searchQ = function(){
         $state.go('app.searchBills', {q: $scope.query});
+        $scope.query = "";
     };
 
 }]);

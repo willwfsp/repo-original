@@ -49,6 +49,7 @@ h3 Acompanhamento de Projetos de Lei
         span.pull-right(class="fa fa-plus " ng-click="createFolder()")
       br
       .list-group
+          p(ng-if="folders.length === 0") Não há etiquetas.
           a.list-group-item(ng-repeat="folder in folders", ui-sref="app.favorites.folder({folderName: folder})")
               em(class="fa fa-tag") &nbsp;
               span {{folder}}
