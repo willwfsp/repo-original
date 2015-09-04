@@ -261,7 +261,7 @@ App.controller('SearchBillsController',
                 for(j = 0; j < aux.rows[count].fields.USER_TAGS.length; j++){
                     $scope.tagsModel[i].data.push({id:aux.rows[count].fields.USER_TAGS[j]});
                 }
-                    
+
             }
             count ++;
 
@@ -373,9 +373,10 @@ App.controller('SearchBillsController',
         var myObject = {};
         myObject.proposicoesNovas = [];
         myObject.proposicoesVelhas = [];
-        myObject.proposicoesVelhas.push(bill);
+
 
         if (!dontRemove && exists) {
+            myObject.proposicoesVelhas.push(bill);
             FoldersBills.update({pasta: id}, myObject, function(data){
                 $scope.tagsModel[index].data.splice(_.findIndex($scope.tagsModel[index].data, findObj), 1);
                 $scope.externalEvents.onItemDeselect(findObj);
@@ -392,6 +393,7 @@ App.controller('SearchBillsController',
 
 
         } else if (!exists) {
+            myObject.proposicoesNovas.push(bill);
             FoldersBills.update({pasta: id}, myObject, function(data){
                 $scope.tagsModel[index].data.push(finalObj);
                 $scope.externalEvents.onItemSelect(finalObj);
