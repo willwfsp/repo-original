@@ -99,7 +99,7 @@ App.config(
         url: '/house/:house',
         title: 'Casa Legislativa',
         templateUrl: helper.basepath('house.html'),
-        resolve: helper.resolveFor('ngTable'),
+        resolve: helper.resolveFor('ngTable', 'angularMoment', 'mwl.calendar'),
         controller: 'HouseDataController'
     })
     .state('app.profile', {

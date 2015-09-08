@@ -10,7 +10,7 @@ App.controller('BillController',
         ngTableParams, DataFetcher, Auth, ngDialog, $document, spinnerService, UserFolders,FoldersBills, $rootScope, Notification){
 
     $scope.notes = [
-        {'date': '2015-09-03T14:20',
+        {'date': '2015-09-03T14:20:10',
          'content': 'Hi!'
         }
     ];
