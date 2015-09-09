@@ -6,11 +6,11 @@
         img.block-center.img-rounded.wd-sm(src='app/img/logo.png', alt='Image')
     .panel-body
       p.text-center.pv Registre-se para usar o SigaLei.
-      form.form-validate.mb-lg(role='form', name="registerForm", novalidate='', ng-submit="register()")
+      form.form-validate.mb-lg(role='form', name="registerForm", novalidate, ng-submit="register()")
         .row
           .col-md-12
             .form-group.has-feedback
-              input.form-control(type='user', name="register_username" placeholder='Usuário', autocomplete="off", ng-model="register_username", required='', username-validation, ng-pattern="/^[a-z]+$/")
+              input.form-control(type='user', name="register_username" placeholder='Usuário', autocomplete="off", ng-model="register_username", required, username-validation, ng-pattern="/^[a-z0-9]+$/")
               span.fa.fa-user.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_username.$dirty && registerForm.register_username.$error.required") &nbsp;&nbsp;Campo Obrigatório
               span.text-danger(ng-show="registerForm.register_username.$dirty && registerForm.register_username.$error.pattern") &nbsp;&nbsp;Campo não pode conter caracteres especiais
@@ -18,19 +18,19 @@
         .row
           .col-md-12
             .form-group.has-feedback
-              input.form-control(type='text', name="register_firstname" placeholder='Nome', ng-model="register_firstname", required='')
+              input.form-control(type='text', name="register_firstname" placeholder='Nome', ng-model="register_firstname", required)
               span.fa.fa-pencil.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_firstname.$dirty && registerForm.register_firstname.$error.required") &nbsp;&nbsp;Campo Obrigatório
         .row
           .col-md-12
             .form-group.has-feedback
-              input.form-control(type='text', name="register_lastname" placeholder='Sobrenome', ng-model="register_lastname", required='')
+              input.form-control(type='text', name="register_lastname" placeholder='Sobrenome', ng-model="register_lastname", required)
               span.fa.fa-pencil.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_lastname.$dirty && registerForm.register_lastname.$error.required") &nbsp;&nbsp;Campo Obrigatório
         .row
           .col-md-12
             .form-group.has-feedback
-              input.form-control(type='text', name="register_organization", placeholder='Organização (Empresa, Ong, Associação...)', ng-model="register_organization", required='', ng-trim='false')
+              input.form-control(type='text', name="register_organization", placeholder='Organização (Empresa, Ong, Associação...)', ng-model="register_organization", required, ng-trim='false')
               span.fa.fa-building-o.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_organization.$dirty && registerForm.register_organization.$error.required") &nbsp;&nbsp;Campo Obrigatório
         .row(ng-hide="true")
@@ -42,24 +42,24 @@
         .row
           .col-md-12
             .form-group.has-feedback
-              input.form-control(type='text', name="register_phone" , ng-model="register_phone", number-validation, ui-mask="{{'(99) ?99999-9999' }}")
+              input.form-control(type='text', name="register_phone" , ng-model="register_phone", number-validation, ui-mask="{{ mask }}")
               span.fa.fa-phone-square.form-control-feedback.text-muted
               span.text-info &nbsp;&nbsp;Opcional
 
         .row
           .col-md-12
             .form-group.has-feedback
-              input.form-control(type='email', name="register_email" placeholder='Email', autocomplete="off", ng-model="email", required='')
+              input.form-control(type='email', name="register_email" placeholder='Email', autocomplete="off", ng-model="email", required)
               span.fa.fa-envelope.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_email.$dirty && registerForm.register_email.$error.required") Campo Obrigatório
               span.text-danger(ng-show="registerForm.register_email.$dirty && registerForm.register_email.$error.email") E-mail inválido
         .row
           .col-md-12
             .form-group.has-feedback
-              input#id-password.form-control(type='password', name="register_password", ng-model="register_password", ng-pattern="/^[a-zA-Z0-9]{4,18}$/", required='',  placeholder="Senha")
+              input#id-password.form-control(type='password', name="register_password", ng-model="register_password", ng-minlength='4', ng-maxlength='18', required,  placeholder="Senha")
               span.fa.fa-lock.form-control-feedback.text-muted
               span.text-danger(ng-show="registerForm.register_password.$dirty && registerForm.register_password.$error.required") Campo Obrigatório
-              span.text-danger(ng-show="registerForm.register_password.$dirty && registerForm.register_password.$error.pattern") Senha pode conter somente os caracteres alfanumérico (a-zA-Z0-9) e ter o tamanho entre 4-18
+              span.text-danger(ng-show="registerForm.register_password.$dirty && (registerForm.register_password.$error.minlength || registerForm.register_password.$error.maxlength)") Senha deve ter entre 4 e 18 caracteres
         .row
           .col-md-12
             .form-group.has-feedback
@@ -69,10 +69,11 @@
         .clearfix
           .checkbox.c-checkbox.pull-left.mt0
             label
-              input(type='checkbox', required='', name="register_agreed", ng-model="account.agreed")
+              input(type='checkbox', required, name="register_agreed", ng-model="account.agreed")
               span.fa.fa-check
               |  Eu concordo com os&nbsp;
-              a(ng-click="openTerms()") termos
+              a(ng-click="openTerms()") termos de uso
+              | .
         .text-danger(ng-show="registerForm.register_agreed.$dirty && registerForm.register_agreed.$error.required") Você deve concordar com os termos
 
         button.btn.btn-block.btn-primary.mt-lg(type='submit') Criar a conta
