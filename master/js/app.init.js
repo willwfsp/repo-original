@@ -35,13 +35,16 @@ App.run(
   ['$rootScope', '$state', '$stateParams',  '$window', '$templateCache',
    'Auth', '$timeout', 'cfpLoadingBar', '$log', 'spinnerService',
     function ($rootScope, $state, $stateParams, $window, $templateCache, Auth, $timeout, cfpLoadingBar, $log, spinnerService) {
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
-        /* Auth */
+    // Check authentication before loading a page
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+        console.log(toState);
+        // Invalid State or access not defined in app
         if(!('data' in toState) || !('access' in toState.data)){
             $log.error("Access undefined for this state");
             event.preventDefault();
         }
+        //if authorized
         else if (!Auth.authorize(toState.data.access)) {
             $log.error("Seems like you tried accessing a route you don't have access to...");
             event.preventDefault();
@@ -76,6 +79,7 @@ App.run(
         delay:1000
     }
 
+    //amMoment.changeLocale('pt-br');
     /* Uncomment this to disable template cache
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
         if (typeof(toState) !== 'undefined'){

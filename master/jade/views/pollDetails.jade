@@ -1,5 +1,6 @@
 .panel.widget
   .panel-heading
+    span.pull-right.fa.fa-close(ng-click="dismiss()")
     h3 {{pollData.SLV_OBJETO_VOTACAO}}
       span.btn.btn-pill-left.pull-right(ng-if="pollData.SLV_RESULTADO", ng-class="pollData.SLV_RESULTADO == 'Aprovado' ? 'bg-success' : 'bg-danger' ") {{pollData.SLV_RESULTADO}}
 

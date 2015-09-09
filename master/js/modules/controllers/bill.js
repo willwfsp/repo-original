@@ -2,15 +2,33 @@
  * Module: bill.js
  * Bills Details
  =========================================================*/
-
+/* Controller */
 App.controller('BillController',
   ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter', '$window',
    'ngTableParams', 'DataFetcher', 'Auth', 'ngDialog', '$document', 'spinnerService','UserFolders','FoldersBills', '$rootScope','Notification',
     function($location,$scope, $state, $stateParams, $log, $http, $filter, $window,
         ngTableParams, DataFetcher, Auth, ngDialog, $document, spinnerService, UserFolders,FoldersBills, $rootScope, Notification){
 
+    $scope.notes = [
+        {'date': '2015-09-03T14:20:10',
+         'content': 'Hi!'
+        }
+    ];
+    $scope.pushNote = function(){
+        if($scope.noteForm.$valid){
+            var note = {};
+            note.date = Date.now();
+            var breakLine = '\\n';
+            note.content = $scope.noteContent.replace(new RegExp(breakLine, 'g'),'<br>');
+            $scope.notes.push(note);
+            $scope.noteContent = "";
+        }
+        else{
+            $log.log('hi!');
+        }
+    };
+
     $scope.coAuthorsCollapsed = true;
-    $scope.dados = {};
     $rootScope.$broadcast("event:show-loading");
     $scope.viewDoc = function(url, house){
         if(!house){
@@ -23,40 +41,39 @@ App.controller('BillController',
         }
     };
 
-    $scope.docsTableParams = new ngTableParams({
-        page: 1,
-        count: 10,
-        sorting: {SLD_DATA: 'des'}
-    }, {
-        total: $scope.dados.SLP_DOCUMENTOS,
-        counts: [],
-        getData: function($defer, params){
-
-            var filteredData = $scope.dados.SLP_DOCUMENTOS;
-            if (params.filter() ){
-                filteredData = $filter('filter')($scope.dados.SLP_DOCUMENTOS, params.filter());
-            }
-
-            var orderedData = params.sorting() ?
-                $filter('orderBy')(filteredData, params.orderBy()) :
-                filteredData;
-
-            params.total(orderedData.length); // set total for recalc pagination
-            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-        }
-    });
-
-
-
     DataFetcher.fetchBill($stateParams.billName, Auth.user.token).then(function(data) {
         $scope.dados = data[0].data;
         $scope.tracksBill = data[1].data;
         $scope.billVotingList = data[2].data;
-        $scope.docsTableParams.reload();
+
         $scope.tagsModel.data = [];
+
+        $scope.docsTableParams = new ngTableParams({
+            page: 1,
+            count: 10,
+            sorting: {SLD_DATA: 'des'}
+        }, {
+            total: $scope.dados.SLP_DOCUMENTOS,
+            counts: [],
+            getData: function($defer, params){
+
+                var filteredData = $scope.dados.SLP_DOCUMENTOS;
+                if (params.filter() ){
+                    filteredData = $filter('filter')($scope.dados.SLP_DOCUMENTOS, params.filter());
+                }
+
+                var orderedData = params.sorting() ?
+                    $filter('orderBy')(filteredData, params.orderBy()) :
+                    filteredData;
+
+                params.total(orderedData.length); // set total for recalc pagination
+                $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            }
+        });
+
         if($scope.dados.hasOwnProperty('USER_TAGS')){
             $scope.dados.USER_TAGS.forEach(function(item){
-                $scope.tagsModel.data.push({id:item})
+                $scope.tagsModel.data.push({id:item});
             });
         }
         $rootScope.$broadcast("event:dismiss-loading");
@@ -72,11 +89,11 @@ App.controller('BillController',
               overlay: false
             });
         if($scope.dados.hasOwnProperty('following')){
-            $scope.dados.following = !$scope.dados.following
+            $scope.dados.following = !$scope.dados.following;
         }else{
             $scope.dados.following = true;
         }
-    }
+    };
 
     /* Tags Handler*/
     $document.on('click', function (e) {
@@ -85,7 +102,7 @@ App.controller('BillController',
 
         while (angular.isDefined(target) && target !== null && !parentFound) {
             if (_.contains(target.className.split(' '), 'multiselect-parent') && !parentFound) {
-                $dropdownTrigger = angular.element("#DropdownTagsList")[0]
+                $dropdownTrigger = angular.element("#DropdownTagsList")[0];
                 if(target.id === $dropdownTrigger.id) {
                     parentFound = true;
                 }
@@ -126,7 +143,7 @@ App.controller('BillController',
                 data.pastas.forEach(function(item){
                     var AuxObject = {};
                     AuxObject.id = item;
-                    $scope.tagsData.data.push(AuxObject)
+                    $scope.tagsData.data.push(AuxObject);
 
                 });
                 spinnerService.hide("ActionLoading");
@@ -137,11 +154,9 @@ App.controller('BillController',
             spinnerService.hide("ActionLoading");
             $scope.open = !$scope.open;
         }
+    };
 
-
-    }
-
-    $scope.getPropertyForObject = function (object, property) {
+    $scope.getPropertyForObject = function(object, property) {
         if (angular.isDefined(object) && object.hasOwnProperty(property)) {
             return object[property];
         }
@@ -159,12 +174,12 @@ App.controller('BillController',
         dontRemove = dontRemove || false;
 
         var exists = _.findIndex($scope.tagsModel.data, findObj) !== -1;
+        var myObject = {};
+        myObject.proposicoesNovas = [];
+        myObject.proposicoesVelhas = [];
 
         if (!dontRemove && exists) {
-            var myObject = {};
-            myObject.proposicoesNovas = [];
-            myObject.proposicoesVelhas = [];
-            myObject.proposicoesVelhas.push(bill)
+            myObject.proposicoesVelhas.push(bill);
             FoldersBills.update({pasta: id}, myObject, function(data){
                 $scope.tagsModel.data.splice(_.findIndex($scope.tagsModel.data, findObj), 1);
                 $scope.externalEvents.onItemDeselect(findObj);
@@ -181,10 +196,7 @@ App.controller('BillController',
 
 
         } else if (!exists) {
-            var myObject = {};
-            myObject.proposicoesNovas = [];
-            myObject.proposicoesVelhas = [];
-            myObject.proposicoesNovas.push(bill)
+            myObject.proposicoesNovas.push(bill);
             FoldersBills.update({pasta: id}, myObject, function(data){
                 $scope.tagsModel.data.push(finalObj);
                 $scope.externalEvents.onItemSelect(finalObj);
@@ -210,7 +222,7 @@ App.controller('BillController',
         spinnerService.show("ActionLoading");
         var myObject = {};
         myObject.proposicoes = [];
-        myObject.proposicoes.push(bill)
+        myObject.proposicoes.push(bill);
         FoldersBills.save({pasta: tag}, myObject, function(data){
             var AuxObject = {};
             AuxObject.id = tag;
@@ -228,12 +240,12 @@ App.controller('BillController',
             Notification.error(notify);
         });
 
-    }
+    };
     $scope.initVariables = function(){
         $scope.open = false;
         $scope.tagsModel = {};
         $scope.tagsData = {};
-    }
+    };
 
     $scope.removeTag = function(id, bill){
         spinnerService.show("ActionLoading");
@@ -241,7 +253,7 @@ App.controller('BillController',
         var myObject = {};
         myObject.proposicoesNovas = [];
         myObject.proposicoesVelhas = [];
-        myObject.proposicoesVelhas.push(bill)
+        myObject.proposicoesVelhas.push(bill);
         FoldersBills.update({pasta: id}, myObject, function(data){
             $scope.tagsModel.data.splice(_.findIndex($scope.tagsModel.data, findObj), 1);
             spinnerService.hide("ActionLoading");
@@ -255,7 +267,7 @@ App.controller('BillController',
             Notification.error(notify);
         });
 
-    }
+    };
 
     $scope.externalEvents = {
         onItemSelect: angular.noop,
@@ -279,7 +291,8 @@ App.controller('BillController',
 
 }]);
 
-App.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'ngTableParams', 'Auth',
+App.controller('PollDetailsController',
+    ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'ngTableParams', 'Auth',
     function($scope, $log, DataFetcher, $filter, $stateParams, ngTableParams, Auth) {
 
     $scope.pollData = {};

@@ -35,23 +35,23 @@ App
                                'vendor/simple-line-icons/css/simple-line-icons.css'],
       'loaders.css':          ['vendor/loaders.css/loaders.css'],
       'spinkit':              ['vendor/spinkit/css/spinkit.css'],
-      'chartjs':              ['vendor/Chart.js/Chart.js'],
+      'chartjs':              ['vendor/Chart.js/Chart.js']
     },
     // Angular based script (use the right module name)
     modules: [
-      {name: 'ui.select',                 files: ['vendor/angular-ui-select/dist/select.js',
+      {name: 'ui.select',                   files: ['vendor/angular-ui-select/dist/select.js',
                                                   'vendor/angular-ui-select/dist/select.css']},
       {name: 'ngTable',                   files: ['vendor/ng-table/dist/ng-table.min.js',
                                                   'vendor/ng-table/dist/ng-table.min.css']},
       {name: 'ngDialog',                  files: ['vendor/ngDialog/js/ngDialog.min.js',
                                                  'vendor/ngDialog/css/ngDialog.min.css',
                                                  'vendor/ngDialog/css/ngDialog-theme-default.min.css'] },
-      {name: 'ngNotification',                  files: [
-        'vendor/angular-ui-notification/dist/angular-ui-notification.min.js',
-        'vendor/angular-ui-notification/dist/angular-ui-notification.min.css'] }
-
-
-
+      {name: 'ngNotification',          files: [ 'vendor/angular-ui-notification/dist/angular-ui-notification.min.js',
+                                                 'vendor/angular-ui-notification/dist/angular-ui-notification.min.css'] },
+      {name: 'mwl.calendar',           files: ['vendor/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css',
+                                                 'vendor/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.js'] },
+      {name: 'angularMoment',       files: ['vendor/moment/moment.js',
+                                                 'vendor/angular-moment/angular-moment.min.js'] }
     ]
 
   })

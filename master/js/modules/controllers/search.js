@@ -9,6 +9,7 @@ App.controller('SearchBarController',
 
     $scope.searchQ = function(){
         $state.go('app.searchBills', {q: $scope.query});
+        $scope.query = "";
     };
 
 }]);
@@ -246,7 +247,7 @@ App.controller('SearchBillsController',
     $scope.$on('fetch billSearchResults:completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
         var aux = DataFetcher.getBillSearchResults();
-        if ($scope.bills.length == 0){
+        if ($scope.bills.length === 0){
             index = 0;
         }else{
             index = $scope.bills.length;
@@ -257,10 +258,11 @@ App.controller('SearchBillsController',
             $scope.tagsModel[i] = {};
             $scope.tagsModel[i].data = [];
 
-            if (aux.rows[count].fields.hasOwnProperty('USER_TAGS')){
-                aux.rows[count].fields.USER_TAGS.forEach(function(item){
-                    $scope.tagsModel[i].data.push({id:item});
-                })
+            if (aux.rows[count].fields.hasOwnProperty('USER_TAGS') ){
+                for(j = 0; j < aux.rows[count].fields.USER_TAGS.length; j++){
+                    $scope.tagsModel[i].data.push({id:aux.rows[count].fields.USER_TAGS[j]});
+                }
+                    
             }
             count ++;
 
@@ -289,7 +291,7 @@ App.controller('SearchBillsController',
 
         while (angular.isDefined(target) && target !== null && !parentFound) {
             if (_.contains(target.className.split(' '), 'multiselect-parent') && !parentFound) {
-                $dropdownTrigger = angular.element("#DropdownTagsList")[0]
+                $dropdownTrigger = angular.element("#DropdownTagsList")[0];
                 if(target.id === $dropdownTrigger.id) {
                     parentFound = true;
                 }
@@ -332,7 +334,7 @@ App.controller('SearchBillsController',
                 data.pastas.forEach(function(item){
                     var AuxObject = {};
                     AuxObject.id = item;
-                    $scope.tagsData[index].data.push(AuxObject)
+                    $scope.tagsData[index].data.push(AuxObject);
 
                 });
                 spinnerService.hide("ActionLoading");
@@ -349,9 +351,7 @@ App.controller('SearchBillsController',
                 $scope.listDropdownsOpened.splice(indexDropdown, 1);
             }
         }
-
-
-    }
+    };
 
     $scope.getPropertyForObject = function (object, property) {
         if (angular.isDefined(object) && object.hasOwnProperty(property)) {
@@ -371,12 +371,12 @@ App.controller('SearchBillsController',
         dontRemove = dontRemove || false;
 
         var exists = _.findIndex($scope.tagsModel[index].data, findObj) !== -1;
+        var myObject = {};
+        myObject.proposicoesNovas = [];
+        myObject.proposicoesVelhas = [];
+        myObject.proposicoesVelhas.push(bill);
 
         if (!dontRemove && exists) {
-            var myObject = {};
-            myObject.proposicoesNovas = [];
-            myObject.proposicoesVelhas = [];
-            myObject.proposicoesVelhas.push(bill)
             FoldersBills.update({pasta: id}, myObject, function(data){
                 $scope.tagsModel[index].data.splice(_.findIndex($scope.tagsModel[index].data, findObj), 1);
                 $scope.externalEvents.onItemDeselect(findObj);
@@ -393,10 +393,6 @@ App.controller('SearchBillsController',
 
 
         } else if (!exists) {
-            var myObject = {};
-            myObject.proposicoesNovas = [];
-            myObject.proposicoesVelhas = [];
-            myObject.proposicoesNovas.push(bill)
             FoldersBills.update({pasta: id}, myObject, function(data){
                 $scope.tagsModel[index].data.push(finalObj);
                 $scope.externalEvents.onItemSelect(finalObj);
@@ -422,7 +418,7 @@ App.controller('SearchBillsController',
         spinnerService.show("ActionLoading");
         var myObject = {};
         myObject.proposicoes = [];
-        myObject.proposicoes.push(bill)
+        myObject.proposicoes.push(bill);
         FoldersBills.save({pasta: tag}, myObject, function(data){
             var AuxObject = {};
             AuxObject.id = tag;
@@ -439,21 +435,21 @@ App.controller('SearchBillsController',
             notify.message = 'Etiqueta já existe. Tente outro nome.';
             Notification.error(notify);
         });
+    };
 
-    }
     $scope.initVariables = function(){
         $scope.tagsModel = [];
         $scope.tagsData = [];
         $scope.listDropdownsOpened = [];
+    };
 
-    }
     $scope.removeTag = function(id, index, bill){
         spinnerService.show("ActionLoading");
         var findObj = getFindObj(id);
         var myObject = {};
         myObject.proposicoesNovas = [];
         myObject.proposicoesVelhas = [];
-        myObject.proposicoesVelhas.push(bill)
+        myObject.proposicoesVelhas.push(bill);
         FoldersBills.update({pasta: id}, myObject, function(data){
             $scope.tagsModel[index].data.splice(_.findIndex($scope.tagsModel[index].data, findObj), 1);
             spinnerService.hide("ActionLoading");
@@ -467,7 +463,7 @@ App.controller('SearchBillsController',
             Notification.error(notify);
         });
 
-    }
+    };
 
     $scope.externalEvents = {
         onItemSelect: angular.noop,

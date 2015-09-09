@@ -15,4 +15,9 @@
   "bower_components/ngDialog/css/ngDialog.min.css",
   "bower_components/ngDialog/css/ngDialog-theme-default.min.css",
   "bower_components/angular-ui-notification/dist/angular-ui-notification.min.js",
-  "bower_components/angular-ui-notification/dist/angular-ui-notification.min.css"]
+  "bower_components/angular-ui-notification/dist/angular-ui-notification.min.css",
+  "bower_components/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.js",
+  "bower_components/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css",
+  "bower_components/moment/moment.js",
+  "bower_components/angular-moment/angular-moment.min.js"
+]
