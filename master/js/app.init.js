@@ -80,12 +80,12 @@ App.run(
     }
 
     //amMoment.changeLocale('pt-br');
-    /* Uncomment this to disable template cache
+    //Uncomment this to disable template cache
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
         if (typeof(toState) !== 'undefined'){
           $templateCache.remove(toState.templateUrl);
         }
-    });*/
+    });
     // Scope Globals
     // -----------------------------------
     $rootScope.app = {

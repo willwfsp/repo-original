@@ -78,17 +78,6 @@ App.controller('AppController',
         $rootScope.$broadcast('closeSidebarMenu');
     });
 
-    // Restore layout settings
-    if( angular.isDefined($localStorage.layout) )
-      $scope.app.layout = $localStorage.layout;
-    else
-      $localStorage.layout = $scope.app.layout;
-
-    $rootScope.$watch("app.layout", function () {
-      $localStorage.layout = $scope.app.layout;
-    }, true);
-
-
     // Allows to use branding color with interpolation
     // {{ colorByName('primary') }}
     $scope.colorByName = colors.byName;
