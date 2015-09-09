@@ -9,14 +9,29 @@ App.controller('BillController',
     function($location,$scope, $state, $stateParams, $log, $http, $filter, $window,
         ngTableParams, DataFetcher, Auth, ngDialog, $document, spinnerService, UserFolders,FoldersBills, $rootScope, Notification){
 
+    $scope.timePast = function(timepast){
+        return moment(timepast).fromNow();
+    };
+
+    var commentSortParameter = function(a, b) {
+      if (a.date < b.date)
+        return 1;
+      if (a.date > b.date)
+        return -1;
+      return 0;
+    };
+
     $scope.notes = [
-        {'date': '2015-09-03T14:20:10',
-         'content': 'Hi!'
+        {
+            'user': Auth.user.username,
+            'date': '2015-09-03T14:20:10',
+            'content': 'Hi!'
         }
     ];
     $scope.pushNote = function(){
         if($scope.noteForm.$valid){
             var note = {};
+            note.user = Auth.user.username;
             note.date = Date.now();
             var breakLine = '\\n';
             note.content = $scope.noteContent.replace(new RegExp(breakLine, 'g'),'<br>');
@@ -26,6 +41,7 @@ App.controller('BillController',
         else{
             $log.log('hi!');
         }
+
     };
 
     $scope.coAuthorsCollapsed = true;

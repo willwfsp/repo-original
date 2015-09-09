@@ -54,7 +54,7 @@ App.config(
         url: '/bill/:billName',
         title: 'Visualizar Projeto de Lei',
         templateUrl: helper.basepath('bill.html'),
-        resolve: helper.resolveFor('ngTable'),
+        resolve: helper.resolveFor('ngTable', 'angularMoment'),
         controller: 'BillController'
     })
     .state('app.viewDocuments', {

@@ -224,19 +224,19 @@ h3(ng-init='initVariables()')
                   .col-sm-9.form-control-static-sm.m0
                     a.btn(ui-sref="app.bill.pollDetails({pollID: poll.id})", ng-class="resultado == 'Aprovado' ? 'bg-success' : 'bg-danger' ") {{poll.SLV_RESULTADO}}
       //POLL VIEW END
+      .col-md-12
+        .panel.widget.bill-box
+          .panel-heading
+            h3 Comentários
+          .panel-body
+            .panel(ng-repeat="note in notes | orderBy: 'note.date'  ")
+              .panel-heading.bg-gray-light
+                h4 {{note.user}} -&nbsp;
+                  small {{ timePast(note.date) }}
+              .panel-body
+                p(ng-bind-html="note.content")
+            form.form-validate.mb-lg(role='form', name="noteForm", novalidate='', ng-submit="pushNote(noteContent)")
+              textarea.form-control(ng-model="noteContent", name="noteContent", rows="4", required, placeholder="Deixe um comentário")
+              button.btn.btn-success.form-control(type="submit") OK
       // END table-responsive
     // END panel
-  .col-md-12
-    .panel.widget.bill-box
-      .panel-heading
-        h3 Anotações
-      .panel-body
-        .media(ng-repeat="note in notes | orderBy: 'date' ")
-          .media-body
-            h4.media-heading {{note.date | date:'dd/MM/yyyy HH:mm'}}
-            p(ng-bind-html="note.content") 
-        h4 Faça uma anotação (máximo de 500 caracteres):
-        form.form-validate.mb-lg(role='form', name="noteForm", novalidate='', ng-submit="pushNote(noteContent)")
-          textarea.form-control(ng-model="noteContent" name="noteContent" rows="4" required ng-maxlength="500")
-          p Total de Caracteres: {{noteContent.$valid ? 'Limite Ultrapassado':noteContent.length}}
-          button.btn.btn-success.form-control(type="submit") OK
