@@ -19,6 +19,7 @@ App.controller("RecoverPasswordController",
 
             $http.post($rootScope.apiURL + 'v1/accounts/forgot', email)
 
+
               .then(function(response) {
 
                 if ( response.status == "200" ) {

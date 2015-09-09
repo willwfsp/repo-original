@@ -22,10 +22,8 @@ App.controller('SignupConfirmController',
             email.email = value;
             var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
             if(re.test(email.email)){
-
                 var url = $rootScope.apiURL + '/v1/accounts/signup/resend';
                 $http.post(url, email)
-
                     .then(function(response) {
 
                         if ( response.status == "200" ) {
@@ -65,11 +63,9 @@ App.controller('SignupConfirmController',
         }
         $scope.showLoading = false;
     } else{
-<<<<<<< HEAD
-        var url = 'https://sigalei-api.mybluemix.net/v1/accounts/signup/' + token;
-=======
+
         var url = $rootScope.apiURL + 'v1/accounts/signup/' + token;
->>>>>>> origin/dev
+
         $http.get(url)
             .then(function(response) {
 

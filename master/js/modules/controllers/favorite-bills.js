@@ -162,8 +162,8 @@ App.controller('FavoriteBillsController',
         modalInstance.result.then(function (folderName) {
 
             spinnerService.hide("ActionLoading");
-            $state.go('app.favorites.folder', {'folderName': folderName })
 
+            $state.go('app.favorites.folder', {'folderName': folderName });
             notify = $rootScope.notificationSettings;
             notify.message = 'Etiqueta renomeada';
             Notification.success(notify);

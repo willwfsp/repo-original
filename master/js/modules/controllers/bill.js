@@ -62,6 +62,7 @@ App.controller('BillController',
         $scope.tracksBill = data[1].data;
         $scope.billVotingList = data[2].data;
 
+
         $scope.tagsModel.data = [];
 
         $scope.docsTableParams = new ngTableParams({

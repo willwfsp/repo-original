@@ -15,8 +15,8 @@
         $scope.showLoading = false;
     } else{
 
-
         var url = $rootScope.apiURL + 'v1/accounts/forgot/' + token;
+
 
         $http.get(url)
             .then(function(response) {

@@ -25,7 +25,7 @@ nav.navbar.topnavbar(role='navigation')
 
     .collapse.navbar-collapse(collapse="navCollapsed" ng-init="navCollapsed = true")
       .nav.navbar-left.col-md-6.col-lg-8
-        form.navbar-form(ng-controller="SearchBarController", ng-submit="searchQ(); navCollapsed = !navCollapsed")
+        form.navbar-form(ng-controller="SearchBarController", ng-submit="searchQ()")
           .form-group.has-feedback
             input.form-control(type="text", ng-model="query", placeholder="{{'topbar.search.PLACEHOLDER' | translate }}")
             button.btn-inline.fa.fa-search.form-control-feedback.sigalei-search(type="submit")
