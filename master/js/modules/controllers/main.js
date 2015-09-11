@@ -138,9 +138,6 @@ App.controller('AppController',
       Auth.logout();
       $state.go("page.login");
     };
-    $scope.profile = function(){
-      $state.go("app.profile");
-    };
 
     $rootScope.$on("event:auth-loginRequired", function() {
        $scope.logout();

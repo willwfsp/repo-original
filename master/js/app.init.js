@@ -38,7 +38,6 @@ App.run(
 
     // Check authentication before loading a page
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-        console.log(toState);
         // Invalid State or access not defined in app
         if(!('data' in toState) || !('access' in toState.data)){
             $log.error("Access undefined for this state");
@@ -47,11 +46,12 @@ App.run(
         //if authorized
         else if (!Auth.authorize(toState.data.access)) {
             $log.error("Seems like you tried accessing a route you don't have access to...");
-            $log.log(toState, toParams);
+            Auth.logout();
             $rootScope.accessedRoute = toState;
             $rootScope.accessedRouteParams = toParams;
             event.preventDefault();
 
+            //if direct access
             if(fromState.url === '^') {
                 if(Auth.isLoggedIn()) {
                     $state.go('app.dashBoard');

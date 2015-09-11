@@ -108,6 +108,12 @@ App.config(
         templateUrl: helper.basepath('profile.html'),
         controller: 'ProfileController'
     })
+   .state('app.changePassword', {
+        url: '/changePassword',
+        title: 'TrocarSenha',
+        templateUrl: helper.basepath('change-password.html'),
+        controller: 'ChangePasswordController'
+    })
     .state('app.favorites', {
         url: '/favorites',
         title: 'Favoritos',

@@ -1,6 +1,6 @@
 App.directive('preloader',
-  ['$animate', '$timeout', '$q', '$rootScope',
-    function preloader ($animate, $timeout, $q, $rootScope) {
+  ['$animate', '$timeout', '$q', '$rootScope', 'Auth',
+    function preloader ($animate, $timeout, $q, $rootScope, Auth) {
 
     var directive = {
         restrict: 'EAC',
@@ -22,17 +22,19 @@ App.directive('preloader',
       var counter  = 0,
           timeout;
 
-      // disables scrollbar
-      angular.element('body').css('overflow', 'hidden');
-      // ensure class is present for styling
-      el.addClass('preloader');
+      //commented line below avoids preloader if user is logged in
+        //if(!Auth.isLoggedIn()){
+          // disables scrollbar
+          angular.element('body').css('overflow', 'hidden');
+          // ensure class is present for styling
+          el.addClass('preloader');
 
-      appReady().then(endCounter);
+          appReady().then(endCounter);
 
-      timeout = $timeout(startCounter);
+          timeout = $timeout(startCounter);
 
-      ///////
-
+          ///////
+        //}
       function startCounter() {
 
         var remaining = 100 - counter;
