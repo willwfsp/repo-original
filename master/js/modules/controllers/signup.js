@@ -24,7 +24,7 @@ App.controller('SignupController',
         }
         catch(e){
 
-        };
+        }
     });
 
     $scope.register = function() {

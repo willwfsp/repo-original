@@ -298,6 +298,23 @@ App.factory('DataFetcher',
 
 }]);
 
+App.factory('UserSettings', ['$resource', '$rootScope', 'Auth', function ($resource, $rootScope, Auth) {
+    return $resource($rootScope.apiURL + 'usuarios/perfil/:field', {}, {
+            get: {
+                method:"GET",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            changeSettings: {
+                method:"PUT",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            changePassword: {
+                method:"PUT",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            }
+    });
+}]);
+
 App.factory('UserFolders', ['$resource', '$rootScope', 'Auth', function ($resource, $rootScope, Auth) {
     return $resource($rootScope.apiURL + 'usuarios/favoritos/pastas/:pasta', {}, {
             get: {
@@ -316,7 +333,7 @@ App.factory('UserFolders', ['$resource', '$rootScope', 'Auth', function ($resour
                 method:"DELETE",
                 headers: {'Authorization': 'Bearer ' + Auth.user.token}
             }
-        });
+    });
 }]);
 
 App.factory('FoldersBills', ['$resource', '$rootScope', 'Auth', '$http',
@@ -336,5 +353,5 @@ App.factory('FoldersBills', ['$resource', '$rootScope', 'Auth', '$http',
                 method:"PUT",
                 headers: {'Authorization': 'Bearer ' + Auth.user.token}
             }
-        });
+    });
 }]);

@@ -54,6 +54,7 @@ App.run(
                     $state.go('app.dashBoard');
                 } else {
                     $rootScope.error = null;
+                    Auth.logout();
                     $state.go('page.login');
                 }
             }
