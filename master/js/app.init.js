@@ -47,6 +47,9 @@ App.run(
         //if authorized
         else if (!Auth.authorize(toState.data.access)) {
             $log.error("Seems like you tried accessing a route you don't have access to...");
+            $log.log(toState, toParams);
+            $rootScope.accessedRoute = toState;
+            $rootScope.accessedRouteParams = toParams;
             event.preventDefault();
 
             if(fromState.url === '^') {
@@ -71,7 +74,7 @@ App.run(
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.$storage = $window.localStorage;
-    $rootScope.apiURL = "https://sigalei-api.mybluemix.net/v1/";
+    $rootScope.apiURL = "https://sigalei-dev-api.mybluemix.net/v1/";
 
     $rootScope.notificationSettings = {
         message: '',

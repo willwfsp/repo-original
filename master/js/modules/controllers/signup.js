@@ -8,7 +8,6 @@ App.controller('SignupController',
     function($scope, $http, $state, $log, ngDialog, Auth) {
 
     // bind here all data from the form
-    $scope.account = {};
     // place the message if something goes wrong
     $scope.authMsg = '';
     $scope.showLoading = false;

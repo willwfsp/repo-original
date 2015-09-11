@@ -4,8 +4,8 @@
  =========================================================*/
 
 App.controller('LoginFormController',
-  ['$scope', '$http', '$state', 'Auth',
-    function($scope, $http, $state, Auth) {
+  ['$scope', '$http', '$state', 'Auth', '$rootScope',
+    function($scope, $http, $state, Auth, $rootScope) {
 
     // bind here all data from the form
     $scope.account = {};
@@ -23,8 +23,10 @@ App.controller('LoginFormController',
 
             Auth.login({login: $scope.loginUser, password: $scope.account.password},
               function() {
-
-                $state.go("app.dashBoard");
+                if ($rootScope.accessedRoute)
+                    $state.go($rootScope.accessedRoute, $rootScope.accessedRouteParams);
+                else
+                    $state.go('app.dashBoard');
             },function(err) {
 
                 if (err.error == "postLogin: Invalid user or password"){
