@@ -4,44 +4,39 @@
  =========================================================*/
 /* Controller */
 App.controller('BillController',
-  ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter', '$window',
+  ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter', '$window', 'BillComments',
    'ngTableParams', 'DataFetcher', 'Auth', 'ngDialog', '$document', 'spinnerService','UserFolders','FoldersBills', '$rootScope','Notification',
-    function($location,$scope, $state, $stateParams, $log, $http, $filter, $window,
+    function($location,$scope, $state, $stateParams, $log, $http, $filter, $window, BillComments,
         ngTableParams, DataFetcher, Auth, ngDialog, $document, spinnerService, UserFolders,FoldersBills, $rootScope, Notification){
 
     $scope.timePast = function(timepast){
         return moment(timepast).fromNow();
     };
 
-    var commentSortParameter = function(a, b) {
-      if (a.date < b.date)
-        return 1;
-      if (a.date > b.date)
-        return -1;
-      return 0;
+    $scope.postComment = function(){
+        if($scope.newCommentForm.$valid){
+            $scope.newCommentText = $scope.newCommentText.replace(new RegExp('\\n', 'g'),'<br>');
+            $scope.loading = true;
+            spinnerService.show("ActionLoading");
+            BillComments.save({"proposicao": $stateParams.billName, "comentario": $scope.newCommentText}).$promise.then(function(data){
+                //$scope.comments.push(data);
+                $scope.loading = false;
+                $scope.newCommentText = "";
+                spinnerService.hide("ActionLoading");
+            });
+        }
     };
 
-    $scope.notes = [
-        {
-            'user': Auth.user.username,
-            'date': '2015-09-03T14:20:10',
-            'content': 'Hi!'
-        }
-    ];
-    $scope.pushNote = function(){
-        if($scope.noteForm.$valid){
-            var note = {};
-            note.user = Auth.user.username;
-            note.date = Date.now();
-            var breakLine = '\\n';
-            note.content = $scope.noteContent.replace(new RegExp(breakLine, 'g'),'<br>');
-            $scope.notes.push(note);
-            $scope.noteContent = "";
-        }
-        else{
-            $log.log('hi!');
-        }
-
+    $scope.deleteComment = function(comment){
+        $scope.loading = true;
+        spinnerService.show("ActionLoading");
+        BillComments.delete({comentario: comment}).$promise.then(function(){
+            //remove deleted comment from DOM
+            var index = $scope.comments.indexOf(comment);
+            $scope.loading = false;
+            $scope.comments.splice(index, 1);
+            spinnerService.hide("ActionLoading");
+        });
     };
 
     $scope.coAuthorsCollapsed = true;
@@ -61,8 +56,7 @@ App.controller('BillController',
         $scope.dados = data[0].data;
         $scope.tracksBill = data[1].data;
         $scope.billVotingList = data[2].data;
-
-
+        $scope.comments = data[3].data;
         $scope.tagsModel.data = [];
 
         $scope.docsTableParams = new ngTableParams({

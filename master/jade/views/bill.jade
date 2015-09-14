@@ -229,14 +229,15 @@ h3(ng-init='initVariables()')
           .panel-heading
             h3 Comentários
           .panel-body
-            .panel(ng-repeat="note in notes | orderBy: 'note.date'  ")
+            .panel(ng-repeat="comment in comments | orderBy: 'comment.date'  ")
               .panel-heading.bg-gray-light
-                h4 {{note.user}} -&nbsp;
-                  small {{ timePast(note.date) }}
+                h4 {{comment.autor}} -&nbsp;
+                  small {{ timePast(comment.data) }}
+                  em.pull-right.fa.fa-close(ng-click="deleteComment(comment._id)")
               .panel-body
-                p(ng-bind-html="note.content")
-            form.form-validate.mb-lg(role='form', name="noteForm", novalidate='', ng-submit="pushNote(noteContent)")
-              textarea.form-control(ng-model="noteContent", name="noteContent", rows="4", required, placeholder="Deixe um comentário")
-              button.btn.btn-success.form-control(type="submit") OK
+                p(ng-bind-html="comment.texto")
+            form.form-validate.mb-lg(role='form', name="newCommentForm", novalidate, ng-submit="postComment()")
+              textarea.form-control(ng-model="newCommentText", name="newCommentText", rows="4", required, placeholder="Deixe um comentário")
+              button.btn.btn-success.form-control(type="submit", ng-disabled="newCommentForm.$invalid || loading") OK
       // END table-responsive
     // END panel

@@ -63,10 +63,11 @@ App.factory('DataFetcher',
         var promiseBillDetails = $http.get((baseUrl + "proposicoes/" + nome),headers);
         var promiseBillTrack = $http.get((baseUrl + "proposicoes/" + nome + "/tramitacao"), headers);
         var promiseBillPollList = $http.get((baseUrl + "proposicoes/" + nome + "/votacao"), headers);
+        var promiseBillComments = $http.get((baseUrl + "usuarios/comentarios/proposicao/" + nome), headers);
 
         var defer = $q.defer();
 
-        $q.all([promiseBillDetails, promiseBillTrack, promiseBillPollList])
+        $q.all([promiseBillDetails, promiseBillTrack, promiseBillPollList, promiseBillComments])
           .then(function(results) {
             defer.resolve(results);
 

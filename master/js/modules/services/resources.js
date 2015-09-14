@@ -55,3 +55,24 @@ App.factory('FoldersBills', ['$resource', '$rootScope', 'Auth', '$http',
             }
     });
 }]);
+
+App.factory('BillComments', ['$resource', '$rootScope', 'Auth', function ($resource, $rootScope, Auth) {
+    return $resource($rootScope.apiURL + 'usuarios/comentarios/:comentario', {}, {
+            get: {
+                method:"GET",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            save: {
+                method:"POST",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            edit:{
+                method:"PUT",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            },
+            delete:{
+                method:"DELETE",
+                headers: {'Authorization': 'Bearer ' + Auth.user.token}
+            }
+    });
+}]);

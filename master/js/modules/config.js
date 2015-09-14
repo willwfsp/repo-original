@@ -102,13 +102,20 @@ App.config(
         resolve: helper.resolveFor('ngTable', 'angularMoment', 'mwl.calendar'),
         controller: 'HouseDataController'
     })
-    .state('app.profile', {
+    .state('app.settings', {
+        url: '/settings',
+        abstract: true,
+        title: 'Configurações',
+        templateUrl: helper.basepath('settings.html'),
+        controller: 'SettingsController'
+    })
+    .state('app.settings.profile', {
         url: '/profile',
         title: 'Perfil do Usuário',
         templateUrl: helper.basepath('profile.html'),
         controller: 'ProfileController'
     })
-   .state('app.changePassword', {
+   .state('app.settings.changePassword', {
         url: '/changePassword',
         title: 'TrocarSenha',
         templateUrl: helper.basepath('change-password.html'),

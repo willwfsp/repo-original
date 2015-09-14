@@ -1,8 +1,8 @@
-h3 Dados da Conta {{user.name}}
-.row
-  .block-center.mt-xl.wd-xxl
+.col-md-12.pl0
     // START panel
     .panel.panel-dark.panel-flat
+      .panel-heading
+        h4 Dados da Conta
       .panel-body
         form.form-validate.mb-lg(role='form', name="changeSettingsForm", novalidate='', ng-submit="update()")
           .row
