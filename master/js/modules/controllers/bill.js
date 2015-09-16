@@ -2,12 +2,42 @@
  * Module: bill.js
  * Bills Details
  =========================================================*/
-
+/* Controller */
 App.controller('BillController',
-  ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter', '$window',
+  ['$location', '$scope','$state', '$stateParams', '$log', '$http', '$filter', '$window', 'BillComments',
    'ngTableParams', 'DataFetcher', 'Auth', 'ngDialog', '$document', 'spinnerService','UserFolders','FoldersBills', '$rootScope','Notification',
-    function($location,$scope, $state, $stateParams, $log, $http, $filter, $window,
+    function($location,$scope, $state, $stateParams, $log, $http, $filter, $window, BillComments,
         ngTableParams, DataFetcher, Auth, ngDialog, $document, spinnerService, UserFolders,FoldersBills, $rootScope, Notification){
+
+    $scope.timePast = function(timepast){
+        return moment(timepast).fromNow();
+    };
+
+    $scope.postComment = function(){
+        if($scope.newCommentForm.$valid){
+            var commentText = $scope.newCommentText.replace(new RegExp('\\n', 'g'),'<br>');
+            $scope.loading = true;
+            spinnerService.show("ActionLoading");
+            BillComments.save({"proposicao": $stateParams.billName, "comentario": commentText}).$promise.then(function(data){
+                $scope.comments.push(data);
+                $scope.loading = false;
+                $scope.newCommentText = "";
+                spinnerService.hide("ActionLoading");
+            });
+        }
+    };
+
+    $scope.deleteComment = function(comment){
+        $scope.loading = true;
+        spinnerService.show("ActionLoading");
+        BillComments.delete({comentario: comment}).$promise.then(function(){
+            //remove deleted comment from DOM
+            var index = $scope.comments.indexOf(comment);
+            $scope.loading = false;
+            $scope.comments.splice(index, 1);
+            spinnerService.hide("ActionLoading");
+        });
+    };
 
     $scope.coAuthorsCollapsed = true;
     $rootScope.$broadcast("event:show-loading");
@@ -26,7 +56,7 @@ App.controller('BillController',
         $scope.dados = data[0].data;
         $scope.tracksBill = data[1].data;
         $scope.billVotingList = data[2].data;
-        
+        $scope.comments = data[3].data;
         $scope.tagsModel.data = [];
 
         $scope.docsTableParams = new ngTableParams({
@@ -272,7 +302,8 @@ App.controller('BillController',
 
 }]);
 
-App.controller('PollDetailsController', ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'ngTableParams', 'Auth',
+App.controller('PollDetailsController',
+    ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'ngTableParams', 'Auth',
     function($scope, $log, DataFetcher, $filter, $stateParams, ngTableParams, Auth) {
 
     $scope.pollData = {};

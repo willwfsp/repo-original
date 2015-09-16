@@ -10,19 +10,14 @@
     "icon": "fa icon-feed"
   },
   {
+    "text": "Últimos Projetos",
+    "sref": "app.searchBills",
+    "icon": "fa fa-search"
+  },
+  {
     "text": "Etiquetas",
     "sref": "app.favorites.folder",
     "icon": "fa fa-tags"
-  },
-  {
-    "text": "Últimos Projetos",
-    "sref": "app.searchBills",
-    "icon": "fa icon-hourglass"
-  },
-  {
-    "text": "Calendários",
-    "sref": "app.calendar",
-    "icon": "fa icon-calendar"
   },
   {
     "text": "Casas Legislativas",
@@ -63,8 +58,13 @@
     "translate": "sidebar.nav.menu.CASAS"
   },
   {
+    "text": "Calendários",
+    "sref": "app.calendar",
+    "icon": "fa icon-calendar"
+  },
+  {
     "text": "Conta",
-    "sref": "app.profile",
+    "sref": "app.settings.profile",
     "icon": "icon-user"
   }
 ]

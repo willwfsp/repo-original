@@ -1,0 +1,18 @@
+h3 Configurações
+.row
+  .col-md-3.pr0
+    .panel.panel-dark.panel-flat
+      .panel-heading
+        h4
+          em.fa.fa-gear &nbsp;
+          span {{user.username}}
+      .panel-body
+        .list-group
+          a.list-group-item(ui-sref="app.settings.profile")
+            em.fa.fa-user &nbsp;
+            span Dados da Conta
+          a.list-group-item(ui-sref="app.settings.changePassword")
+            em.fa.fa-lock &nbsp;
+            span Trocar Senha
+
+  .col-md-9.pl0(ui-view="")

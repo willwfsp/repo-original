@@ -25,7 +25,7 @@ App.directive('usernameValidation', function(){
                 modelCtrl.$setViewValue(inputValue);
                 modelCtrl.$render();
 
-                var transformedInput = /[a-z]/.test(inputValue.slice(-1));
+                var transformedInput = /[a-z0-9]/.test(inputValue.slice(-1));
                 if (!transformedInput) {
                     modelCtrl.$setViewValue(inputValue.substring(0, inputValue.length - 1));
                     modelCtrl.$render();

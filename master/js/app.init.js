@@ -28,29 +28,37 @@ var App = angular.module('sigaLeiApp', [
     'ui.utils',
     'http-auth-interceptor',
     'angulartics',
-    'angulartics.google.analytics'
+    'angulartics.google.analytics',
+    'ui.calendar'
   ]);
 
 App.run(
   ['$rootScope', '$state', '$stateParams',  '$window', '$templateCache',
    'Auth', '$timeout', 'cfpLoadingBar', '$log', 'spinnerService',
     function ($rootScope, $state, $stateParams, $window, $templateCache, Auth, $timeout, cfpLoadingBar, $log, spinnerService) {
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
-        /* Auth */
+    // Check authentication before loading a page
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+        // Invalid State or access not defined in app
         if(!('data' in toState) || !('access' in toState.data)){
             $log.error("Access undefined for this state");
             event.preventDefault();
         }
+        //if authorized
         else if (!Auth.authorize(toState.data.access)) {
             $log.error("Seems like you tried accessing a route you don't have access to...");
+            Auth.logout();
+            $rootScope.accessedRoute = toState;
+            $rootScope.accessedRouteParams = toParams;
             event.preventDefault();
 
+            //if direct access
             if(fromState.url === '^') {
                 if(Auth.isLoggedIn()) {
                     $state.go('app.dashBoard');
                 } else {
                     $rootScope.error = null;
+                    Auth.logout();
                     $state.go('page.login');
                 }
             }
@@ -67,7 +75,7 @@ App.run(
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.$storage = $window.localStorage;
-    $rootScope.apiURL = "https://sigalei-api.mybluemix.net/v1/";
+    $rootScope.apiURL = "https://sigalei-dev-api.mybluemix.net/v1/";
 
     $rootScope.notificationSettings = {
         message: '',
@@ -76,12 +84,13 @@ App.run(
         delay:1000
     }
 
-    /* Uncomment this to disable template cache
+    //amMoment.changeLocale('pt-br');
+    //Uncomment this to disable template cache
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
         if (typeof(toState) !== 'undefined'){
           $templateCache.remove(toState.templateUrl);
         }
-    });*/
+    });
     // Scope Globals
     // -----------------------------------
     $rootScope.app = {

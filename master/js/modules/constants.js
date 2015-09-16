@@ -36,22 +36,20 @@ App
       'loaders.css':          ['vendor/loaders.css/loaders.css'],
       'spinkit':              ['vendor/spinkit/css/spinkit.css'],
       'chartjs':              ['vendor/Chart.js/Chart.js'],
+      'fullcalendar':      ['vendor/fullcalendar/dist/fullcalendar.css']
     },
     // Angular based script (use the right module name)
     modules: [
-      {name: 'ui.select',                 files: ['vendor/angular-ui-select/dist/select.js',
+      {name: 'ui.select',                   files: ['vendor/angular-ui-select/dist/select.js',
                                                   'vendor/angular-ui-select/dist/select.css']},
       {name: 'ngTable',                   files: ['vendor/ng-table/dist/ng-table.min.js',
                                                   'vendor/ng-table/dist/ng-table.min.css']},
       {name: 'ngDialog',                  files: ['vendor/ngDialog/js/ngDialog.min.js',
                                                  'vendor/ngDialog/css/ngDialog.min.css',
                                                  'vendor/ngDialog/css/ngDialog-theme-default.min.css'] },
-      {name: 'ngNotification',                  files: [
-        'vendor/angular-ui-notification/dist/angular-ui-notification.min.js',
-        'vendor/angular-ui-notification/dist/angular-ui-notification.min.css'] }
-
-
-
+      {name: 'ngNotification',          files: [ 'vendor/angular-ui-notification/dist/angular-ui-notification.min.js',
+                                                 'vendor/angular-ui-notification/dist/angular-ui-notification.min.css'] },
+      {name: 'angularMoment',       files: ['vendor/angular-moment/angular-moment.min.js'] }
     ]
 
   })

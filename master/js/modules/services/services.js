@@ -63,10 +63,11 @@ App.factory('DataFetcher',
         var promiseBillDetails = $http.get((baseUrl + "proposicoes/" + nome),headers);
         var promiseBillTrack = $http.get((baseUrl + "proposicoes/" + nome + "/tramitacao"), headers);
         var promiseBillPollList = $http.get((baseUrl + "proposicoes/" + nome + "/votacao"), headers);
+        var promiseBillComments = $http.get((baseUrl + "usuarios/comentarios/proposicao/" + nome), headers);
 
         var defer = $q.defer();
 
-        $q.all([promiseBillDetails, promiseBillTrack, promiseBillPollList])
+        $q.all([promiseBillDetails, promiseBillTrack, promiseBillPollList, promiseBillComments])
           .then(function(results) {
             defer.resolve(results);
 
@@ -129,6 +130,28 @@ App.factory('DataFetcher',
         return defer.promise;
     };
 
+    service.fetchMonthEvents = function(houseId, token){
+        var result;
+        var headers = {
+            headers: {'Authorization': 'Bearer ' + token,
+                      'Access-Control-Allow-Origin' : '*',
+                        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'}
+        };
+        var startDate = moment().format();
+        var endDate= '2015-10';
+        var url = baseUrl + "eventos/" + houseId + '?data_ini='+ startDate+'&data_fim=' + endDate;
+        return $http.get(url,headers).then(function(result) {
+
+            return result.data.eventos;
+        },
+        function(reason){
+            $log.error(reason);
+        });
+
+    };
+
     service.fetchDataHouseDetails = function(houseId, token){
         var result;
         var headers = {
@@ -139,7 +162,7 @@ App.factory('DataFetcher',
                         'Content-Type': 'application/json'}
         };
         var promiseHouseDetails = $http.get((baseUrl + "assembleias/" + houseId),headers);
-        var promiseHouseEvents = $http.get((baseUrl + "eventos/" + houseId),headers);
+        //var promiseHouseEvents = $http.get((baseUrl + "eventos/" + houseId),headers);
         var promiseHouseCommittees = $http.get((baseUrl + "comissoes" +
             "?sigla=" + houseId),headers);
         var promiseHouseMembers = $http.get((baseUrl + "parlamentares" +
@@ -148,7 +171,7 @@ App.factory('DataFetcher',
         var defer = $q.defer();
 
         $q.all([promiseHouseDetails,
-                 promiseHouseEvents,
+                 //promiseHouseEvents,
                  promiseHouseCommittees,
                  promiseHouseMembers])
           .then(function(results) {
@@ -296,45 +319,4 @@ App.factory('DataFetcher',
 
     return service;
 
-}]);
-
-App.factory('UserFolders', ['$resource', '$rootScope', 'Auth', function ($resource, $rootScope, Auth) {
-    return $resource($rootScope.apiURL + 'usuarios/favoritos/pastas/:pasta', {}, {
-            get: {
-                method:"GET",
-                headers: {'Authorization': 'Bearer ' + Auth.user.token}
-            },
-            create: {
-                method:"POST",
-                headers: {'Authorization': 'Bearer ' + Auth.user.token}
-            },
-            rename: {
-                method:"PUT",
-                headers: {'Authorization': 'Bearer ' + Auth.user.token}
-            },
-            delete: {
-                method:"DELETE",
-                headers: {'Authorization': 'Bearer ' + Auth.user.token}
-            }
-        });
-}]);
-
-App.factory('FoldersBills', ['$resource', '$rootScope', 'Auth', '$http',
-    function ($resource, $rootScope, Auth, $http) {
-    $http.defaults.headers['Access-Control-Allow-Origin'] = '*';
-    $http.defaults.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, PUT';
-    return $resource($rootScope.apiURL + 'usuarios/favoritos/:pasta/proposicoes', {}, {
-            get: {
-                method:"GET",
-                headers: {'Authorization': 'Bearer ' + Auth.user.token}
-            },
-            save: {
-                method:"POST",
-                headers: {'Authorization': 'Bearer ' + Auth.user.token}
-            },
-            update:{
-                method:"PUT",
-                headers: {'Authorization': 'Bearer ' + Auth.user.token}
-            }
-        });
 }]);

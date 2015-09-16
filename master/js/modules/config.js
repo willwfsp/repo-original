@@ -54,7 +54,7 @@ App.config(
         url: '/bill/:billName',
         title: 'Visualizar Projeto de Lei',
         templateUrl: helper.basepath('bill.html'),
-        resolve: helper.resolveFor('ngTable'),
+        resolve: helper.resolveFor('ngTable', 'angularMoment'),
         controller: 'BillController'
     })
     .state('app.viewDocuments', {
@@ -99,14 +99,27 @@ App.config(
         url: '/house/:house',
         title: 'Casa Legislativa',
         templateUrl: helper.basepath('house.html'),
-        resolve: helper.resolveFor('ngTable'),
+        resolve: helper.resolveFor('ngTable', 'angularMoment', 'fullcalendar'),
         controller: 'HouseDataController'
     })
-    .state('app.profile', {
+    .state('app.settings', {
+        url: '/settings',
+        abstract: true,
+        title: 'Configurações',
+        templateUrl: helper.basepath('settings.html'),
+        controller: 'SettingsController'
+    })
+    .state('app.settings.profile', {
         url: '/profile',
         title: 'Perfil do Usuário',
         templateUrl: helper.basepath('profile.html'),
         controller: 'ProfileController'
+    })
+   .state('app.settings.changePassword', {
+        url: '/changePassword',
+        title: 'TrocarSenha',
+        templateUrl: helper.basepath('change-password.html'),
+        controller: 'ChangePasswordController'
     })
     .state('app.favorites', {
         url: '/favorites',

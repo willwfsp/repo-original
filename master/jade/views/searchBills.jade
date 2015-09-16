@@ -56,7 +56,7 @@ h3(ng-init="init()") Pesquisa
           .col-xs-6
             h2 Resultados
               medium(ng-if="query != \"\" ") por "{{query}}"
-            p(ng-if="!fetching") {{total_results}} projetos de lei encontrados
+            p(ng-if="!fetchingStart") {{total_results}} projetos de lei encontrados
           .col-xs-6.text-right
             label Ordernar por:
               select.form-control(ng-model="orderedBy", ng-change="changeOrder()")

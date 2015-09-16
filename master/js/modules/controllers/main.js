@@ -78,6 +78,7 @@ App.controller('AppController',
         $rootScope.$broadcast('closeSidebarMenu');
     });
 
+
     // Restore layout settings
     /*
     if( angular.isDefined($localStorage.layout) )
@@ -91,6 +92,7 @@ App.controller('AppController',
     */
     if($localStorage.layout)
       delete $localStorage.layout;
+
     // Allows to use branding color with interpolation
     // {{ colorByName('primary') }}
     $scope.colorByName = colors.byName;
@@ -135,9 +137,6 @@ App.controller('AppController',
       spinnerService._unregisterAll();
       Auth.logout();
       $state.go("page.login");
-    };
-    $scope.profile = function(){
-      $state.go("app.profile");
     };
 
     $rootScope.$on("event:auth-loginRequired", function() {

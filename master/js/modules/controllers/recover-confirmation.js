@@ -14,7 +14,10 @@
         $scope.authErrMsg  = 'Token Inválido';
         $scope.showLoading = false;
     } else{
-        var url = $rootScope.apiURL + 'accounts/forgot/' + token;
+
+        var url = $rootScope.apiURL + 'v1/accounts/forgot/' + token;
+
+
         $http.get(url)
             .then(function(response) {
 

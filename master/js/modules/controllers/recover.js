@@ -3,7 +3,7 @@
  * Recover password
  =========================================================*/
 App.controller("RecoverPasswordController",
-  ["$scope", "$log", '$state', '$http', '$rootScope', 
+  ["$scope", "$log", '$state', '$http', '$rootScope',
     function($scope, $log, $state, $http, $rootScope){
 
     $scope.showLoading = false;
@@ -16,7 +16,10 @@ App.controller("RecoverPasswordController",
             $scope.showLoading = true;
             var email = {};
             email.email = $scope.recoverForm.email.$modelValue;
-            $http.post($rootScope.apiURL + 'accounts/forgot', email)
+
+            $http.post($rootScope.apiURL + 'v1/accounts/forgot', email)
+
+
               .then(function(response) {
 
                 if ( response.status == "200" ) {

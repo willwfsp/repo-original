@@ -15,14 +15,13 @@ section
         div.sk-child.sk-bounce3
   // Page content
   .content-wrapper(ui-view="", autoscroll="false", ng-class="app.viewAnimation")
-  div
-    spinner(name="ActionLoading")
-      div.overlay
-      div.spinner
-        div.sk-three-bounce
-          div.sk-child.sk-bounce1
-          div.sk-child.sk-bounce2
-          div.sk-child.sk-bounce3
+  spinner(name="ActionLoading")
+    div.overlay
+    div.spinner
+      div.sk-three-bounce
+        div.sk-child.sk-bounce1
+        div.sk-child.sk-bounce2
+        div.sk-child.sk-bounce3
 // Page footer
 footer(ng-include="'app/views/partials/footer.html'")
 

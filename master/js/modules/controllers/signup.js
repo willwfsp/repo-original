@@ -8,11 +8,24 @@ App.controller('SignupController',
     function($scope, $http, $state, $log, ngDialog, Auth) {
 
     // bind here all data from the form
-    $scope.account = {};
     // place the message if something goes wrong
     $scope.authMsg = '';
     $scope.showLoading = false;
     $scope.userpassword = '';
+    $scope.mask = '(99) 9999-9999?9';
+    $scope.register_phone = "";
+    $scope.$watch('register_phone', function() {
+        try{
+            if($scope.register_phone.length === 11)
+                $scope.mask =  '(99) ?9-9999-9999';
+            else
+                $scope.mask = '(99) 9999-9999?9';
+        }
+        catch(e){
+
+        }
+    });
+
     $scope.register = function() {
         $scope.authMsg = '';
         $scope.authSucMsg = '';

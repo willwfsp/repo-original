@@ -1,54 +1,72 @@
-h3 Dados da Conta
-.row
-  .block-center.mt-xl.wd-xxl
+.col-md-12.pl0
     // START panel
     .panel.panel-dark.panel-flat
+      .panel-heading
+        h4 Dados da Conta
       .panel-body
-        form.form-validate.mb-lg(role='form', name="registerForm", novalidate='', ng-submit="register()")
-          .row
-            .col-md-12
-              .form-group.has-feedback
-                label Usuário:
-                input.form-control(placeholder='{{user.name}}', disabled="true")
-                span.fa.fa-user.form-control-feedback.text-muted
+        form.form-validate.mb-lg(role='form', name="changeSettingsForm", novalidate='', ng-submit="update()")
           .row
             .col-md-12
               .form-group.has-feedback
                 label Nome:
-                input.form-control(placeholder='{{user.firstname}}', disabled="true")
+                input.form-control(name="firstname", ng-model="firstname", required)
                 span.fa.fa-pencil.form-control-feedback.text-muted
+                span.text-danger(ng-show="changeSettingsForm.firstname.$error.required&& changeSettingsForm.firstname.$error.$dirty") &nbsp;&nbsp;Campo Obrigatório
           .row
             .col-md-12
               .form-group.has-feedback
                 label Sobrenome:
-                input.form-control(placeholder='{{user.lastname}}', disabled="true")
+                input.form-control(name="lastname", ng-model="lastname", required)
                 span.fa.fa-pencil.form-control-feedback.text-muted
+                span.text-danger(ng-show="changeSettingsForm.lastname.$error.required && changeSettingsForm.lastname.$error.$dirty") &nbsp;&nbsp;Campo Obrigatório
           .row
             .col-md-12
               .form-group.has-feedback
                 label Organização:
-                input.form-control(placeholder='{{user.organization}}', disabled="true")
+                input.form-control(name="organization", ng-model="organization", required)
                 span.fa.fa-building-o.form-control-feedback.text-muted
-          .row
+                span.text-danger(ng-show="changeSettingsForm.organization.$error.required && changeSettingsForm.organization.$error.$dirty") &nbsp;&nbsp;Campo Obrigatório
+
+          .row(ng-hide="true")
             .col-md-12
               .form-group.has-feedback
                 label Área de Interesse:
-                select.form-control(disabled="true")
-                  option.text-muted(value='') {{user.industry}}
+                select.form-control()
+                  option.text-muted {{user.industry}}
           .row
             .col-md-12
               .form-group.has-feedback
                 label Telefone:
-                input.form-control(type='text', name="register_phone" , placeholder="{{user.telephone}}", disabled="true")
+                input.form-control(name="phone", ng-model="phone", ui-mask="{{ mask }}", number-validation )
                 span.fa.fa-phone-square.form-control-feedback.text-muted
 
           .row
             .col-md-12
               .form-group.has-feedback
                 label E-mail:
-                input.form-control(placeholder='{{user.email}}', disabled="true")
+                p.form-control(disabled) {{user.email}}
                 span.fa.fa-envelope.form-control-feedback.text-muted
+
+          .row
+              .col-md-12
+                .form-group.has-feedback
+                  label Notificações por e-mail:
+                  select.form-control(name="emailDigestPeriod", ng-model="emailDigestPeriod" selected="emailDigestPeriod")
+                    option.text-muted(value="4") A cada 4 horas
+                    option.text-muted(value="24") Diariamente
+                    option.text-muted(value="168") Semanalmente
+                    option.text-muted(value="0") Não receber
+
+          .row.text-center
+              .col-md-12
+                .form-group.has-feedback
+                  button.btn.btn-success(type="submit", ng-disabled="changeSettingsForm.$invalid") Salvar Alterações
+          .text-center(ng-if="showLoading")
+            .ball-clip-rotate
+              div
+            p Carregando...
+          .alert.text-center(ng-show='changeMessage && !showLoading', ng-class="changeSuccess?  'alert-success' : 'alert-danger' ") {{changeMessage}}
           .row.text-center
             hr
-            p Caso queira mudar algum dado, favor entrar em contato pelo e-mail:
+            p Caso tenha problemas em alterar seus dados, entre em contato pelo e-mail:
             p suporte@openlex.com.br

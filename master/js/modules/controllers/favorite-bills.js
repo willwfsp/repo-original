@@ -128,10 +128,10 @@ App.controller('FavoriteBillsController',
   ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'Auth', '$rootScope', 'UserFolders', '$modal', 'FoldersBills', 'ngDialog', '$state', 'spinnerService', 'Notification',
     function($scope, $log, DataFetcher, $filter, $stateParams, Auth, $rootScope, UserFolders, $modal, FoldersBills, ngDialog, $state, spinnerService, Notification) {
 
-    spinnerService.show("ActionLoading");
     $scope.showDefault = true;
 
     if($stateParams.folderName){
+        spinnerService.show("ActionLoading");
         FoldersBills.get({pasta: $stateParams.folderName}, function(data){
             $scope.bills = data.SL_PROPOSICOES;
             spinnerService.hide("ActionLoading");
@@ -139,7 +139,6 @@ App.controller('FavoriteBillsController',
         $scope.currentFolder = $stateParams.folderName;
         $scope.showDefault = false;
     }else{
-        spinnerService.hide("ActionLoading");
         $scope.showDefault = true;
     }
 
@@ -160,7 +159,9 @@ App.controller('FavoriteBillsController',
         });
         //resolve modal
         modalInstance.result.then(function (folderName) {
+
             spinnerService.hide("ActionLoading");
+
             $state.go('app.favorites.folder', {'folderName': folderName });
             notify = $rootScope.notificationSettings;
             notify.message = 'Etiqueta renomeada';

@@ -15,12 +15,12 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
       .panel-body
         .row
           .col-md-2.text-center(ng-repeat="representative in houseDetails.SLAs_MESA_DIRETORA")
-            a(ui-sref="app.representative({ id: '{{representative.id}}' })")
-              .thumbnail
-                .caption
+            .thumbnail
+              .caption
+                a(ui-sref="app.representative({ id: '{{representative.id}}' })")
                   img.thumb128.b(ng-src="data:image/jpeg;base64,{{representative.photo}}")
                   strong.sigalei-color {{representative.Nome}}
-                  p {{representative.Cargo}}
+                p {{representative.Cargo}}
 
 .row( ng-hide="houseDetails.SLAs_SIGLA == 'CN' ")
   .col-lg-12
@@ -39,18 +39,7 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
               td(ng-show= "checkHouse()", data-title=" 'Estado' ", sortable="'uf_rep'", filter="{ 'uf_rep': 'text' }") {{representative.uf_rep}}
 
 .row
-  .col-lg-6
-    .panel
-      .panel-heading
-        h3 Eventos
-      .panel-body
-        table.table.table-bordered.table-striped.text-center(ng-table='eventsTableParams', show-filter="true")
-          tbody
-            tr(ng-repeat="event in $data")
-              td(data-title=" 'Data' ", sortable="'date'", filter="{ 'date': 'text' }") {{event.date.replace(" ", "T") | date:"dd/MM/yyyy 'às' HH:mm" || "Não Disponível"}}
-              td(data-title=" 'Evento' ", sortable="'name'", filter="{ 'name': 'text' }") {{event.name}}
-              td(data-title=" 'Local' ", sortable="'place'", filter="{ 'place': 'text' }") {{event.place}}
-  .col-lg-6
+  .col-lg-4
     .panel
       .panel-heading
         h3 Comissões
@@ -61,3 +50,61 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
               td(data-title=" 'Sigla' ", sortable="'initials'", filter="{ 'initials': 'text' }") {{committee.initials}}
               td(data-title=" 'Nome' ", sortable="'name'", filter="{ 'name': 'text' }")
                 a(ui-sref="app.committee({ house:committee.house, committeeID: committee.refCode })") {{committee.name}}
+
+  .col-lg-8
+    .panel
+      .panel-heading
+        h3 Eventos
+      .panel-body
+        .panel(ng-init="renderCalender('myCalendar1');")
+          .panel-heading
+            h4 Clique em um evento para ver os detalhes.
+
+          .panel-body
+            div(ui-calendar="uiConfig.calendar" class="calendar" ng-model="eventSources" calendar="myCalendar1")
+
+script(type="text/ng-template" id="modalContent.html")
+  .modal-header
+    em.pull-right.fa.fa-close(ng-click="dismiss()")
+    h3.modal-titleEvent {{event.title}}
+  .modal-body
+    .form-horizontal
+      .form-group.m0
+        .col-sm-3.control-label-sm.m0
+          label Local:
+        .col-sm-9.form-control-static-sm.m0
+          p {{event.place}}
+      .form-group.m0(ng-if='event.end')
+        .col-sm-12.control-label-sm.m0
+          h4 Início
+      .form-group.m0
+        .col-sm-3.control-label-sm.m0
+          label Data:
+        .col-sm-9.form-control-static-sm.m0
+          p {{event.start._i.replace(' ', 'T') | date:"fullDate"}}
+      .form-group.m0
+        .col-sm-3.control-label-sm.m0
+          label Horário:
+        .col-sm-9.form-control-static-sm.m0
+          p {{event.start._i.replace(' ', 'T') | date:"shortTime"}}
+
+      .form-group.m0(ng-if='event.end')
+        .col-sm-12.control-label-sm.m0
+          h4 Fim
+      .form-group.m0(ng-if='event.end')
+        .col-sm-3.control-label-sm.m0
+          label Data:
+        .col-sm-9.form-control-static-sm.m0
+          p {{event.end._i.replace(' ', 'T') | date:"fullDate"}}
+      .form-group.m0(ng-if='event.end')
+        .col-sm-3.control-label-sm.m0
+          label Horário:
+        .col-sm-9.form-control-static-sm.m0
+          p {{event.end._i.replace(' ', 'T') | date:"shortTime"}}
+      p.text-right(ng-if="event.details")
+        a(ng-href="{{event.details}}" target="_blank") Clique aqui&nbsp;
+          em.fa.fa-external-link &nbsp;
+        span para saber mais detalhes.
+
+  .modal-footer
+    button.btn.btn-primary(ng-click="$close()") OK
