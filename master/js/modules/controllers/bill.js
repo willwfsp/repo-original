@@ -15,11 +15,12 @@ App.controller('BillController',
 
     $scope.postComment = function(){
         if($scope.newCommentForm.$valid){
-            $scope.newCommentText = $scope.newCommentText.replace(new RegExp('\\n', 'g'),'<br>');
+            var commentText = $scope.newCommentText.replace(new RegExp('\\n', 'g'),'<br>');
+
             $scope.loading = true;
             spinnerService.show("ActionLoading");
-            BillComments.save({"proposicao": $stateParams.billName, "comentario": $scope.newCommentText}).$promise.then(function(data){
-                //$scope.comments.push(data);
+            BillComments.save({"proposicao": $stateParams.billName, "comentario": commentText}).$promise.then(function(data){
+                $scope.comments.push(data);
                 $scope.loading = false;
                 $scope.newCommentText = "";
                 spinnerService.hide("ActionLoading");

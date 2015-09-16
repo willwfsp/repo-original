@@ -39,7 +39,7 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
               td(ng-show= "checkHouse()", data-title=" 'Estado' ", sortable="'uf_rep'", filter="{ 'uf_rep': 'text' }") {{representative.uf_rep}}
 
 .row
-  .col-lg-6
+  .col-lg-4
     .panel
       .panel-heading
         h3 Comissões
@@ -51,55 +51,60 @@ h3 {{houseDetails.SLAs_NOME}} - {{houseDetails.SLAs_SIGLA}}
               td(data-title=" 'Nome' ", sortable="'name'", filter="{ 'name': 'text' }")
                 a(ui-sref="app.committee({ house:committee.house, committeeID: committee.refCode })") {{committee.name}}
 
-  .col-lg-6
+  .col-lg-8
     .panel
       .panel-heading
         h3 Eventos
       .panel-body
-        .btn-group
-          button(
-            mwl-date-modifier
-            class="btn btn-primary"
-            date="calendarDay"
-            decrement="calendarView"
-            Previous) Anterior
+        .panel(ng-init="renderCalender('myCalendar1');")
+          .panel-heading
+            h4 Clique em um evento para ver os detalhes.
 
-          button(
-            mwl-date-modifier
-            class="btn btn-default"
-            date="calendarDay"
-            set-to-today
-            Today) Hoje
-
-          button(
-            mwl-date-modifier
-            class="btn btn-primary"
-            date="calendarDay"
-            increment="calendarView"
-            Next) Próximo
-        .btn-group.pull-right
-          button.btn.btn-default(ng-click="calendarView= 'week' ") Semana
-          button.btn.btn-default(ng-click="calendarView= 'day' ")    Dia
-
-        mwl-calendar(
-            view="calendarView"
-            current-day="calendarDay"
-            events="events"
-            on-event-click="showEvent(calendarEvent)"
-            view-title="calendarTitle"
-            auto-open="false")
+          .panel-body
+            div(ui-calendar="uiConfig.calendar" class="calendar" ng-model="eventSources" calendar="myCalendar1")
 
 script(type="text/ng-template" id="modalContent.html")
   .modal-header
+    em.pull-right.fa.fa-close(ng-click="dismiss()")
     h3.modal-titleEvent {{event.title}}
   .modal-body
-    .form-group
-      label Data:&nbsp;
-      span {{ event.startsAt | date:"dd/mm/yyyy" }}
-    .form-group
-      label Horário:&nbsp;
-      span {{ event.startsAt | date:"HH:mm" }}
+    .form-horizontal
+      .form-group.m0
+        .col-sm-3.control-label-sm.m0
+          label Local:
+        .col-sm-9.form-control-static-sm.m0
+          p {{event.place}}
+      .form-group.m0(ng-if='event.end')
+        .col-sm-12.control-label-sm.m0
+          h4 Início
+      .form-group.m0
+        .col-sm-3.control-label-sm.m0
+          label Data:
+        .col-sm-9.form-control-static-sm.m0
+          p {{event.start._i.replace(' ', 'T') | date:"fullDate"}}
+      .form-group.m0
+        .col-sm-3.control-label-sm.m0
+          label Horário:
+        .col-sm-9.form-control-static-sm.m0
+          p {{event.start._i.replace(' ', 'T') | date:"shortTime"}}
+
+      .form-group.m0(ng-if='event.end')
+        .col-sm-12.control-label-sm.m0
+          h4 Fim
+      .form-group.m0(ng-if='event.end')
+        .col-sm-3.control-label-sm.m0
+          label Data:
+        .col-sm-9.form-control-static-sm.m0
+          p {{event.end._i.replace(' ', 'T') | date:"fullDate"}}
+      .form-group.m0(ng-if='event.end')
+        .col-sm-3.control-label-sm.m0
+          label Horário:
+        .col-sm-9.form-control-static-sm.m0
+          p {{event.end._i.replace(' ', 'T') | date:"shortTime"}}
+      p.text-right(ng-if="event.details")
+        a(ng-href="{{event.details}}" target="_blank") Clique aqui&nbsp;
+          em.fa.fa-external-link &nbsp;
+        span para saber mais detalhes.
 
   .modal-footer
     button.btn.btn-primary(ng-click="$close()") OK
-</script>

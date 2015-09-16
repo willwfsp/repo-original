@@ -233,7 +233,7 @@ h3(ng-init='initVariables()')
               .panel-heading.bg-gray-light
                 h4 {{comment.autor}} -&nbsp;
                   small {{ timePast(comment.data) }}
-                  em.pull-right.fa.fa-close(ng-click="deleteComment(comment._id)")
+                  em.pull-right.fa.fa-close(ng-click="loading? angular.noop : deleteComment(comment._id)")
               .panel-body
                 p(ng-bind-html="comment.texto")
             form.form-validate.mb-lg(role='form', name="newCommentForm", novalidate, ng-submit="postComment()")

@@ -28,7 +28,8 @@ var App = angular.module('sigaLeiApp', [
     'ui.utils',
     'http-auth-interceptor',
     'angulartics',
-    'angulartics.google.analytics'
+    'angulartics.google.analytics',
+    'ui.calendar'
   ]);
 
 App.run(

@@ -35,7 +35,9 @@ App
                                'vendor/simple-line-icons/css/simple-line-icons.css'],
       'loaders.css':          ['vendor/loaders.css/loaders.css'],
       'spinkit':              ['vendor/spinkit/css/spinkit.css'],
-      'chartjs':              ['vendor/Chart.js/Chart.js']
+      'chartjs':              ['vendor/Chart.js/Chart.js'],
+      'fullcalendar':      ['vendor/fullcalendar/dist/fullcalendar.css',
+                                 'vendor/fullcalendar/dist/lang/pt-br.js']
     },
     // Angular based script (use the right module name)
     modules: [
@@ -50,8 +52,7 @@ App
                                                  'vendor/angular-ui-notification/dist/angular-ui-notification.min.css'] },
       {name: 'mwl.calendar',           files: ['vendor/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css',
                                                  'vendor/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.js'] },
-      {name: 'angularMoment',       files: ['vendor/moment/moment.js',
-                                                 'vendor/angular-moment/angular-moment.min.js'] }
+      {name: 'angularMoment',       files: ['vendor/angular-moment/angular-moment.min.js'] }
     ]
 
   })

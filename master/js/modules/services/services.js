@@ -130,6 +130,28 @@ App.factory('DataFetcher',
         return defer.promise;
     };
 
+    service.fetchMonthEvents = function(houseId, token){
+        var result;
+        var headers = {
+            headers: {'Authorization': 'Bearer ' + token,
+                      'Access-Control-Allow-Origin' : '*',
+                        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'}
+        };
+        var startDate = '2015-09-15';
+        var endDate= '2015-09-30';
+        var url = baseUrl + "eventos/" + houseId + '?data_ini='+ startDate+'&data_fim=' + endDate;
+        return $http.get(url,headers).then(function(result) {
+
+            return result.data.eventos;
+        },
+        function(reason){
+            $log.error(reason);
+        });
+
+    };
+
     service.fetchDataHouseDetails = function(houseId, token){
         var result;
         var headers = {
@@ -140,7 +162,7 @@ App.factory('DataFetcher',
                         'Content-Type': 'application/json'}
         };
         var promiseHouseDetails = $http.get((baseUrl + "assembleias/" + houseId),headers);
-        var promiseHouseEvents = $http.get((baseUrl + "eventos/" + houseId),headers);
+        //var promiseHouseEvents = $http.get((baseUrl + "eventos/" + houseId),headers);
         var promiseHouseCommittees = $http.get((baseUrl + "comissoes" +
             "?sigla=" + houseId),headers);
         var promiseHouseMembers = $http.get((baseUrl + "parlamentares" +
@@ -149,7 +171,7 @@ App.factory('DataFetcher',
         var defer = $q.defer();
 
         $q.all([promiseHouseDetails,
-                 promiseHouseEvents,
+                 //promiseHouseEvents,
                  promiseHouseCommittees,
                  promiseHouseMembers])
           .then(function(results) {

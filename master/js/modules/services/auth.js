@@ -4,7 +4,7 @@
  =========================================================*/
 
 App.factory('Auth',
-  ['$http','$cookieStore', '$rootScope', 
+  ['$http','$cookieStore', '$rootScope',
     function($http, $cookieStore, $rootScope){
 
     var accessLevels = routingConfig.accessLevels,
