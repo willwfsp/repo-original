@@ -1,4 +1,13 @@
 h3 Painel Principal
+.row(ng-if="housesNews.length === 0")
+  .col-xs-12.col-sm-6.col-md-3(ng-repeat="house in houses")
+    .panel.widget
+      .panel-heading.news-heading
+        h4 Notícias -&nbsp;
+      .panel-body.news-box.scrollable
+      .panel-footer
+          | + Mais Notícias
+
 .row
   .col-xs-12.col-sm-6.col-md-3(ng-repeat="house in housesNews")
     .panel.widget
