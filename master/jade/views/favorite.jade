@@ -42,14 +42,14 @@ script(type='text/ng-template', id="deleteTagModal.html")
 h3 Acompanhamento de Projetos de Lei
 .row
   .col-md-3.pr0
-    .panel.panel-dark.panel-flat
+    .panel.panel-dark.panel-flat.min-div-height
       .panel-heading
         h4
           em(class="fa fa-tags") &nbsp;
           span Etiquetas
           span.pull-right(class="fa fa-plus " ng-click="createFolder()")
       .panel-body
-          p(ng-if="folders.length === 0") Não há etiquetas.
+          strong(ng-if="folders.length === 0") Não há etiquetas.
           a.list-group-item(ng-repeat="folder in folders", ui-sref="app.favorites.folder({folderName: folder})", ng-click="showActionLoading()")
               em(class="fa fa-tag") &nbsp;
               span {{folder}}

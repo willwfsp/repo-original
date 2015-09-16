@@ -8,7 +8,7 @@
     function($q, $rootScope, $scope, $log, Auth, DataFetcher, UserSettings){
 
     $rootScope.$broadcast("event:show-loading");
-    $scope.changeMessage='';
+    $scope.changeMessage= '';
     UserSettings.get(function(data){
         $scope.user = data;
         $scope.firstname=data.firstname;
@@ -48,7 +48,7 @@
         else{
             newUserSettings.telephone = "";
         }
-        newUserSettings.emailDigestPeriod = $scope.emailDigestPeriod;
+        newUserSettings.emailDigestPeriod = parseInt($scope.emailDigestPeriod);
         $log.log(newUserSettings);
         $scope.showLoading = true;
 

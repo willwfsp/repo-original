@@ -39,51 +39,50 @@ App.controller('HouseDataController',
     $scope.events = [];
     /* event source that calls a function on every view switch */
     $scope.eventsF = function (start, end, timezone, callback) {
-      var s = new Date(start).getTime() / 1000;
-      var e = new Date(end).getTime() / 1000;
-      var m = new Date(start).getMonth();
-      var events = [{title: 'Feed Me ' + m,start: s + (50000),end: s + (100000),allDay: false, className: ['customFeed']}];
-      callback(events);
+        var s = new Date(start).getTime() / 1000;
+        var e = new Date(end).getTime() / 1000;
+        var m = new Date(start).getMonth();
+        var events = [{title: 'Feed Me ' + m,start: s + (50000),end: s + (100000),allDay: false, className: ['customFeed']}];
+        callback(events);
     };
     /* alert on eventClick */
     $scope.alertOnEventClick = function( date, jsEvent, view){
         $scope.alertMessage = (date);
-        console.log(date);
     };
     /* add and removes an event source of choice */
     $scope.addRemoveEventSource = function(sources,source) {
-      var canAdd = 0;
-      angular.forEach(sources,function(value, key){
-        if(sources[key] === source){
-          sources.splice(key,1);
-          canAdd = 1;
+        var canAdd = 0;
+        angular.forEach(sources,function(value, key){
+            if(sources[key] === source){
+                sources.splice(key,1);
+                canAdd = 1;
+            }
+        });
+        if(canAdd === 0){
+            sources.push(source);
         }
-      });
-      if(canAdd === 0){
-        sources.push(source);
-      }
     };
      /* Render Tooltip */
     $scope.eventRender = function( event, element, view ) {
         element.attr({'tooltip': event.title,
-                     'tooltip-append-to-body': true});
+                             'tooltip-append-to-body': true});
         $compile(element)($scope);
     };
     /* config object */
     $scope.uiConfig = {
-      calendar:{
-        height: '100%',
-        editable: false,
-        header:{
-          left: '',
-          center: 'title',
-          right: ''
-        },
+        calendar: {
+            height: '100%',
+            editable: false,
+            header:{
+                left: '',
+                center: 'title',
+                right: ''
+            },
         eventClick: $scope.showEvent,
         eventDrop: $scope.alertOnDrop,
         eventResize: $scope.alertOnResize,
         eventRender: $scope.eventRender
-      }
+        }
     };
     /* event sources array*/
     $scope.eventSources = [$scope.events];
@@ -105,47 +104,21 @@ App.controller('HouseDataController',
     });
 
     DataFetcher.fetchDataHouseDetails($stateParams.house, Auth.user.token).then(function(data){
-        $log.log("houseDetails");
         $scope.houseDetails = data[0].data;
         $scope.houseCommittees = data[1].data.rows;
         $scope.houseMembers = data[2].data.rows;
 
         $scope.initialLegislatureFilter = $scope.houseDetails.SLAs_LEGISLATURA;
-        /*parsing house events
-        var aux = [];
-        for(var i = 0; i < $scope.houseEvents.length; i++){
 
-            var evento = {};
-            evento.name = $scope.houseEvents[i].key[2];
-            evento.place = $scope.houseEvents[i].key[3];
-            evento.date = $scope.houseEvents[i].key[1];
-            aux.push(evento);
-
-            $scope.events[i] = {
-                title: evento.name, // The title of the event
-                type: 'success', // The type of the event (determines its color). Can be important, warning, info, inverse, success or special
-                startsAt: new Date(evento.date), // A javascript date object for when the event starts
-                //endsAt: new Date(2015,8,8), // Optional - a javascript date object for when the event ends
-                editable: false, // If edit-event-html is set and this field is explicitly set to false then dont make it editable.
-                deletable: false, // If delete-event-html is set and this field is explicitly set to false then dont make it deleteable
-                draggable: false, //Allow an event to be dragged and dropped
-                resizable: false, //Allow an event to be resizable
-                incrementsBadgeTotal: true, //If set to false then will not count towards the badge total amount on the month and year view
-                cssClass: 'text-center', //A CSS class (or more, just separate with spaces) that will be added to the event when it is displayed on each view. Useful for marking an event as selected / active etc
-            };
-        }
-
-        $scope.houseEvents = aux;
-        */
         //parsing committees
         aux = [];
         for(var j = 0; j < $scope.houseCommittees.length; j++){
-        	var committee = {};
-        	committee.name = $scope.houseCommittees[j].key[2];
-        	committee.initials = $scope.houseCommittees[j].key[1];
+            var committee = {};
+            committee.name = $scope.houseCommittees[j].key[2];
+            committee.initials = $scope.houseCommittees[j].key[1];
             committee.house = $scope.houseCommittees[j].key[0];
             committee.refCode = $scope.houseCommittees[j].key[3];
-        	aux.push(committee);
+            aux.push(committee);
         }
 
         $scope.houseCommittees = aux;

@@ -16,7 +16,6 @@ App.controller('BillController',
     $scope.postComment = function(){
         if($scope.newCommentForm.$valid){
             var commentText = $scope.newCommentText.replace(new RegExp('\\n', 'g'),'<br>');
-
             $scope.loading = true;
             spinnerService.show("ActionLoading");
             BillComments.save({"proposicao": $stateParams.billName, "comentario": commentText}).$promise.then(function(data){

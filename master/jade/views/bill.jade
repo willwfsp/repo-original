@@ -224,6 +224,8 @@ h3(ng-init='initVariables()')
                   .col-sm-9.form-control-static-sm.m0
                     a.btn(ui-sref="app.bill.pollDetails({pollID: poll.id})", ng-class="resultado == 'Aprovado' ? 'bg-success' : 'bg-danger' ") {{poll.SLV_RESULTADO}}
       //POLL VIEW END
+
+      //COMMENT VIEW START
       .col-md-12
         .panel.widget.bill-box
           .panel-heading
@@ -238,6 +240,7 @@ h3(ng-init='initVariables()')
                 p(ng-bind-html="comment.texto")
             form.form-validate.mb-lg(role='form', name="newCommentForm", novalidate, ng-submit="postComment()")
               textarea.form-control(ng-model="newCommentText", name="newCommentText", rows="4", required, placeholder="Deixe um comentário")
-              button.btn.btn-success.form-control(type="submit", ng-disabled="newCommentForm.$invalid || loading") OK
+              button.btn.btn-success.form-control(type="submit", ng-disabled="newCommentForm.$invalid || loading") Comentar
+      //COMMENT VIEW END
       // END table-responsive
     // END panel

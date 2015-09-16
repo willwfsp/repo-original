@@ -11,21 +11,21 @@
                 label Nome:
                 input.form-control(name="firstname", ng-model="firstname", required)
                 span.fa.fa-pencil.form-control-feedback.text-muted
-                span.text-danger(ng-show="changeSettingsForm.firstname.$error.required") &nbsp;&nbsp;Campo Obrigatório
+                span.text-danger(ng-show="changeSettingsForm.firstname.$error.required&& changeSettingsForm.firstname.$error.$dirty") &nbsp;&nbsp;Campo Obrigatório
           .row
             .col-md-12
               .form-group.has-feedback
                 label Sobrenome:
                 input.form-control(name="lastname", ng-model="lastname", required)
                 span.fa.fa-pencil.form-control-feedback.text-muted
-                span.text-danger(ng-show="changeSettingsForm.lastname.$error.required") &nbsp;&nbsp;Campo Obrigatório
+                span.text-danger(ng-show="changeSettingsForm.lastname.$error.required && changeSettingsForm.lastname.$error.$dirty") &nbsp;&nbsp;Campo Obrigatório
           .row
             .col-md-12
               .form-group.has-feedback
                 label Organização:
                 input.form-control(name="organization", ng-model="organization", required)
                 span.fa.fa-building-o.form-control-feedback.text-muted
-                span.text-danger(ng-show="changeSettingsForm.organization.$error.required") &nbsp;&nbsp;Campo Obrigatório
+                span.text-danger(ng-show="changeSettingsForm.organization.$error.required && changeSettingsForm.organization.$error.$dirty") &nbsp;&nbsp;Campo Obrigatório
 
           .row(ng-hide="true")
             .col-md-12
@@ -51,11 +51,11 @@
               .col-md-12
                 .form-group.has-feedback
                   label Notificações por e-mail:
-                  select.form-control(name="emailDigestPeriod", ng-model="emailDigestPeriod")
-                    option.text-muted(value=4) A cada 4 horas
-                    option.text-muted(value=24) Diariamente
-                    option.text-muted(value=168) Semanalmente
-                    option.text-muted(value=0) Não receber
+                  select.form-control(name="emailDigestPeriod", ng-model="emailDigestPeriod" selected="emailDigestPeriod")
+                    option.text-muted(value="4") A cada 4 horas
+                    option.text-muted(value="24") Diariamente
+                    option.text-muted(value="168") Semanalmente
+                    option.text-muted(value="0") Não receber
 
           .row.text-center
               .col-md-12
