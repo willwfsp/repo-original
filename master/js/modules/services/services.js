@@ -140,7 +140,6 @@ App.factory('DataFetcher',
                         'Content-Type': 'application/json'}
         };
         var startDate = moment().format();
-        console.log(startDate);
         var endDate= '2015-10';
         var url = baseUrl + "eventos/" + houseId + '?data_ini='+ startDate+'&data_fim=' + endDate;
         return $http.get(url,headers).then(function(result) {

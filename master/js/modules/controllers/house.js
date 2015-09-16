@@ -87,7 +87,6 @@ App.controller('HouseDataController',
     /* event sources array*/
     $scope.eventSources = [$scope.events];
     DataFetcher.fetchMonthEvents($stateParams.house, Auth.user.token).then(function(data){
-        console.log(data);
         for(var i = 0; i < data.length; i++){
             var evento = {};
             evento.title = data[i].SLEv_TITULO;

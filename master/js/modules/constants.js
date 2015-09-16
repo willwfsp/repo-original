@@ -36,8 +36,7 @@ App
       'loaders.css':          ['vendor/loaders.css/loaders.css'],
       'spinkit':              ['vendor/spinkit/css/spinkit.css'],
       'chartjs':              ['vendor/Chart.js/Chart.js'],
-      'fullcalendar':      ['vendor/fullcalendar/dist/fullcalendar.css',
-                                 'vendor/fullcalendar/dist/lang/pt-br.js']
+      'fullcalendar':      ['vendor/fullcalendar/dist/fullcalendar.css']
     },
     // Angular based script (use the right module name)
     modules: [
