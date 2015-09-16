@@ -18,7 +18,5 @@
   "bower_components/angular-ui-notification/dist/angular-ui-notification.min.js",
   "bower_components/angular-ui-notification/dist/angular-ui-notification.min.css",
   "bower_components/angular-moment/angular-moment.min.js",
-  "bower_components/fullcalendar/dist/fullcalendar.css",
-  "bower_components/fullcalendar/dist/fullcalendar.print.css"
-
+  "bower_components/fullcalendar/dist/fullcalendar.css"
 ]

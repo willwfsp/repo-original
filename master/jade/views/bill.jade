@@ -117,9 +117,9 @@ h3(ng-init='initVariables()')
                     .pull-left.timeline-custom-date.text-center {{tramitacao.doc.SLT_DATA_TRAMITACAO.replace(" ", "T") | date: 'MMM dd' | capitalize}}
                     .timeline-custom-badge
                     .popover(ng-class="timelineAlt ? 'right' : 'left'")
-                      h4.popover-title(ng-if="tramitacao.doc.SLT_ORGAO_ORIGEM_DESC")
+                      h4.popover-title
                         span.pull-right {{tramitacao.doc.SLT_CASA_TRAMITACAO}}
-                        | {{tramitacao.doc.SLT_ORGAO_ORIGEM_DESC}}
+                        span {{tramitacao.doc.SLT_ORGAO_ORIGEM_DESC || "Tramitação"}}
                       .arrow
                       .popover-content
                         p {{tramitacao.doc.SLT_DESCRICAO_TRAMITACAO || "Sem descrição"}}
