@@ -50,8 +50,6 @@ App
                                                  'vendor/ngDialog/css/ngDialog-theme-default.min.css'] },
       {name: 'ngNotification',          files: [ 'vendor/angular-ui-notification/dist/angular-ui-notification.min.js',
                                                  'vendor/angular-ui-notification/dist/angular-ui-notification.min.css'] },
-      {name: 'mwl.calendar',           files: ['vendor/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css',
-                                                 'vendor/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.js'] },
       {name: 'angularMoment',       files: ['vendor/angular-moment/angular-moment.min.js'] }
     ]
 

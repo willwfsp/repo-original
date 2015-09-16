@@ -96,12 +96,12 @@ App.controller('HouseDataController',
             evento.place = data[i].SLEv_LOCAL;
             if(data[i].SLEv_DATA_FIM){
                 evento.end = data[i].SLEv_DATA_FIM;
-            };
+            }
             if(data[i].SLEv_LINK_DETALHES){
                 evento.details = data[i].SLEv_LINK_DETALHES;
-            };
+            }
             $scope.events.push(evento);
-        };
+        }
     });
 
     DataFetcher.fetchDataHouseDetails($stateParams.house, Auth.user.token).then(function(data){
