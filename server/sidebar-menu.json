@@ -64,7 +64,7 @@
   },
   {
     "text": "Conta",
-    "sref": "app.profile",
+    "sref": "app.settings.profile",
     "icon": "icon-user"
   }
 ]
