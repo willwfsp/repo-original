@@ -15,12 +15,11 @@ App.controller('SearchBarController',
 }]);
 
 App.controller('SearchBillsController',
-  ['$state', '$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal',
-  'CacheManager','DataFetcher', 'Auth', 'ngDialog', 'UserFolders','FoldersBills', 'spinnerService','$document', 'Notification', '$rootScope',
-    function($state, $http, $stateParams, $location, $scope, $log, $state, $modal,
-        CacheManage,DataFetcher, Auth, ngDialog, UserFolders, FoldersBills, spinnerService, $document, Notification, $rootScope) {
+  ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal',
+  'DataFetcher', 'Auth', 'ngDialog', 'UserFolders','FoldersBills', 'spinnerService','$document', 'Notification', '$rootScope',
+    function($http, $stateParams, $location, $scope, $log, $state, $modal,
+        DataFetcher, Auth, ngDialog, UserFolders, FoldersBills, spinnerService, $document, Notification, $rootScope) {
 
-    $scope.hasCache = $state.current.data.cache;
     $scope.isCollapsed = false;
     $scope.showOtherAuthors = false;
     $scope.themesAndSubthemes = [];
@@ -232,14 +231,9 @@ App.controller('SearchBillsController',
     };
 
     $scope.init = function(){
-        var cachedSearch = CacheManager.fetchSearchDataBills;
-        if ($scope.hasCache) {
-
-        }else{
-            $scope.fetchingStart = true;
-            $scope.loadThemes();
-            DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
-        }
+        $scope.fetchingStart = true;
+        $scope.loadThemes();
+        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
     };
 
     $scope.moreResults = function(){
@@ -249,10 +243,10 @@ App.controller('SearchBillsController',
         DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
     };
 
-    $scope.fetchCache = function () {
-    }
-
-    $scope.handleResponse = function(aux){
+    // Listeners
+    $scope.$on('fetch billSearchResults:completed', function(event) {
+        // you could inspect the data to see if what you care about changed, or just update your own scope
+        var aux = DataFetcher.getBillSearchResults();
         if ($scope.bills.length === 0){
             index = 0;
         }else{
@@ -285,6 +279,9 @@ App.controller('SearchBillsController',
             $scope.bookmark = aux.bookmark;
             $scope.fetchingMore = false;
         }
+
+
+
     });
 
     $document.on('click', function (e) {
@@ -309,12 +306,6 @@ App.controller('SearchBillsController',
 
             });
         }
-    }
-    // Listeners
-    $scope.$on('fetch billSearchResults:completed', function(event) {
-        // you could inspect the data to see if what you care about changed, or just update your own scope
-        var data = DataFetcher.getBillSearchResults();
-        handleResponse(data);
     });
 
     $scope.open = [];

@@ -5,13 +5,12 @@
 
 App.controller('DashboardController',
   ['$scope','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', 'Auth',
-    function($state, $scope, $rootScope, $stateParams, $log, $http, DataFetcher, Auth){
+    function($scope, $rootScope, $stateParams, $log, $http, DataFetcher, Auth){
+
 
     $rootScope.$broadcast("event:show-loading");
     $scope.houses = ['CD', 'SF', 'SP', 'MG'];
     $scope.housesNews = [];
-
-    var cache = $state.current.data.cache;
 
     DataFetcher.fetchHousesNews($scope.houses, Auth.user.token).then(function(data){
         $scope.housesNews[0] = data[0].data;
