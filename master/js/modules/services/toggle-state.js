@@ -29,7 +29,7 @@ App.service('toggleStateService', ['$rootScope', function($rootScope) {
     // Add a state to the browser storage to be restored later
     addState: function(classname){
       var data = angular.fromJson($rootScope.$storage[storageKeyName]);
-      
+
       if(!data)  {
         data = classname;
       }
@@ -50,11 +50,11 @@ App.service('toggleStateService', ['$rootScope', function($rootScope) {
 
       $rootScope.$storage[storageKeyName] = angular.toJson(data);
     },
-    
+
     // Load the state string and restore the classlist
     restoreState: function($elem) {
       var data = angular.fromJson($rootScope.$storage[storageKeyName]);
-      
+
       // nothing to restore
       if(!data) return;
       $elem.addClass(data);
