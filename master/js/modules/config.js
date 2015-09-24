@@ -41,14 +41,20 @@ App.config(
         url: '/dashboard',
         title: 'Página Principal',
         templateUrl: helper.basepath('dashboard.html'),
-        controller: 'DashboardController'
+        controller: 'DashboardController',
+        data: {
+            cache: true
+        }
     })
     .state('app.searchBills', {
         url: '/searchBills?q',
         title: 'Pesquisar Proposições',
         templateUrl: helper.basepath('searchBills.html'),
         resolve: helper.resolveFor('ui.select'),
-        controller: 'SearchBillsController'
+        controller: 'SearchBillsController',
+        data: {
+            cache: true
+        }
     })
     .state('app.bill', {
         url: '/bill/:billName',
@@ -61,11 +67,17 @@ App.config(
         url: '/viewDocuments/:docUrl',
         title: 'Visualizar Documento',
         templateUrl: helper.basepath('viewDocuments.html'),
-        controller: 'ViewDocumentsController'
+        controller: 'ViewDocumentsController',
+        data: {
+            cache: true
+        }
     })
     .state('app.bill.pollDetails', {
         url: '/pollDetails/:pollID',
         title: 'Visualizar detalhes da votação',
+        data: {
+            cache: true
+        },
         onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
           $modal.open({
             templateUrl: helper.basepath('pollDetails.html'),
@@ -81,26 +93,38 @@ App.config(
         title: 'Parlamentar',
         templateUrl: helper.basepath('representative.html'),
         resolve: helper.resolveFor('chartjs', 'ngTable'),
-        controller: 'RepresentativeDataController'
+        controller: 'RepresentativeDataController',
+        data: {
+            cache: true
+        }
     })
     .state('app.committee', {
         url: '/committees/:house/:committeeID',
         title: 'Comissão',
         templateUrl: helper.basepath('committee.html'),
         resolve: helper.resolveFor('ngTable'),
-        controller: 'CommitteesController'
+        controller: 'CommitteesController',
+        data: {
+            cache: true
+        }
     })
     .state('app.calendar', {
         url: '/calendar',
         title: 'Calendários',
-        templateUrl: helper.basepath('calendar.html')
+        templateUrl: helper.basepath('calendar.html'),
+        data: {
+            cache: true
+        }
     })
     .state('app.house', {
         url: '/house/:house',
         title: 'Casa Legislativa',
         templateUrl: helper.basepath('house.html'),
         resolve: helper.resolveFor('ngTable', 'angularMoment', 'fullcalendar'),
-        controller: 'HouseDataController'
+        controller: 'HouseDataController',
+        data: {
+            cache: true
+        }
     })
     .state('app.settings', {
         url: '/settings',
