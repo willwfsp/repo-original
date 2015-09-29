@@ -40,9 +40,7 @@ App.controller('SearchBillsController',
     $scope.total_results = 0;
     $scope.bookmark = "";
 
-    debugger;
-    CacheManager.cacheSearchDataBills("blabla");
-    console.log(CacheManager.fetchSearchDataBills());
+    var hasCache = $state.current.data.cache;
 
     $scope.toDate = function(date){
       return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
@@ -235,9 +233,23 @@ App.controller('SearchBillsController',
     };
 
     $scope.init = function(){
+
+        var cacheRetrieved = false;
+        if (hasCache) {
+            cacheRetrieved = CacheManager.fetchSearchDataBills($scope.query + JSON.stringify($scope.filters,null,""));
+        }
         $scope.fetchingStart = true;
         $scope.loadThemes();
-        DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
+
+        // verify if cache has feched
+        if (!cacheRetrieved) {
+
+            DataFetcher.fetchSearchDataBills($scope.query, $scope.filters, Auth.user.token);
+        }else{
+            // use cached data
+            $scope.initVariables();
+            prepareData(cacheRetrieved);
+        }
     };
 
     $scope.moreResults = function(){
@@ -250,41 +262,9 @@ App.controller('SearchBillsController',
     // Listeners
     $scope.$on('fetch billSearchResults:completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
-        var aux = DataFetcher.getBillSearchResults();
-        if ($scope.bills.length === 0){
-            index = 0;
-        }else{
-            index = $scope.bills.length;
-        }
-        var count = 0;
-        for (i = index; i < (index + aux.rows.length); i++) {
-
-            $scope.tagsModel[i] = {};
-            $scope.tagsModel[i].data = [];
-
-            if (aux.rows[count].fields.hasOwnProperty('USER_TAGS') ){
-                for(j = 0; j < aux.rows[count].fields.USER_TAGS.length; j++){
-                    $scope.tagsModel[i].data.push({id:aux.rows[count].fields.USER_TAGS[j]});
-                }
-            }
-            count ++;
-
-        }
-        if ($scope.fetchingStart){
-            $scope.total_results = aux.total_rows;
-            $scope.bookmark = aux.bookmark;
-            $scope.bills = aux.rows;
-            $scope.fetchingStart = false;
-        }
-        if($scope.fetchingMore){
-            for(i = 0; i < aux.rows.length; i++){
-                $scope.bills.push(aux.rows[i]);
-            }
-            $scope.bookmark = aux.bookmark;
-            $scope.fetchingMore = false;
-        }
-
-
+        var data = DataFetcher.getBillSearchResults();
+        CacheManager.cacheSearchDataBills(data, $scope.query + JSON.stringify($scope.filters,null,""));
+        prepareData(data);
 
     });
 
@@ -313,6 +293,42 @@ App.controller('SearchBillsController',
     });
 
     $scope.open = [];
+
+    // Prepare data after fetch
+    function prepareData (data) {
+        if ($scope.bills.length === 0){
+            index = 0;
+        }else{
+            index = $scope.bills.length;
+        }
+        var count = 0;
+        for (i = index; i < (index + data.rows.length); i++) {
+
+            $scope.tagsModel[i] = {};
+            $scope.tagsModel[i].data = [];
+
+            if (data.rows[count].fields.hasOwnProperty('USER_TAGS') ){
+                for(j = 0; j < data.rows[count].fields.USER_TAGS.length; j++){
+                    $scope.tagsModel[i].data.push({id:data.rows[count].fields.USER_TAGS[j]});
+                }
+            }
+            count ++;
+
+        }
+        if ($scope.fetchingStart){
+            $scope.total_results = data.total_rows;
+            $scope.bookmark = data.bookmark;
+            $scope.bills = data.rows;
+            $scope.fetchingStart = false;
+        }
+        if($scope.fetchingMore){
+            for(i = 0; i < data.rows.length; i++){
+                $scope.bills.push(data.rows[i]);
+            }
+            $scope.bookmark = data.bookmark;
+            $scope.fetchingMore = false;
+        }
+    }
 
     function getFindObj(id) {
         var findObj = {};

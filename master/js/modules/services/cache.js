@@ -26,13 +26,23 @@ App.factory('CacheManager',
       return cache.get(key);
     }
 
-    service.fetchSearchDataBills = function(){
+    // SearchBillsController cache methods
+    service.fetchSearchDataBills = function(query){
+      var lastQuery = get("lastSearchDataBillsQuery");
+      debugger;
+      if (lastQuery == undefined) {
+        return false;
+      }
+      if (lastQuery.toUpperCase() === query.toUpperCase()) {
+        return get("searchDataBills");
+      }
 
-      return get("searchDataBills");
+      return false;
 
     };
 
-    service.cacheSearchDataBills = function(data) {
+    service.cacheSearchDataBills = function(data, lastQuery) {
+      put("lastSearchDataBillsQuery", lastQuery);
       put("searchDataBills", data);
     }
     return service;

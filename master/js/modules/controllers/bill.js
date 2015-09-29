@@ -12,7 +12,7 @@ App.controller('BillController',
     $scope.timePast = function(timepast){
         return moment(timepast).fromNow();
     };
-
+    debugger;
     $scope.postComment = function(){
         if($scope.newCommentForm.$valid){
             var commentText = $scope.newCommentText.replace(new RegExp('\\n', 'g'),'<br>');
