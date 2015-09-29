@@ -16,9 +16,9 @@ App.controller('SearchBarController',
 
 App.controller('SearchBillsController',
   ['$http', '$stateParams', '$location', '$scope', '$log', '$state', '$modal',
-  'DataFetcher', 'Auth', 'ngDialog', 'UserFolders','FoldersBills', 'spinnerService','$document', 'Notification', '$rootScope',
+  'CacheManager','DataFetcher', 'Auth', 'ngDialog', 'UserFolders','FoldersBills', 'spinnerService','$document', 'Notification', '$rootScope',
     function($http, $stateParams, $location, $scope, $log, $state, $modal,
-        DataFetcher, Auth, ngDialog, UserFolders, FoldersBills, spinnerService, $document, Notification, $rootScope) {
+        CacheManager, DataFetcher, Auth, ngDialog, UserFolders, FoldersBills, spinnerService, $document, Notification, $rootScope) {
 
     $scope.isCollapsed = false;
     $scope.showOtherAuthors = false;
@@ -39,6 +39,10 @@ App.controller('SearchBillsController',
     $scope.bills = [];
     $scope.total_results = 0;
     $scope.bookmark = "";
+
+    debugger;
+    CacheManager.cacheSearchDataBills("blabla");
+    console.log(CacheManager.fetchSearchDataBills());
 
     $scope.toDate = function(date){
       return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
