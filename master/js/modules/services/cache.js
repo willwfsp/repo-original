@@ -27,9 +27,25 @@ App.factory('CacheManager',
     }
 
     // SearchBillsController cache methods
+
+         }
+    ]
     service.fetchSearchDataBills = function(query){
+      var cacheArray = get("searchDataBills");
+
+      if (cacheArray == undefined) {
+        return false;
+      };
+      var hasCache = false;
+      for (var i = 0; i < cacheArray.length; i++) {
+
+      };
+
+
+
+
       var lastQuery = get("lastSearchDataBillsQuery");
-      debugger;
+
       if (lastQuery == undefined) {
         return false;
       }
@@ -38,12 +54,22 @@ App.factory('CacheManager',
       }
 
       return false;
+      }
+
+
 
     };
 
-    service.cacheSearchDataBills = function(data, lastQuery) {
-      put("lastSearchDataBillsQuery", lastQuery);
-      put("searchDataBills", data);
+    service.cacheSearchDataBills = function(object, lastQuery) {
+
+      var cacheArray = get("searchDataBills");
+
+      cacheArray.push({query:lastQuery,data:object});
+
+      if (cacheArray.length > 5) {
+        cacheArray.shift();
+      };
+      put("searchDataBills");
     }
     return service;
 
