@@ -28,48 +28,54 @@ App.factory('CacheManager',
 
     // SearchBillsController cache methods
 
-         }
-    ]
     service.fetchSearchDataBills = function(query){
       var cacheArray = get("searchDataBills");
-
+      debugger;
       if (cacheArray == undefined) {
         return false;
-      };
-      var hasCache = false;
-      for (var i = 0; i < cacheArray.length; i++) {
-
-      };
-
-
-
-
-      var lastQuery = get("lastSearchDataBillsQuery");
-
-      if (lastQuery == undefined) {
-        return false;
       }
-      if (lastQuery.toUpperCase() === query.toUpperCase()) {
-        return get("searchDataBills");
+
+
+      for (var i = 0; i < cacheArray.length; i++) {
+        if (cacheArray[i].query === undefined || query === undefined) {
+          return false;
+        }
+        // Verify if the query already exist
+        if (cacheArray[i].query.toUpperCase() === query.toUpperCase()) {
+          return cacheArray[i].data;
+        }
       }
 
       return false;
-      }
 
-
-
-    };
+    }
 
     service.cacheSearchDataBills = function(object, lastQuery) {
 
       var cacheArray = get("searchDataBills");
+
+      var object = {};
+      for (object in cacheArray) {
+        if (object.query === undefined || lastQuery === undefined) {
+          return false;
+        }
+
+        if (object.query.toUpperCase() === lastQuery.toUpperCase()) {
+          return;
+        }
+      }
+
+      if (cacheArray === null || cacheArray === undefined) {
+        // Init local cache array
+        cacheArray = [];
+      }
 
       cacheArray.push({query:lastQuery,data:object});
 
       if (cacheArray.length > 5) {
         cacheArray.shift();
       };
-      put("searchDataBills");
+      put("searchDataBills",cacheArray);
     }
     return service;
 
