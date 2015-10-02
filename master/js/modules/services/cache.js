@@ -26,11 +26,15 @@ App.factory('CacheManager',
       return cache.get(key);
     }
 
-    // SearchBillsController cache methods
 
+    /**
+     * SearchBillsController cache methods
+     *
+     * The following methods storage and fetch the last five searches performed
+     */
     service.fetchSearchDataBills = function(query){
       var cacheArray = get("searchDataBills");
-      debugger;
+
       if (cacheArray == undefined) {
         return false;
       }
@@ -50,17 +54,17 @@ App.factory('CacheManager',
 
     }
 
-    service.cacheSearchDataBills = function(object, lastQuery) {
+    service.cacheSearchDataBills = function(lastQuery,dataObject) {
 
-      var cacheArray = get("searchDataBills");
+      var cacheArray = get("searchDataBills") ? get("searchDataBills") : [];
 
-      var object = {};
-      for (object in cacheArray) {
-        if (object.query === undefined || lastQuery === undefined) {
+
+      for (var i=0; i < cacheArray.length; i++) {
+        if (cacheArray[i].query === undefined || lastQuery === undefined) {
           return false;
         }
 
-        if (object.query.toUpperCase() === lastQuery.toUpperCase()) {
+        if (cacheArray[i].query.toUpperCase() === lastQuery.toUpperCase()) {
           return;
         }
       }
@@ -70,13 +74,29 @@ App.factory('CacheManager',
         cacheArray = [];
       }
 
-      cacheArray.push({query:lastQuery,data:object});
+      cacheArray.push({query:lastQuery,data:dataObject});
 
       if (cacheArray.length > 5) {
         cacheArray.shift();
       };
       put("searchDataBills",cacheArray);
     }
+
+
+    /**
+     * DashboardController cache methods
+     *
+     * The following methods storage and fetch the DashboardController data
+     */
+    service.fetchHousesNews = function(){
+      var cacheObject = get("housesNews") ? get("housesNews") : {};
+      return cacheObject.data;
+    }
+
+    service.cacheHousesNews = function(dataObject) {
+      put("searchDataBills",dataObject);
+    }
+
     return service;
 
 }]);

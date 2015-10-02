@@ -4,15 +4,25 @@
  =========================================================*/
 
 App.controller('DashboardController',
-  ['$scope','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', 'Auth',
-    function($scope, $rootScope, $stateParams, $log, $http, DataFetcher, Auth){
+  ['$scope','$state','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', 'Auth', 'CacheManager',
+    function($scope, $state, $rootScope, $stateParams, $log, $http, DataFetcher, Auth, CacheManager){
 
 
     $rootScope.$broadcast("event:show-loading");
     $scope.houses = ['CD', 'SF', 'SP', 'MG'];
     $scope.housesNews = [];
 
-    DataFetcher.fetchHousesNews($scope.houses, Auth.user.token).then(function(data){
+    var cacheAllowed = $state.current.data.cache;
+    if(cacheAllowed && CacheManager.fetchHousesNews(JSON.stringify($scope.houses,null,""))){
+        prepareData(CacheManager.fetchHousesNews());
+    }else{
+        DataFetcher.fetchHousesNews($scope.houses, Auth.user.token).then(function(data){
+            CacheManager.cacheHousesNews(data);
+            prepareData(data);
+        });
+    }
+
+    var prepareData = function(data){
         $scope.housesNews[0] = data[0].data;
         $scope.housesNews[1] = data[1].data;
         $scope.housesNews[2] = data[2].data;
@@ -22,8 +32,7 @@ App.controller('DashboardController',
             $scope.housesNews[i].name = $scope.houses[i];
         }
         $rootScope.$broadcast("event:dismiss-loading");
-
-    });
+    }
 }]);
 
 

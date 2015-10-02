@@ -263,7 +263,7 @@ App.controller('SearchBillsController',
     $scope.$on('fetch billSearchResults:completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
         var data = DataFetcher.getBillSearchResults();
-        CacheManager.cacheSearchDataBills(data, $scope.query + JSON.stringify($scope.filters,null,""));
+        CacheManager.cacheSearchDataBills($scope.query + JSON.stringify($scope.filters,null,""),data);
         prepareData(data);
 
     });
