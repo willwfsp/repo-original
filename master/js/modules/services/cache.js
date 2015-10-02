@@ -89,12 +89,37 @@ App.factory('CacheManager',
      * The following methods storage and fetch the DashboardController data
      */
     service.fetchHousesNews = function(){
-      var cacheObject = get("housesNews") ? get("housesNews") : {};
-      return cacheObject.data;
+      var cacheObject = get("housesNews");
+
+      if (cacheObject === null) {
+        return false;
+      }
+
+      return cacheObject;
     }
 
     service.cacheHousesNews = function(dataObject) {
-      put("searchDataBills",dataObject);
+      put("housesNews",dataObject);
+    }
+
+
+    /**
+     * ViewDocumentsController cache methods
+     *
+     * The following methods storage and fetch the ViewDocumentsController data
+     */
+    service.fetchBillDoc = function(){
+      var cacheObject = get("BillDoc");
+
+      if (cacheObject === null) {
+        return false;
+      }
+
+      return cacheObject;
+    }
+
+    service.cacheBillDoc = function(dataObject) {
+      put("BillDoc",dataObject);
     }
 
     return service;

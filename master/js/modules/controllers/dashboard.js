@@ -13,7 +13,7 @@ App.controller('DashboardController',
     $scope.housesNews = [];
 
     var cacheAllowed = $state.current.data.cache;
-    if(cacheAllowed && CacheManager.fetchHousesNews(JSON.stringify($scope.houses,null,""))){
+    if(cacheAllowed && CacheManager.fetchHousesNews()){
         prepareData(CacheManager.fetchHousesNews());
     }else{
         DataFetcher.fetchHousesNews($scope.houses, Auth.user.token).then(function(data){
@@ -22,7 +22,7 @@ App.controller('DashboardController',
         });
     }
 
-    var prepareData = function(data){
+    function prepareData (data){
         $scope.housesNews[0] = data[0].data;
         $scope.housesNews[1] = data[1].data;
         $scope.housesNews[2] = data[2].data;
