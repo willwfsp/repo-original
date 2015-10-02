@@ -82,20 +82,22 @@ App.factory('CacheManager',
       put("searchDataBills",cacheArray);
     }
 
-
-    /**
-     * DashboardController cache methods
-     *
-     * The following methods storage and fetch the DashboardController data
-     */
-    service.fetchHousesNews = function(){
-      var cacheObject = get("housesNews");
+    var fetch = function(key) {
+       var cacheObject = get(key);
 
       if (cacheObject === null) {
         return false;
       }
 
       return cacheObject;
+    }
+    /**
+     * DashboardController cache methods
+     *
+     * The following methods storage and fetch the DashboardController data
+     */
+    service.fetchHousesNews = function(){
+      return fetch("housesNews");
     }
 
     service.cacheHousesNews = function(dataObject) {
@@ -109,13 +111,7 @@ App.factory('CacheManager',
      * The following methods storage and fetch the ViewDocumentsController data
      */
     service.fetchBillDoc = function(){
-      var cacheObject = get("BillDoc");
-
-      if (cacheObject === null) {
-        return false;
-      }
-
-      return cacheObject;
+      return fetch("BillDoc");
     }
 
     service.cacheBillDoc = function(dataObject) {

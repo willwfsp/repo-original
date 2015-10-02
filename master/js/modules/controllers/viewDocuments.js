@@ -1,4 +1,4 @@
-App.controller('ViewDocumentsController', ['$scope','$state', '$log', 'DataFetcher', '$stateParams', 'Auth','$rootScope', 'CacheManager'
+App.controller('ViewDocumentsController', ['$scope','$state', '$log', 'DataFetcher', '$stateParams', 'Auth','$rootScope', 'CacheManager',
     function($scope, $state, $log, $stateParams,  $rootScope, DataFetcher, Auth, CacheManager) {
 
     $rootScope.$broadcast("event:show-loading");
