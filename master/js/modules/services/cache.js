@@ -118,6 +118,29 @@ App.factory('CacheManager',
       put("BillDoc",dataObject);
     }
 
+    /**
+     * HouseController cache methods
+     *
+     * The following methods storage and fetch the HouseController data
+     */
+    service.fetchMonthEvents = function(){
+      return fetch("houseMonthEvents");
+    }
+
+    service.cacheMonthEvents = function(dataObject) {
+      put("houseMonthEvents",dataObject);
+    }
+
+    service.fetchDataHouseDetails = function(){
+      return fetch("dataHouseDetails");
+    }
+
+    service.cacheDataHouseDetails = function(dataObject) {
+      put("dataHouseDetails",dataObject);
+    }
+
+
+
     return service;
 
 }]);

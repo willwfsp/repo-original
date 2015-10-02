@@ -4,8 +4,8 @@
  =========================================================*/
 
 App.controller('HouseDataController',
-  ['$scope','$rootScope', '$stateParams', '$filter', 'ngTableParams', '$log', '$http', 'DataFetcher', 'Auth', '$modal','$compile', 'uiCalendarConfig',
-    function($scope, $rootScope, $stateParams, $filter, ngTableParams, $log, $http, DataFetcher, Auth, $modal,$compile, uiCalendarConfig){
+  ['$scope','$state','$rootScope', '$stateParams', '$filter', 'ngTableParams', '$log', '$http', 'DataFetcher', 'Auth', '$modal','$compile', 'uiCalendarConfig', 'CacheManager',
+    function($scope,$state, $rootScope, $stateParams, $filter, ngTableParams, $log, $http, DataFetcher, Auth, $modal,$compile, uiCalendarConfig, CacheManager){
     $rootScope.$broadcast("event:show-loading");
 
     // function to check if it's a state house, don't show 'state' column on ngTableParams
@@ -86,7 +86,27 @@ App.controller('HouseDataController',
     };
     /* event sources array*/
     $scope.eventSources = [$scope.events];
-    DataFetcher.fetchMonthEvents($stateParams.house, Auth.user.token).then(function(data){
+    var cacheAllowed = $state.current.data.cache;
+
+    if(cacheAllowed && CacheManager.fetchMonthEvents()){
+        prepareMonthEvents(CacheManager.fetchMonthEvents());
+    }else{
+        DataFetcher.fetchMonthEvents($stateParams.house, Auth.user.token).then(function(data){
+            CacheManager.cacheMonthEvents(data);
+            prepareMonthEvents(data);
+        });
+    }
+
+    if(cacheAllowed && CacheManager.fetchDataHouseDetails()){
+        prepareDataHouseDetails(CacheManager.fetchDataHouseDetails());
+    }else{
+        DataFetcher.fetchDataHouseDetails($stateParams.house, Auth.user.token).then(function(data){
+            CacheManager.cacheDataHouseDetails(data);
+            prepareDataHouseDetails(data);
+        });
+    }
+
+    function prepareMonthEvents (data){
         for(var i = 0; i < data.length; i++){
             var evento = {};
             evento.title = data[i].SLEv_TITULO;
@@ -100,9 +120,9 @@ App.controller('HouseDataController',
             }
             $scope.events.push(evento);
         }
-    });
+    }
 
-    DataFetcher.fetchDataHouseDetails($stateParams.house, Auth.user.token).then(function(data){
+    function prepareDataHouseDetails (data){
         $scope.houseDetails = data[0].data;
         $scope.houseCommittees = data[1].data.rows;
         $scope.houseMembers = data[2].data.rows;
@@ -170,7 +190,8 @@ App.controller('HouseDataController',
         });
 
         $rootScope.$broadcast("event:dismiss-loading");
-    });
+    }
+
 
 }]);
 
