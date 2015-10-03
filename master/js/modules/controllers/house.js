@@ -88,20 +88,24 @@ App.controller('HouseDataController',
     $scope.eventSources = [$scope.events];
     var cacheAllowed = $state.current.data.cache;
 
-    if(cacheAllowed && CacheManager.fetchMonthEvents()){
-        prepareMonthEvents(CacheManager.fetchMonthEvents());
+    if(cacheAllowed && CacheManager.fetchMonthEvents(JSON.stringify($stateParams.house, null, ""))){
+        prepareMonthEvents(CacheManager.fetchMonthEvents(JSON.stringify($stateParams.house, null, "")));
     }else{
         DataFetcher.fetchMonthEvents($stateParams.house, Auth.user.token).then(function(data){
-            CacheManager.cacheMonthEvents(data);
+            if(cacheAllowed) {
+                CacheManager.cacheMonthEvents(JSON.stringify($stateParams.house, null, ""), data);
+            }
             prepareMonthEvents(data);
         });
     }
 
-    if(cacheAllowed && CacheManager.fetchDataHouseDetails()){
-        prepareDataHouseDetails(CacheManager.fetchDataHouseDetails());
+    if(cacheAllowed && CacheManager.fetchDataHouseDetails(JSON.stringify($stateParams.house, null, ""))){
+        prepareDataHouseDetails(CacheManager.fetchDataHouseDetails(JSON.stringify($stateParams.house, null, "")));
     }else{
         DataFetcher.fetchDataHouseDetails($stateParams.house, Auth.user.token).then(function(data){
-            CacheManager.cacheDataHouseDetails(data);
+            if(cacheAllowed) {
+                CacheManager.cacheDataHouseDetails(JSON.stringify($stateParams.house, null, ""), data);
+            }
             prepareDataHouseDetails(data);
         });
     }

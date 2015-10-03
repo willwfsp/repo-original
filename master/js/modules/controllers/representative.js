@@ -4,8 +4,8 @@
  =========================================================*/
 
 App.controller('RepresentativeDataController',
-  ['$scope','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', 'colors', '$filter', 'ngTableParams', 'Auth',
-    function($scope, $rootScope, $stateParams, $log, $http, DataFetcher, colors, $filter, ngTableParams, Auth){
+  ['$scope','$state','$rootScope', '$stateParams', '$log', '$http', 'DataFetcher', 'colors', '$filter', 'ngTableParams', 'Auth','CacheManager',
+    function($scope, $state,  $rootScope, $stateParams, $log, $http, DataFetcher, colors, $filter, ngTableParams, Auth, CacheManager){
 
     $rootScope.$broadcast("event:show-loading");
     $scope.dados = {};
@@ -72,7 +72,22 @@ App.controller('RepresentativeDataController',
         }
     });
 
-    DataFetcher.fetchDataRepresentative($stateParams.id, Auth.user.token).then(function(data) {
+    var cacheAllowed = $state.current.data.cache;
+
+    if(cacheAllowed && CacheManager.fetchDataRepresentative(JSON.stringify($stateParams.id, null, ""))){
+        prepareData(CacheManager.fetchDataRepresentative(JSON.stringify($stateParams.id, null, "")));
+    }else{
+        DataFetcher.fetchDataRepresentative($stateParams.id, Auth.user.token).then(function(data) {
+            if(cacheAllowed){
+                CacheManager.cacheDataRepresentative(JSON.stringify($stateParams.id), data);
+            }
+
+            prepareData(data);
+        });
+    }
+
+
+    function prepareData (data){
         $scope.dados = data[0].data;
         $scope.themeData = data[1].data;
         $scope.terms = data[2].data;
@@ -114,5 +129,5 @@ App.controller('RepresentativeDataController',
         $scope.RepresentativePhoto = b64;
 
         $rootScope.$broadcast("event:dismiss-loading");
-    });
+    }
 }]);

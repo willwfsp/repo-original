@@ -17,7 +17,9 @@ App.controller('DashboardController',
         prepareData(CacheManager.fetchHousesNews());
     }else{
         DataFetcher.fetchHousesNews($scope.houses, Auth.user.token).then(function(data){
-            CacheManager.cacheHousesNews(data);
+            if(cacheAllowed) {
+                CacheManager.cacheHousesNews(data);
+            }
             prepareData(data);
         });
     }

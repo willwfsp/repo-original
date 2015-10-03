@@ -26,14 +26,18 @@ App.factory('CacheManager',
       return cache.get(key);
     }
 
+    var fetch = function(key) {
+       var cacheObject = get(key);
 
-    /**
-     * SearchBillsController cache methods
-     *
-     * The following methods storage and fetch the last five searches performed
-     */
-    service.fetchSearchDataBills = function(query){
-      var cacheArray = get("searchDataBills");
+      if (cacheObject === null) {
+        return false;
+      }
+
+      return cacheObject;
+    }
+
+    var fetchInMultiCache = function(key, query){
+      var cacheArray = get(key);
 
       if (cacheArray == undefined) {
         return false;
@@ -51,12 +55,11 @@ App.factory('CacheManager',
       }
 
       return false;
-
     }
 
-    service.cacheSearchDataBills = function(lastQuery,dataObject) {
-
-      var cacheArray = get("searchDataBills") ? get("searchDataBills") : [];
+    // Creates a cache thats allows queue an especific number of different data
+    var multiCache = function(maxLimit, key, lastQuery, dataObject){
+      var cacheArray = get(key) ? get(key) : [];
 
 
       for (var i=0; i < cacheArray.length; i++) {
@@ -76,21 +79,27 @@ App.factory('CacheManager',
 
       cacheArray.push({query:lastQuery,data:dataObject});
 
-      if (cacheArray.length > 5) {
+      if (cacheArray.length > maxLimit) {
         cacheArray.shift();
       };
-      put("searchDataBills",cacheArray);
+      put(key,cacheArray);
     }
 
-    var fetch = function(key) {
-       var cacheObject = get(key);
 
-      if (cacheObject === null) {
-        return false;
-      }
+    /**
+     * SearchBillsController cache methods
+     *
+     * The following methods storage and fetch the last five searches performed
+     */
+    service.fetchSearchDataBills = function(query){
+      return fetchInMultiCache("searchDataBills", query);
 
-      return cacheObject;
     }
+
+    service.cacheSearchDataBills = function(lastQuery,dataObject) {
+      return multiCache(5, "searchDataBills", lastQuery, dataObject);
+    }
+
     /**
      * DashboardController cache methods
      *
@@ -110,12 +119,12 @@ App.factory('CacheManager',
      *
      * The following methods storage and fetch the ViewDocumentsController data
      */
-    service.fetchBillDoc = function(){
-      return fetch("BillDoc");
+    service.fetchBillDoc = function(query){
+      return fetch("billDoc" + query);
     }
 
-    service.cacheBillDoc = function(dataObject) {
-      put("BillDoc",dataObject);
+    service.cacheBillDoc = function(query, dataObject) {
+      put("billDoc" + query,dataObject);
     }
 
     /**
@@ -123,22 +132,65 @@ App.factory('CacheManager',
      *
      * The following methods storage and fetch the HouseController data
      */
-    service.fetchMonthEvents = function(){
-      return fetch("houseMonthEvents");
+    service.fetchMonthEvents = function(query){
+      return fetch("events"+query);
     }
 
-    service.cacheMonthEvents = function(dataObject) {
-      put("houseMonthEvents",dataObject);
+    service.cacheMonthEvents = function(query, dataObject) {
+      put("events"+ query,dataObject);
     }
 
-    service.fetchDataHouseDetails = function(){
-      return fetch("dataHouseDetails");
+    service.fetchDataHouseDetails = function(query){
+      return fetch("houseDetails"+query);
     }
 
-    service.cacheDataHouseDetails = function(dataObject) {
-      put("dataHouseDetails",dataObject);
+    service.cacheDataHouseDetails = function(query, dataObject) {
+      put("houseDetails"+query,dataObject);
     }
 
+
+    /**
+     * RepresentativeDataController cache methods
+     *
+     * The following methods storage and fetch the last five searches performed
+     */
+    service.fetchDataRepresentative = function(query){
+      return fetchInMultiCache("representativeData", query);
+
+    }
+
+    service.cacheDataRepresentative = function(lastQuery,dataObject) {
+      return multiCache(5, "representativeData", lastQuery, dataObject);
+    }
+
+    /**
+     * CommitteesController cache methods
+     *
+     * The following methods storage and fetch the last five searches performed
+     */
+    service.fetchCommitteeDetails = function(query){
+      return fetchInMultiCache("committesData", query);
+
+    }
+
+    service.cacheCommittees = function(lastQuery,dataObject) {
+      return multiCache(5, "committesData", lastQuery, dataObject);
+    }
+
+
+    /**
+     * PollDetailsController cache methods
+     *
+     * The following methods storage and fetch the searches performed
+     */
+
+    service.fetchPollDetails = function(query){
+      return fetch("pollDetails"+query);
+    }
+
+    service.cachePollDetails = function(query, dataObject) {
+      put("pollDetails"+query,dataObject);
+    }
 
 
     return service;

@@ -303,8 +303,8 @@ App.controller('BillController',
 }]);
 
 App.controller('PollDetailsController',
-    ['$scope', '$log', 'DataFetcher', '$filter', '$stateParams', 'ngTableParams', 'Auth',
-    function($scope, $log, DataFetcher, $filter, $stateParams, ngTableParams, Auth) {
+    ['$scope', '$state', '$log', 'DataFetcher', '$filter', '$stateParams', 'ngTableParams', 'Auth', 'CacheManager',
+    function($scope, $state, $log, DataFetcher, $filter, $stateParams, ngTableParams, Auth, CacheManager) {
 
     $scope.pollData = {};
     $scope.pollResults = [];
@@ -335,10 +335,22 @@ App.controller('PollDetailsController',
                 $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()) );
             }
     });
+    var cacheAllowed = $state.current.data.cache;
 
-    DataFetcher.fetchDataPollDetails($stateParams.pollID, Auth.user.token).then(function(data) {
+    if(cacheAllowed && CacheManager.fetchPollDetails(JSON.stringify($stateParams.pollID, null, ""))){
+        prepareData(CacheManager.fetchPollDetails(JSON.stringify($stateParams.pollID, null, "")));
+    }else{
+        DataFetcher.fetchDataPollDetails($stateParams.pollID, Auth.user.token).then(function(data){
+            if(cacheAllowed) {
+                CacheManager.cachePollDetails(JSON.stringify($stateParams.pollID, null, ""), data);
+            }
+            prepareData(data);
+        });
+    }
+
+    function prepareData (data){
         $scope.pollData = data;
         $scope.pollResults = data.SLV_VOTOS;
         $scope.pollTableParams.reload();
-    });
+    }
 }]);

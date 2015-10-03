@@ -40,7 +40,7 @@ App.controller('SearchBillsController',
     $scope.total_results = 0;
     $scope.bookmark = "";
 
-    var hasCache = $state.current.data.cache;
+    var cacheAllowed = $state.current.data.cache;
 
     $scope.toDate = function(date){
       return date.substr(0,4) + "-" + date.substr(4,2) + "-" + date.substr(6,2);
@@ -235,7 +235,7 @@ App.controller('SearchBillsController',
     $scope.init = function(){
 
         var cacheRetrieved = false;
-        if (hasCache) {
+        if (cacheAllowed) {
             cacheRetrieved = CacheManager.fetchSearchDataBills($scope.query + JSON.stringify($scope.filters,null,""));
         }
         $scope.fetchingStart = true;
@@ -263,7 +263,9 @@ App.controller('SearchBillsController',
     $scope.$on('fetch billSearchResults:completed', function(event) {
         // you could inspect the data to see if what you care about changed, or just update your own scope
         var data = DataFetcher.getBillSearchResults();
-        CacheManager.cacheSearchDataBills($scope.query + JSON.stringify($scope.filters,null,""),data);
+        if(cacheAllowed) {
+            CacheManager.cacheSearchDataBills($scope.query + JSON.stringify($scope.filters,null,""),data);
+        }
         prepareData(data);
 
     });

@@ -4,10 +4,10 @@
  =========================================================*/
 
  App.controller('CommitteesController',
-  ['$scope', '$log', '$stateParams', '$filter', 'ngTableParams',
-   'DataFetcher', 'Auth', '$rootScope',
-    function($scope, $log, $stateParams, $filter, ngTableParams, DataFetcher,
-    Auth, $rootScope){
+  ['$scope','$state', '$log', '$stateParams', '$filter', 'ngTableParams',
+   'DataFetcher', 'Auth', '$rootScope', 'CacheManager',
+    function($scope, $state, $log, $stateParams, $filter, ngTableParams, DataFetcher,
+    Auth, $rootScope, CacheManager){
 
     $scope.committeesMembers = [];
     $scope.membersJson = [];
@@ -36,8 +36,22 @@
             }
     });
 
-    DataFetcher.fetchCommitteeDetails($stateParams.house,
-        $stateParams.committeeID, Auth.user.token).then(function(data) {
+    var cacheAllowed = $state.current.data.cache;
+    var query = JSON.stringify($stateParams.house) + JSON.stringify($stateParams.committeeID);
+
+    if(cacheAllowed && CacheManager.fetchCommitteeDetails(query)){
+        prepareData(CacheManager.fetchCommitteeDetails(query));
+    }else{
+        DataFetcher.fetchCommitteeDetails($stateParams.house, $stateParams.committeeID, Auth.user.token).then(function(data) {
+            if(cacheAllowed) {
+                CacheManager.cacheCommittees(query, data);
+            }
+            prepareData(data);
+        });
+    }
+
+    function prepareData (data){
+
         $scope.committeesDetails = data[0].data;
         $scope.committeesMembers = data[1].data.rows;
 
@@ -53,7 +67,7 @@
         }
         $scope.membersTableParams.reload();
         $rootScope.$broadcast("event:dismiss-loading");
-    });
+    }
 }]);
 
 

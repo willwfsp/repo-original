@@ -4,12 +4,15 @@ App.controller('ViewDocumentsController', ['$scope','$state', '$log', 'DataFetch
     $rootScope.$broadcast("event:show-loading");
 
     var cacheAllowed = $state.current.data.cache;
+    var query = JSON.stringify($stateParams.docUrl);
 
-    if(cacheAllowed && CacheManager.fetchBillDoc()){
-        prepareData(CacheManager.fetchBillDoc());
+    if(cacheAllowed && CacheManager.fetchBillDoc(query)){
+        prepareData(CacheManager.fetchBillDoc(query));
     }else{
     	DataFetcher.fetchBillDoc($stateParams.docUrl, Auth.user.token).then(function(data) {
-            CacheManager.cacheBillDoc(data);
+            if(cacheAllowed) {
+                CacheManager.cacheBillDoc(query, data);
+            }
             prepareData(data);
         });
     }
